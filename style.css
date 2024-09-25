@@ -1,0 +1,617 @@
+* {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #afacac;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Height ng buong screen */
+    margin: 0;
+}
+
+/* ---Section Content--- */
+section.ProductsL {
+    flex: 1; /* tabi mo nlng sya sa css nila product, di ko alam kung saan sya */
+}
+/* --------------------- */
+
+/* Define the hidden class */
+.hidden {
+    display: none; /* This hides the product box */
+}
+
+header {
+    padding: 20px;
+    background: #070707;
+    color: #fff;
+}
+
+header .logo img {
+    height: 85px;
+    margin-left: 40px;
+    align-items: center;
+}
+
+/* Style for the top navigation */
+.top-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+    background-color: #070707;
+}
+
+/* Style for the search container */
+.search-container, #search-form {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.search-container input[type="text"] {
+    padding: 10px;
+    padding-right: 40px; /* Space for the search icon */
+    border: 1px solid #000000;
+    border-radius: 4px;
+    font-size: 16px;
+    width: 300px; /* Adjust the width as needed */
+}
+
+.search-container button {
+    position: absolute;
+    right: 10px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+}
+
+.search-container button i {
+    color: #333;
+    font-size: 16px;
+}
+
+.navmenu {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    column-gap: 5%;
+    justify-content: center;
+}
+
+/* Dropdown Menu Style */
+.navmenu .dropdown {
+    position: relative;
+}
+
+.navmenu .dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: #070707;
+    border-radius: 0%;
+    padding: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    z-index: 10; /* Ensures dropdown is on top of other elements */
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    min-width: 150px;
+    margin-top: 0px;
+    font-size: 5px;
+}
+
+.navmenu .dropdown-menu li {
+    margin: 0; /* Remove default margin */
+    padding: 0; /* Remove default padding */
+}
+
+.navmenu .dropdown-menu a {
+    display: block; /* Make sure links take up the full width */
+    padding: 6px 20px; /* Add padding for better spacing */
+    margin-bottom: 6px;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.navmenu .dropdown-menu a:hover {
+    background: #000000;
+    color: #ffde59;
+}
+
+/* Show dropdown on hover */
+.navmenu .dropdown:hover .dropdown-menu {
+    display: block;
+}
+
+/* Ensures dropdown is properly aligned */
+.navmenu .dropdown-menu li {
+    padding: 0;
+}
+
+.navmenu li {
+    margin-left: 20px;
+}
+
+
+.navmenu a {
+    position: relative;
+    display: inline-block;
+    color: #fff;
+    text-decoration: none;
+    font-size: 18px;
+}
+
+.navmenu a:hover{
+    color: #ffde59;
+}
+
+.navmenu a::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -6px;
+    width: 100%;
+    height: 3px;
+    background-color: #ffde59;
+    border-radius: 40px;
+    transform: scaleX(0);
+    transition: transform .3s;
+}
+
+.navmenu a:hover:after {
+    transform: scaleX(1);
+}
+
+/* ---- .right-icons HERE ---- */
+.right-icons {
+    display: flex;
+    justify-content: flex-end;
+    width: 300px; /* Did 300px so that it has the same size as .search-container to keep BG Icon in the middle */
+}
+/* --------------------------- */
+
+.nav-icon-s, .nav-icon-p, .nav-icon-c {
+    display: flex;
+}
+
+.nav-icon-s a {
+    color: #fff;
+    margin-left: 20px;
+    font-size: 30px;
+}
+
+
+
+.nav-icon-p a {
+    color: #fff;
+    margin-left: 20px;
+    font-size: 30px;
+}
+
+.nav-icon-c a{
+    color: #fff;
+    margin-left: 20px;
+    font-size: 30px;
+}
+
+.nav-icon-p a:hover {
+    color: yellow;
+}
+
+.nav-icon-c a:hover {
+    color: yellow;
+}
+
+.nav-icon-c {
+    position: relative;
+}
+
+#cart-count {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    background: red;
+    color: white;
+    border-radius: 50%;
+    padding: 5px 10px;
+    font-size: 14px;
+}
+
+.main-home {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 55vh;
+    background: #000;
+}
+
+.slider {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    position: relative;
+}
+
+.slides {
+    width: 300%;
+    height: 100%;
+    display: flex;
+}
+
+.slides input {
+    display: none;
+}
+
+.slide {
+    width: 33.33%;
+    transition: 0.5s;
+}
+
+.slide img {
+    width: 100%; 
+    height: 150%;
+    object-fit: cover;
+}
+
+.navigation-auto {
+    position: absolute;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    bottom: 10px;
+}
+
+.navigation-auto div {
+    border: 2px solid #fff;
+    padding: 5px;
+    border-radius: 10px;
+    transition: 1s;
+}
+
+.navigation-auto div:not(:last-child) {
+    margin-right: 40px;
+}
+
+#radio1:checked ~ .first {
+    margin-left: 0;
+}
+
+#radio2:checked ~ .first {
+    margin-left: -33.33%;
+}
+
+#radio3:checked ~ .first {
+    margin-left: -66.66%;
+}
+
+.navigation-manual {
+    position: absolute;
+    width: 100%;
+    bottom: 10px;
+    display: flex;
+    justify-content: center;
+}
+
+.manual-btn {
+    border: 2px solid #fff;
+    padding: 5px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 1s;
+}
+
+.manual-btn:not(:last-child) {
+    margin-right: 40px;
+}
+
+.manual-btn:hover {
+    background: #fff;
+}
+
+
+.ProductsL {
+    margin-top: 40px; /* Adjust the top margin as needed */
+}
+
+.product-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.product-container2 {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.product-box {
+    width: 350px; /* Adjust the width as needed */
+    margin: 8px; /* Add margin for spacing between boxes */
+    padding: 5px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    text-align: center;
+    background-color: #fff;
+    position: relative;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.product-box:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.product-box img {
+    width: 100%;
+    height: auto;
+}
+
+.product-text {
+    margin: 20px 0;
+}
+
+.product-text h4 {
+    margin: 15px 0;
+}
+
+.price {
+    margin-bottom: 20px;
+}
+
+.price p {
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+}
+
+.add-to-cart-btn {
+    padding: 10px 20px;
+    background: #000000;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.add-to-cart-btn:hover {
+    background: #000000;
+    color: yellow;
+}
+
+.view-more {
+    text-align: center;
+    margin-top: 50px;
+}
+
+.view-more-btn {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: transparent;
+    color: #000000;
+    border: solid;
+    border-radius: 5px;
+    font-weight: bold;
+    text-decoration: none; /* Remove underline */
+    transition: background-color 0.3s;
+}
+
+.view-more-btn:hover {
+    background-color: #000000;
+    color: #ffde59;
+}
+
+/* CSS for cart modal */
+.cart-modal {
+    display: none; 
+    position: fixed; 
+    z-index: 1; 
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%; 
+    overflow: auto; 
+    background-color: rgba(0,0,0,0.4); 
+    padding-top: 60px; 
+}
+
+.cart-modal-content .cart-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 10px;
+}
+
+.cart-modal-content .cart-item-details {
+    flex: 1;
+}
+
+.cart-modal-content .quantity-controls {
+    display: flex;
+    align-items: center;
+}
+
+.cart-modal-content .quantity-controls button {
+    background: #000;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 0 5px;
+}
+
+.cart-modal-content .quantity-controls button:hover {
+    background: #555;
+}
+
+.cart-modal-content .quantity-controls span {
+    margin: 0 10px;
+}
+
+.cart-modal-content {
+    background: #fff;
+    margin: 5% auto;
+    padding: 20px;
+    border-radius: 8px;
+    width: 80%;
+    max-width: 900px;
+    position: relative;
+}
+
+.cart-modal-content .close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.cart-modal-content ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.cart-modal-content .cart-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 10px;
+}
+
+.cart-modal-content .cart-item img {
+    width: 100px;
+    height: auto;
+    margin-right: 20px;
+}
+
+.cart-modal-content .cart-item-details {
+    flex: 1;
+}
+
+.cart-modal-content .cart-item-details span {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.cart-modal-content .remove-btn {
+    background: red;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background 0.3s;
+}
+
+.cart-modal-content .remove-btn:hover {
+    background: darkred;
+}
+
+.cart-total {
+    margin-top: 20px;
+    text-align: right;
+    font-size: 18px;
+}
+
+.cart-total strong {
+    font-weight: bold;
+}
+
+.cart-item-details {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex: 1;
+}
+
+.quantity-controls {
+    display: flex;
+    align-items: center;
+    margin-left: 20px;
+}
+
+.quantity-controls button {
+    background: #ddd;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    font-size: 16px;
+    margin: 0 5px;
+    border-radius: 5px;
+}
+
+.quantity-controls .quantity {
+    font-size: 16px;
+    margin: 0 5px;
+}
+
+.quantity-controls button:hover {
+    background: #ffde59;
+}
+
+/* CSS for checkout button */
+.checkout-btn {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    background-color: #000000;
+    color: #fcfcfc;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 20px;
+}
+
+.checkout-btn:hover {
+    background-color: #ffde59;
+    color: #000000;
+}
+
+
+.footer {
+    background: #000000;
+    color: #fff;
+    text-align: center;
+    padding: 10px 0;
+    margin-top: 40px;
+}
+
+
+/* Style for the top navigation */
+.top-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+    background-color: #070707;
+}
+
+.cart-modal {
+    display: none; 
+    position: fixed; 
+    z-index: 1; 
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%; 
+    overflow: auto; 
+    background-color: rgb(0,0,0); 
+    background-color: rgba(0,0,0,0.4); 
+    padding-top: 60px; 
+}
