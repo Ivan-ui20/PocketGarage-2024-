@@ -141,3 +141,22 @@ body {
     font-size: 12px; /* Smaller text size for the label */
     margin-left: 0; /* Remove left margin to bring text closer to checkbox */
 }
+
+#back-btn {
+    background: none; /* Remove background color */
+    color: #fff; /* Keep text color white */
+    border: none; /* Remove border */
+    font-size: 14px; /* Adjust font size */
+    text-align: left; /* Align text to the left */
+    width: fit-content; /* Make the width fit the text */
+    cursor: pointer;
+    margin: 0; /* Remove margin */
+    padding: 0; /* Remove padding */
+    position: absolute; /* Positioning to move it */
+    top: 10px; /* Move to top */
+    left: 10px; /* Move to left */
+}
+
+#back-btn:hover {
+    text-decoration: underline; /* Add underline on hover */
+}

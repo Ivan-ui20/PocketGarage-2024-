@@ -387,6 +387,157 @@ header .logo img {
     color: yellow;
 }
 
+/* Modal Styles */
+.modal {
+    display: none; /* Initially hidden */
+    position: fixed;
+    z-index: 1000; /* Make sure it is on top of everything */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent background */
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: white; /* White background for modal content */
+    border-radius: 8px; /* Rounded corners */
+    width: 80%; /* Adjusted width to be smaller */
+    max-width: 850px; /* Set maximum width to a smaller value */
+    max-height: 90vh; /* Maximum height */
+    overflow: auto; /* Allow scrolling if needed */
+    position: relative; /* Position relative for absolute children */
+}
+
+.product-modal {
+    max-width: 400px; /* Further reduced max width */
+    width: 90%; /* Responsive width */
+    max-height: 60vh; /* Further reduced maximum height */
+    overflow: hidden; /* Prevent scrolling */
+    margin: auto; /* Center the modal */
+    background-color: white; /* Background color */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Shadow effect */
+    display: flex; /* Use flexbox */
+    flex-direction: column; /* Stack content vertically */
+}
+
+.modal-content {
+    display: flex; /* Align image and details side by side */
+    width: 100%;
+}
+
+.modal-image {
+    flex: 0 0 35%; /* Image takes 35% of the modal width */
+    padding: 10px; /* Reduced padding for spacing */
+}
+
+.modal-image img {
+    width: 100%; /* Full width of the image container */
+    height: auto; /* Maintain aspect ratio */
+    border-radius: 8px; /* Rounded corners for the image */
+}
+
+.modal-details {
+    flex: 1; /* Details take remaining space */
+    padding: 5px; /* Reduced padding for spacing */
+    background-color: black; /* Background for product details */
+    color: white; /* Text color */
+    display: flex; 
+    flex-direction: column; /* Stack items vertically */
+    justify-content: space-between; /* Space items out */
+}
+
+.product-list {
+    display: grid; /* Use grid layout for products */
+    grid-template-columns: repeat(2, 1fr); /* Two products per row */
+    gap: 5px; /* Reduced space between products */
+    padding: 5px; /* Reduced padding for the product list */
+}
+
+.product-item {
+    background-color: #f9f9f9; /* Light background for product items */
+    border: 1px solid #ddd; /* Light border */
+    border-radius: 5px; /* Rounded corners */
+    padding: 2px; /* Smaller padding for product item */
+    text-align: center; /* Center text */
+    font-size: 12px; /* Reduced font size */
+}
+
+.button-container {
+    display: flex; /* Align buttons horizontally */
+    flex-direction: column; /* Stack buttons vertically */
+    gap: 4px; /* Reduced space between buttons */
+}
+
+.action-button {
+    background-color: white; /* Button background color */
+    color: black; /* Button text color */
+    border: none; /* Remove default border */
+    padding: 5px 6px; /* Smaller padding for button */
+    border-radius: 0; /* Edgeless button */
+    transition: background 0.3s, color 0.3s; /* Transition for hover effects */
+    font-size: 12px; /* Reduced font size */
+}
+
+.action-button:hover {
+    background-color: yellow; /* Hover background color */
+    color: black; /* Hover text color */
+}
+
+#chatButton {
+    background-color: yellow; /* Chat button color */
+    border-radius: 50%; /* Make it round */
+    display: flex; /* Use flexbox for centering the icon */
+    justify-content: center; /* Center icon */
+    align-items: center; /* Center icon */
+    width: 24px; /* Fixed width for smaller button */
+    height: 24px; /* Fixed height for smaller button */
+    padding: 0; /* No padding */
+}
+
+#chatButton:hover {
+    background-color: #e6c700; /* Darker yellow on hover */
+}
+
+/* Optional: Adjust icon size */
+#chatButton box-icon {
+    font-size: 14px; /* Adjust size of the icon */
+    color: black; /* Icon color */
+}
+
+
+/* Flexbox styling for button alignment */
+.button-container {
+    display: flex;
+    flex-direction: column; /* Stack buttons vertically */
+    align-items: flex-end; /* Align buttons to the right */
+}
+
+
+.modal-open {
+    overflow: hidden; /* Prevents scrolling */
+}
+
+/* Close button */
+.close-modal {
+    position: absolute; /* Positioning relative to modal */
+    top: 10px; /* Distance from the top */
+    right: 10px; /* Distance from the right */
+    background: transparent; /* Transparent background */
+    border: none; /* No border */
+    color: rgb(255, 255, 255); /* Color of the "X" */
+    font-size: 20px; /* Size of the "X" */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: color 0.3s; /* Smooth color transition */
+}
+
+.close-modal:hover {
+    color: red; /* Change color on hover */
+}
+
 .view-more {
     text-align: center;
     margin-top: 50px;
