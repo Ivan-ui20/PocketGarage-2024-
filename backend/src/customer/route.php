@@ -9,9 +9,7 @@
     require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/src/customer/cart.php';
     require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/src/customer/diecast.php';
     
-
-    
-    
+        
     if ($_SERVER['REQUEST_METHOD'] === 'POST' ) {
         
         try {
@@ -89,6 +87,27 @@
                     jsonResponse("Invalid cart item", "All fields are required.");
                 }
             }
+
+            if ($route === 'customer/delete/item/cart') {
+                $requiredFields = ['model_id', 'cart_id'];
+
+                if (!array_diff_key(array_flip($requiredFields), $_POST)) {
+                                
+                    $modelId = $_POST['model_id'];
+                    $cartId = $_POST['cart_id'];
+                                        
+                    if (!$modelId || !$cartId) {
+                        jsonResponse("Invalid Request", "Something went wrong!");
+                    }
+                                
+                    $response = deleteCartItem($conn, $modelId, $cartId);
+            
+                    jsonResponse($response["title"], $response["message"]);
+            
+                } else {
+                    jsonResponse("Invalid cart item", "All fields are required.");
+                }
+            }
         
         } catch (\Throwable $th) {            
             return array("title" => "Error", "message" => "Something went wrong!", "data" => []);
@@ -116,20 +135,47 @@
                     );
             
                 } else {
-                    jsonResponse("Invalid cart item", "All fields are required.");
+                    jsonResponse("User not found", "Log in first.");
                 }
             }
 
             if ($route === 'products') {
-                                                                                                                                                                                              
-                $response = getDiecastProduct($conn);
-                            
+                                                           
+                $brand = isset($_GET['brand']) ? $_GET['brand'] : null;
+                $scale = isset($_GET['scale']) ? $_GET['scale'] : null;
+                $minPrice = isset($_GET['min_price']) ? $_GET['min_price'] : null;
+                $maxPrice = isset($_GET['max_price']) ? $_GET['max_price'] : null;
+                $modelStock = isset($_GET['model_stock']) ? $_GET['model_stock'] : null;
+                $modelAvailability = isset($_GET['model_availability']) ? $_GET['model_availability'] : null;
+                $modelTags = isset($_GET['model_tags']) ? $_GET['model_tags'] : null;
+                $modelType = isset($_GET['model_type']) ? $_GET['model_type'] : null;
+                $limit = isset($_GET['limit']) ? (int)$_GET['limit'] : 10;
+                $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+                $offset = ($page - 1) * $limit;
+                $modelName = isset($_GET['model_name']) ? $_GET['model_name'] : null;
+
+                $response = getDiecastProduct($conn, $brand, $scale, $minPrice, $maxPrice, $modelStock, 
+                $modelAvailability, $modelTags, $modelType, $limit, $offset, $modelName);
+                                            
                 jsonResponseWithData(
                     $response["title"], 
                     $response["message"], 
                     $response["data"]
                 );
             
+            }
+
+            if ($route === 'account/view') {
+                $customerId = $_GET['customer_id'];
+
+                $response = getData($conn, $customerId);
+
+                jsonResponseWithData(
+                    $response["title"], 
+                    $response["message"], 
+                    $response["data"]
+                );
+
             }
             
         } catch (\Throwable $th) {            

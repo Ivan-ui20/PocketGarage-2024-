@@ -65,5 +65,34 @@
         }        
     }
 
+    function getData($connect, $customerId) {
+        try {
+
+            $getData = $connect->prepare("SELECT 
+                CONCAT(customer.first_name, ' ', customer.last_name) AS customer_name,
+                customer.contact_number,
+                customer.address,
+                customer.email_address
+            FROM customer
+            WHERE customer_id = ?");
+            $getData->bind_param("s", $customerId);
+            $getData->execute();
+
+            $userData = $getData->get_result();
+            $user = $userData->fetch_all(MYSQLI_ASSOC);
+
+            return array(
+                "title" => "Success", 
+                "message" => "Information retrieved!", 
+                "data" => $user);
+                
+        } catch (\Throwable $th) {
+            return array(
+                "title" => "Failed", 
+                "message" => "Something went wrong! " . $th->getMessage() . " Please try again later",
+                "data" => []
+            );
+        }
+    }
 
 ?>

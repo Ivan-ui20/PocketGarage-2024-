@@ -2,10 +2,9 @@
 
 
 function insertCartItem($connect, $payload, $items) {
-
-    try {
-        $connect->begin_transaction();
-        
+    $connect->begin_transaction();
+    
+    try {                
         $cartId = "";
 
         $checkIfCartExist = $connect->prepare("SELECT cart_id FROM cart WHERE customer_id = ?");
@@ -87,6 +86,32 @@ function insertCartItem($connect, $payload, $items) {
         return array(
             "title" => "Failed", 
             "message" => "Something went wrong! " . $th->getMessage() ." Please try again later",
+            "data" => []
+        );
+    }
+}
+
+function deleteCartItem($connect, $modelId, $cartId) {
+    try {   
+
+        $deleteCartItem = $connect->prepare("DELETE FROM cart_items WHERE model_id ? AND cart_id = ?");
+        $deleteCartItem->bind_param("ss", $modelId, $cartId);
+        $deleteCartItem->execute();
+
+        if ($deleteCartItem->affected_rows < 0) {
+            throw new Exception("We cannot delete the item in your cart.");
+        }
+
+        return array(
+            "title" => "Success", 
+            "message" => "Cart item removed successfully.",
+            "data" => []
+        );
+
+    } catch (\Throwable $th) {
+        return array(
+            "title" => "Failed", 
+            "message" => "Something went wrong! " . $th->getMessage() . " Please try again later",
             "data" => []
         );
     }

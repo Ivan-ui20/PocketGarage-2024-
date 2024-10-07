@@ -84,8 +84,17 @@
             //     model_tags: "Limited Edition, New Arrival",
             //     model_type: "Premium",                                
             // });
+
+            // const data = new URLSearchParams({
+            //     route: 'chat/send',
+            //     room_id: "1",
+            //     sender_id: "3",
+            //     user_type: "customer",
+            //     message: "Secret Message hehe",
+            //     attachment: null,
+            // });
             
-            // fetch('/backend/src/customer/route.php?route=customer/login', {
+            // fetch('/backend/src/chat/route.php?route=chat/send', {
             //     method: 'POST',
             //     body: data.toString(),
             //     headers: {
@@ -106,9 +115,10 @@
             //     });
 
 
-            const id = 12
+            // const id = 12
             // fetch(`/backend/src/seller/route.php?route=seller/get/products&seller_id=${id}`, {
-            fetch(`/backend/src/customer/route.php?route=products`, {
+            // fetch(`/backend/src/customer/route.php?route=products`, {
+            fetch(`/backend/src/chat/route.php?route=chat/get&room_id=1&limit=10&offset=0`, {
                 method: 'GET',                
                 headers: {
                     'Content-Type': 'application/json'
@@ -126,7 +136,7 @@
                 .catch(error => {
                     console.error('There was a problem with the fetch operation:', error);
                 });
-           
+            // setInterval(fetchMessages, 3000); for fetch new message
         }
 
         // Call sendData when the window loads
