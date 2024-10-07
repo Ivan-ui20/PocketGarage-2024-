@@ -16,35 +16,33 @@
 <body>
     <header>
         <div class="top-nav">
-            <div class="search-container">
-                <form id="search-form" action="Products.html" method="get">
-                    <input type="text" name="query" placeholder="Search">
-                    <button type="submit">
-                        <i class='bx bx-search'></i>
-                    </button>
-                </form>
-            </div>
-            
             <div> 
                 <a href="#" class="logo"><img src="BG.PNG" alt="Logo"></a>
             </div>
-
-            <!-- Added new div here and putted nav-icon-p & c inside with css style-->
+    
             <div class="right-icons">
-                <div class="nav-icon-p">
-                    <a href="Login.html"><i class='bx bx-user-circle'></i></a>
-                </div>
-                
+                <div class="search-container">
+                    <form id="search-form" action="Products.html" method="get">
+                        <input type="text" name="query" placeholder="Search">
+                        <button type="submit">
+                            <i class='bx bx-search'></i>
+                        </button>
+                    </form>
+                </div>  
+    
                 <div class="nav-icon-c">
                     <a href="#" id="cart-icon">
                         <i class='bx bx-cart'></i>
                         <span id="cart-count">0</span>
                     </a>
                 </div>
+                
+                <div class="nav-icon-p">
+                    <a href="Login.html"><i class='bx bx-user-circle'></i></a>
+                </div>
             </div>
-            <!-- ---------------------------------------------------------------- -->
         </div>
-    
+        
         <ul class="navmenu">
             <li><a href="index.html">Home</a></li>
             <li class="dropdown">

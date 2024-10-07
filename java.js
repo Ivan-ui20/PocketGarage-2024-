@@ -1,3 +1,4 @@
+//Slider
 const header =document.querySelector("header");
 
 let counter = 1;
@@ -8,6 +9,7 @@ setInterval(function() {
         counter = 1;
     }
 }, 5000);
+
 
 //Login
 document.addEventListener('DOMContentLoaded', () => {
@@ -172,16 +174,11 @@ document.addEventListener('DOMContentLoaded', function() {
 document.addEventListener("DOMContentLoaded", function() {
     const loginBtn = document.getElementById("login-btn");
     const rememberMeCheckbox = document.getElementById("remember-me");
-    
-    const phoneField = document.getElementById("phone-number"); // Phone field used in both forms
-    const passwordField = document.getElementById("password");  // Password field for login
-    const signupPhoneField = document.getElementById("signup-phone-number"); // Updated Phone field for signup
-    const signupPasswordField = document.getElementById("signup-password"); // Updated Password field for signup
-    
+    const phoneField = document.getElementById("phone-number"); // Phone number field
+    const passwordField = document.getElementById("password");  // Password field
 
-    // Login form validation and remember me functionality
-    loginBtn.addEventListener("click", function() {
-        
+    // Login action (to avoid code duplication)
+    function handleLogin() {
         const phoneError = document.getElementById("phone-error");
         const passwordError = document.getElementById("password-error");
         let loginValid = true;
@@ -190,7 +187,7 @@ document.addEventListener("DOMContentLoaded", function() {
         phoneError.textContent = "";
         passwordError.textContent = "";
 
-        // Validate phone number (exactly 11 digits)
+        // Validate phone number field (exactly 11 digits)
         if (!phoneField.value || phoneField.value.length !== 11) {
             phoneField.style.borderColor = "red";
             phoneError.textContent = "Please enter a valid 11-digit phone number.";
@@ -209,38 +206,77 @@ document.addEventListener("DOMContentLoaded", function() {
         }
 
         if (loginValid) {
-            // Handle Remember Me and login logic
             const phoneNumber = phoneField.value;
             const password = passwordField.value;
 
-            if (rememberMeCheckbox.checked) {
-                localStorage.setItem("phone-number", phoneNumber);
-                localStorage.setItem("password", password);
-            } else {
-                localStorage.removeItem("phone-number");
-                localStorage.removeItem("password");
-            }
+            // Example: hardcoded validation for demo purposes
+            if (phoneNumber === '12345678910' && password === 'buyer') {
+                // Store in localStorage if Remember Me is checked
+                if (rememberMeCheckbox.checked) {
+                    localStorage.setItem("phone-number", phoneNumber);
+                    localStorage.setItem("password", password);
+                } else {
+                    localStorage.removeItem("phone-number");
+                    localStorage.removeItem("password");
+                }
 
-            alert("Logged in!");
+                // Redirect to index.html
+                window.location.href = 'index.html';
+            } else {
+                phoneError.textContent = 'Invalid phone number or password.';
+                passwordError.textContent = 'Invalid phone number or password.';
+            }
         } else {
             alert("Please fill in all fields correctly.");
         }
-    });
+    }
 
-    // Remember Me logic for login form (auto-fill phone number and password if saved)
-    if (localStorage.getItem("phone-number")) {
-        phoneField.value = localStorage.getItem("phone-number");
+    // Trigger login when login button is clicked
+    loginBtn.addEventListener("click", handleLogin);
+
+    // Trigger login when pressing Enter
+    document.getElementById("login-form").addEventListener("keydown", function(event) {
+        if (event.key === "Enter") {
+            event.preventDefault();  // Prevent form from submitting
+            handleLogin();  // Call the login function
+        }
+    });
+    
+    // Remember Me logic for login form (auto-fill email and password if saved)
+    if (localStorage.getItem("email")) {
+        emailField.value = localStorage.getItem("email");
         passwordField.value = localStorage.getItem("password");
         rememberMeCheckbox.checked = true;
     }
 
-    // Restrict phone number input to numeric only
-    phoneField.addEventListener("input", function () {
-        phoneField.value = phoneField.value.replace(/\D/g, "");
-        if (phoneField.value.length > 11) {
-            phoneField.value = phoneField.value.slice(0, 11);
+    // Show the forgot password form when the button is clicked
+    forgotPasswordBtn.addEventListener("click", function () {
+        document.querySelector('.login-form').style.display = 'none'; // Hide the login form
+        document.getElementById('forgot-password-form').style.display = 'block'; // Show the forgot password form
+    });
+
+    // Return to login form from the forgot password form
+    document.getElementById('back-to-login-btn').addEventListener('click', function () {
+        document.querySelector('.login-form').style.display = 'block'; // Show the login form
+        document.getElementById('forgot-password-form').style.display = 'none'; // Hide the forgot password form
+    });
+
+    // Reset password functionality
+    document.getElementById('reset-password-btn').addEventListener('click', function () {
+        const email = document.getElementById('forgot-email').value;
+
+        // Simple email validation
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Regex for validating an email address
+
+        if (email && emailPattern.test(email)) {
+            alert('A password reset link has been sent to your email.'); // For demonstration
+            // Redirect to the login page (update with your actual login page URL)
+            window.location.href = 'login.html'; // Change 'login.html' to your actual login page path
+        } else {
+            document.getElementById('forgot-email-error').textContent = 'Please enter a valid email address.';
         }
     });
+});
 
     // Sign-up form: Move to the next step only if all fields are filled correctly
     const nextBtn = document.getElementById("next-btn");
@@ -299,6 +335,7 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 
+
     // Back button functionality for sign-up form
     const backBtn = document.getElementById("back-btn");
 
@@ -327,7 +364,38 @@ document.addEventListener("DOMContentLoaded", function() {
             document.getElementById('password-error').textContent = 'Invalid phone number or password.';
         }
     });
+    // Show the forgot password form when the button is clicked
+    document.getElementById('forgot-password-btn').addEventListener('click', function () {
+    document.querySelector('.login-form').style.display = 'none'; // Hide the login form
+    document.getElementById('forgot-password-form').style.display = 'block'; // Show the forgot password form
 });
+
+// Return to login form from the forgot password form
+    document.getElementById('back-to-login-btn').addEventListener('click', function () {
+    document.querySelector('.login-form').style.display = 'block'; // Show the login form
+    document.getElementById('forgot-password-form').style.display = 'none'; // Hide the forgot password form
+});
+
+// Reset password functionality
+    document.getElementById('reset-password-btn').addEventListener('click', function () {
+    const email = document.getElementById('forgot-email').value;
+
+    // Simple email validation
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Regex for validating an email address
+
+    if (email && emailPattern.test(email)) {
+        alert('A password reset link has been sent to your email.'); // For demonstration
+        // Redirect to the login page (update with your actual login page URL)
+        window.location.href = 'login.html'; // Change 'login.html' to your actual login page path
+    } else {
+        document.getElementById('forgot-email-error').textContent = 'Please enter a valid email address.';
+    }
+});
+    document.getElementById('back-btn').addEventListener('click', function() {
+    document.getElementById('signup-step-2').style.display = 'none';
+    document.getElementById('signup-step-1').style.display = 'flex';
+});
+
 
 
 // Get the modal and close button
@@ -415,3 +483,4 @@ modalAddToCartBtn.onclick = function() {
     // Perform the add to cart action here (logic can be added if needed)
     alert("Product has been added to the cart.");
 }
+

@@ -26,9 +26,14 @@ section.ProductsL {
 }
 
 header {
-    padding: 20px;
+    padding: 10px;
     background: #070707;
     color: #fff;
+    position: fixed; /* Keep header at the top of the page */
+    top: 0;          /* Align to the top */
+    left: 0;         /* Align to the left */
+    width: 100%;     /* Full width */
+    z-index: 1000;   /* Ensure it stays above other content */
 }
 
 header .logo img {
@@ -42,8 +47,22 @@ header .logo img {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 10px 20px;
+    padding: 5px 5px;
     background-color: #070707;
+}
+
+.right-icons {
+    display: flex;
+    align-items: center; /* Align items vertically */
+    justify-content: flex-end;
+    column-gap: 20px; /* Adds space between the search bar and icons */
+}
+
+/* Ensure the search container has enough space */
+.search-container {
+    display: flex;
+    align-items: center;
+    margin-right: 50px;
 }
 
 /* Style for the search container */
@@ -53,13 +72,19 @@ header .logo img {
     align-items: center;
 }
 
+/* Adjust the width of the search input as necessary */
 .search-container input[type="text"] {
     padding: 10px;
     padding-right: 40px; /* Space for the search icon */
-    border: 1px solid #000000;
-    border-radius: 4px;
+    border: none;
+    border-radius: 10px;
     font-size: 16px;
-    width: 300px; /* Adjust the width as needed */
+    width: 250px; /* Adjusted width */
+}
+
+.search-container input[type="text"]:focus {
+    outline: none; /* Removes the default focus outline */
+    border: none; /* Ensures there is no border on focus */
 }
 
 .search-container button {
@@ -80,7 +105,8 @@ header .logo img {
     display: flex;
     align-items: center;
     column-gap: 5%;
-    justify-content: center;
+    justify-content: left;
+    margin-left: 350px;
 }
 
 /* Dropdown Menu Style */
@@ -138,7 +164,6 @@ header .logo img {
     margin-left: 20px;
 }
 
-
 .navmenu a {
     position: relative;
     display: inline-block;
@@ -174,7 +199,6 @@ header .logo img {
     justify-content: flex-end;
     width: 300px; /* Did 300px so that it has the same size as .search-container to keep BG Icon in the middle */
 }
-/* --------------------------- */
 
 .nav-icon-s, .nav-icon-p, .nav-icon-c {
     display: flex;
@@ -186,15 +210,13 @@ header .logo img {
     font-size: 30px;
 }
 
-
-
 .nav-icon-p a {
     color: #fff;
     margin-left: 20px;
     font-size: 30px;
 }
 
-.nav-icon-c a{
+.nav-icon-c a {
     color: #fff;
     margin-left: 20px;
     font-size: 30px;
