@@ -326,7 +326,8 @@ document.addEventListener("DOMContentLoaded", function() {
         passwordField.value = localStorage.getItem("password");
         rememberMeCheckbox.checked = true;
     }
-
+    
+    const forgotPasswordBtn = document.getElementById("forgot-password-btn");
     // Show the forgot password form when the button is clicked
     forgotPasswordBtn.addEventListener("click", function () {
         document.querySelector('.login-form').style.display = 'none'; // Hide the login form
@@ -386,6 +387,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
         // Validate phone number field (should be exactly 11 digits)
         const signupPhoneErrorMsg = document.getElementById("signup-phone-number-error");
+        const signupPhoneField = document.getElementById("signup-phone-number");
         if (signupPhoneField.value.length !== 11) {
             allFilled = false;
             signupPhoneField.style.borderColor = "red"; // Highlight invalid phone number
@@ -396,6 +398,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
         // Validate password field (Check if it's filled)
         const signupPasswordErrorMsg = document.getElementById("signup-password-error");
+        const signupPasswordField = document.getElementById("signup-password");
         if (!signupPasswordField.value) {
             allFilled = false;
             signupPasswordField.style.borderColor = "red"; // Highlight empty password
@@ -422,6 +425,7 @@ document.addEventListener("DOMContentLoaded", function() {
         signupStep1.style.display = "block"; // Show step 1
     });
 
+    const signupPhoneField = document.getElementById("signup-phone-number");
     // Restrict phone number input to numeric only for the signup form
     signupPhoneField.addEventListener("input", function () {
         signupPhoneField.value = signupPhoneField.value.replace(/\D/g, "");
