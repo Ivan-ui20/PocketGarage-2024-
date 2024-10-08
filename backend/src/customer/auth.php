@@ -1,17 +1,17 @@
 <?php
 
-    function login($connect, $email, $password) {
+    function login($connect, $contactNumber, $password) {
         
         try {
 
-            $stmt = $connect->prepare("SELECT * from customer WHERE email_address = ?");
-            $stmt->bind_param("s", $email);
+            $stmt = $connect->prepare("SELECT * from customer WHERE contact_number = ?");
+            $stmt->bind_param("s", $contactNumber);
             $stmt->execute();
             
             $userExist = $stmt->get_result();
 
             if ($userExist->num_rows <= 0 ) {
-                return array("title" => "Failed", "message" => "Incorrect email and password", "data" => []);
+                return array("title" => "Failed", "message" => "Incorrect contact number and password", "data" => []);
             }
 
             $row = $userExist->fetch_assoc();

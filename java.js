@@ -284,26 +284,58 @@ document.addEventListener("DOMContentLoaded", function() {
         }
 
         if (loginValid) {
-            const phoneNumber = phoneField.value;
-            const password = passwordField.value;
+            const data = new URLSearchParams({ 
+                contact_number: phoneField.value,               
+                password: passwordField.value
+            });
+            
+            fetch('/backend/src/customer/route.php?route=customer/login', {
+                    method: 'POST',
+                    body: data.toString(),
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    }
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.success === "Failed") {
+                            phoneError.textContent = 'Invalid phone number or password.';
+                            passwordError.textContent = 'Invalid phone number or password.';
+                        } else {
 
+                            if (rememberMeCheckbox.checked) {
+                                localStorage.setItem("phone-number", phoneNumber);
+                                localStorage.setItem("password", password);
+                            } else {
+                                localStorage.removeItem("phone-number");
+                                localStorage.removeItem("password");
+                            }
+            
+                            // Redirect to index.html
+                            window.location.href = 'index.php';
+                        }
+                     
+                        
+                       
+                    })
+                    .catch(error => {
+                        console.error('There was a problem with the fetch operation:', error);
+                    });
+            
+         
             // Example: hardcoded validation for demo purposes
-            if (phoneNumber === '12345678910' && password === 'buyer') {
-                // Store in localStorage if Remember Me is checked
-                if (rememberMeCheckbox.checked) {
-                    localStorage.setItem("phone-number", phoneNumber);
-                    localStorage.setItem("password", password);
-                } else {
-                    localStorage.removeItem("phone-number");
-                    localStorage.removeItem("password");
-                }
-
-                // Redirect to index.html
-                window.location.href = 'index.html';
-            } else {
-                phoneError.textContent = 'Invalid phone number or password.';
-                passwordError.textContent = 'Invalid phone number or password.';
-            }
+            // if (phoneNumber === '12345678910' && password === 'buyer') {
+            //     // Store in localStorage if Remember Me is checked
+                
+            // } else {
+            //     phoneError.textContent = 'Invalid phone number or password.';
+            //     passwordError.textContent = 'Invalid phone number or password.';
+            // }
         } else {
             alert("Please fill in all fields correctly.");
         }

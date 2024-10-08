@@ -17,11 +17,11 @@
             $route = $_GET['route'] ?? null;
             if ($route === 'customer/login') {
 
-                if (isset($_POST['email_address']) && isset($_POST['password'])) {
-                    $email = $_POST['email_address'];
+                if (isset($_POST['contact_number']) && isset($_POST['password'])) {
+                    $contactnumber = $_POST['contact_number'];
                     $password = $_POST['password'];
 
-                    $response = login($conn, $email, $password);
+                    $response = login($conn, $contactnumber, $password);
 
                     jsonResponse($response["title"], $response["message"]);
 
@@ -142,14 +142,14 @@
             if ($route === 'products') {
                                                            
                 $brand = isset($_GET['brand']) ? $_GET['brand'] : null;
-                $scale = isset($_GET['scale']) ? $_GET['scale'] : null;
+                $scale = isset($_GET['size']) ? $_GET['size'] : null;
                 $minPrice = isset($_GET['min_price']) ? $_GET['min_price'] : null;
                 $maxPrice = isset($_GET['max_price']) ? $_GET['max_price'] : null;
                 $modelStock = isset($_GET['model_stock']) ? $_GET['model_stock'] : null;
                 $modelAvailability = isset($_GET['model_availability']) ? $_GET['model_availability'] : null;
                 $modelTags = isset($_GET['model_tags']) ? $_GET['model_tags'] : null;
                 $modelType = isset($_GET['model_type']) ? $_GET['model_type'] : null;
-                $limit = isset($_GET['limit']) ? (int)$_GET['limit'] : 10;
+                $limit = isset($_GET['limit']) ? (int)$_GET['limit'] : 100;
                 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
                 $offset = ($page - 1) * $limit;
                 $modelName = isset($_GET['model_name']) ? $_GET['model_name'] : null;

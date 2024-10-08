@@ -63,6 +63,10 @@ header .logo {
     margin-left: 0; /* Ensure it's right next to the logo */
 }
 
+.nonclickable {
+    cursor: default;
+}
+
 .navmenu li {
     margin: 0; /* Remove extra margin */
 }

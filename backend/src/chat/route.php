@@ -31,7 +31,7 @@
                     jsonResponse($response["title"], $response["message"]);
 
                 } else {
-                    jsonResponse("Invalid Signup", "All fields are required.");
+                    jsonResponse("Invalid request", "Something went wrong!");
                 }
             
             }

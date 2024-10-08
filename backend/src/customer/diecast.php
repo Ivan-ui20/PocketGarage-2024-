@@ -20,13 +20,13 @@
             $paramTypes = "";
 
             if ($brand) {
-                $query .= " AND diecast_brand.brand_name = ?";
+                $query .= " AND diecast_brand.brand_id = ?";
                 $params[] = $brand;
                 $paramTypes .= "s";
             }
 
             if ($scale) {
-                $query .= " AND diecast_size.ratio = ?";
+                $query .= " AND diecast_size.size_id = ?";
                 $params[] = $scale;
                 $paramTypes .= "s";
             }
