@@ -118,6 +118,47 @@ document.addEventListener('DOMContentLoaded', function () {
             alert('Your cart is empty!');
         }
     });
+    function updateCheckoutModal() {
+        const checkoutProductList = document.getElementById('checkout-product-list');
+        checkoutProductList.innerHTML = ''; // Clear the product list
+    
+        let totalPrice = 0;
+        cartItems.forEach((item, index) => {
+            const productItem = document.createElement('div');
+            productItem.className = 'product-item';
+    
+            const productImage = document.createElement('img');
+            productImage.src = item.image;
+            productImage.alt = item.name;
+    
+            const productDetails = document.createElement('div');
+            productDetails.className = 'product-item-details';
+    
+            const productName = document.createElement('span');
+            productName.textContent = item.name;
+    
+            const productPrice = document.createElement('span');
+            productPrice.textContent = `₱${item.price.toFixed(2)}`;
+    
+            const quantityText = document.createElement('span');
+            quantityText.textContent = `Quantity: ${item.quantity}`;
+    
+            productDetails.appendChild(productName);
+            productDetails.appendChild(productPrice);
+            productDetails.appendChild(quantityText);
+    
+            productItem.appendChild(productImage);
+            productItem.appendChild(productDetails);
+    
+            checkoutProductList.appendChild(productItem);
+    
+            totalPrice += item.price * item.quantity;
+        });
+    
+        // Update the total price
+        const checkoutTotalPrice = document.getElementById('checkout-total-price');
+        checkoutTotalPrice.textContent = `₱${totalPrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    }
 
     function updateCartModal() {
         cartItemsElement.innerHTML = '';
@@ -155,6 +196,7 @@ const closeCheckout = document.querySelector('.close-checkout');
 // When the user clicks on the proceed to checkout button, show the checkout modal
 proceedToCheckoutBtn.addEventListener('click', function() {
     checkoutModal.style.display = 'block';
+    updateCheckoutModal();
 });
 
 // When the user clicks on the close button, hide the checkout modal
