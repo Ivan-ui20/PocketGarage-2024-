@@ -5,13 +5,15 @@
     box-sizing: border-box;
 }
 
+/* Adjust body or main content padding to avoid overlap with the fixed navbar */
 body {
     font-family: Arial, sans-serif;
     background: #afacac;
     display: flex;
     flex-direction: column;
-    min-height: 100vh; /* Height ng buong screen */
+    min-height: 100vh;
     margin: 0;
+    padding-top: 70px; /* Add padding equal to the height of the navbar */
 }
 
 /* ---Section Content--- */
@@ -31,6 +33,12 @@ section.ProductsL {
     justify-content: space-between;
     padding: 5px 5px;
     background-color: #070707;
+    position: fixed; /* Make the navbar fixed at the top */
+    top: 0; /* Align it to the top of the page */
+    left: 0;
+    width: 100%; /* Stretch across the entire viewport width */
+    z-index: 1000; /* Ensure it stays above other elements */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Optional: add a shadow for visibility */
 }
 
 .left-section {
