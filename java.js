@@ -146,8 +146,44 @@ document.addEventListener('DOMContentLoaded', function () {
         // Format total price with commas
         cartTotalPriceElement.textContent = `₱${totalPrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
     }
+
+// Get the checkout button and the checkout modal
+const proceedToCheckoutBtn = document.getElementById('checkout-btn'); // Renamed variable
+const checkoutModal = document.getElementById('checkout-modal');
+const closeCheckout = document.querySelector('.close-checkout');
+
+// When the user clicks on the proceed to checkout button, show the checkout modal
+proceedToCheckoutBtn.addEventListener('click', function() {
+    checkoutModal.style.display = 'block';
+});
+
+// When the user clicks on the close button, hide the checkout modal
+closeCheckout.addEventListener('click', function() {
+    checkoutModal.style.display = 'none';
+});
+
+// Optionally, close the modal if the user clicks outside of it
+window.addEventListener('click', function(event) {
+    if (event.target == checkoutModal) {
+        checkoutModal.style.display = 'none';
+    }
+});
+
+// Handle the checkout form submission
+const checkoutForm = document.getElementById('checkout-form');
+checkoutForm.addEventListener('submit', function(event) {
+    event.preventDefault(); // Prevent the page from refreshing
+    alert('Order has been placed! Thank you for shopping.');
+    
+    // Clear the cart and reset form (if applicable)
+    document.getElementById('cart-items').innerHTML = '';  // Clear cart items
+    document.getElementById('cart-total-price').textContent = '₱0.00';  // Reset total price
+
+    checkoutModal.style.display = 'none'; // Close the checkout modal after submission
+});
     
 })
+
 // Searchbar
 document.addEventListener('DOMContentLoaded', function() {
     // Get the search query from the URL
@@ -453,6 +489,7 @@ document.querySelectorAll('.product-box').forEach(item => {
         modal.setAttribute('data-product-id', productId);
     });
 });
+
 
 // Close modal when the close button (X) is clicked
 closeBtn.onclick = function() {
