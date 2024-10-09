@@ -1,13 +1,14 @@
 <?php
 
-    require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/database/db.php';    
-    require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/src/shared/middleware/verify.php';
-    require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/src/shared/response.php';
+    require_once '../../database/db.php';    
+    require_once '../shared/middleware/verify.php';
+    require_once '../shared/response.php';
+    require_once '../shared/file.php';
 
-    require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/src/customer/auth.php';
-    require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/src/customer/transaction.php';
-    require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/src/customer/cart.php';
-    require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/src/customer/diecast.php';
+    require_once './auth.php';
+    require_once './transaction.php';
+    require_once './cart.php';
+    require_once './diecast.php';
     
         
     if ($_SERVER['REQUEST_METHOD'] === 'POST' ) {
@@ -36,7 +37,22 @@
                     
                     $payload = array_intersect_key($_POST, array_flip($requiredFields));
                     
-                    $response = signup($conn, $payload);
+
+                    $frontIdUrl = handleFileUpload($_FILES['id_front']);                              
+                    if ($frontIdUrl === false) {
+                        jsonResponse("File Upload Failed", "There was an error uploading the image. Please try again.");
+                        return;
+                    }
+                    
+
+                    $backIdUrl = handleFileUpload($_FILES['id_back']);                    
+                    if ($backIdUrl === false) {
+                        jsonResponse("File Upload Failed", "There was an error uploading the image. Please try again.");
+                        return;
+                    }
+                    
+                    
+                    $response = signup($conn, $payload, $frontIdUrl, $backIdUrl);
 
                     jsonResponse($response["title"], $response["message"]);
 

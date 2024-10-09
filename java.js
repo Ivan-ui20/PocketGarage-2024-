@@ -216,6 +216,8 @@ const checkoutForm = document.getElementById('checkout-form');
 checkoutForm.addEventListener('submit', function(event) {
     event.preventDefault(); // Prevent the page from refreshing
     alert('Order has been placed! Thank you for shopping.');
+    const items = document.getElementById('cart-items')
+    console.log(items);
     
     // Clear the cart and reset form (if applicable)
     document.getElementById('cart-items').innerHTML = '';  // Clear cart items
@@ -303,6 +305,7 @@ document.addEventListener("DOMContentLoaded", function() {
                         return response.json();
                     })
                     .then(data => {
+                                               
                         if (data.success === "Failed") {
                             phoneError.textContent = 'Invalid phone number or password.';
                             passwordError.textContent = 'Invalid phone number or password.';
@@ -311,6 +314,7 @@ document.addEventListener("DOMContentLoaded", function() {
                             if (rememberMeCheckbox.checked) {
                                 localStorage.setItem("phone-number", phoneNumber);
                                 localStorage.setItem("password", password);
+                                localStorage.setItem("userId", 3)
                             } else {
                                 localStorage.removeItem("phone-number");
                                 localStorage.removeItem("password");
@@ -318,24 +322,11 @@ document.addEventListener("DOMContentLoaded", function() {
             
                             // Redirect to index.html
                             window.location.href = 'index.php';
-                        }
-                     
-                        
-                       
+                        }                                                                    
                     })
                     .catch(error => {
                         console.error('There was a problem with the fetch operation:', error);
-                    });
-            
-         
-            // Example: hardcoded validation for demo purposes
-            // if (phoneNumber === '12345678910' && password === 'buyer') {
-            //     // Store in localStorage if Remember Me is checked
-                
-            // } else {
-            //     phoneError.textContent = 'Invalid phone number or password.';
-            //     passwordError.textContent = 'Invalid phone number or password.';
-            // }
+                    });                                
         } else {
             alert("Please fill in all fields correctly.");
         }
@@ -442,7 +433,8 @@ document.addEventListener("DOMContentLoaded", function() {
         if (allFilled) {
             // Hide the first step and show the second step
             signupStep1.style.display = "none";
-            signupStep2.style.display = "block";
+            signupStep2.style.display = "block";                       
+
         } else {
             alert("Please fill all fields correctly.");
         }
@@ -456,6 +448,57 @@ document.addEventListener("DOMContentLoaded", function() {
         signupStep2.style.display = "none"; // Hide step 2
         signupStep1.style.display = "block"; // Show step 1
     });
+
+    document.getElementById("signup-btn").addEventListener("click", async function(event) {
+        event.preventDefault(); // Prevent form submission if needed
+                  
+        const formData = new FormData();
+
+        formData.append("first_name", document.getElementById("first-name").value);
+        formData.append("last_name", document.getElementById("last-name").value);
+        formData.append("contact_number", document.getElementById("signup-phone-number").value);
+        formData.append("address", document.getElementById("address").value);
+        formData.append("email_address", document.getElementById("email").value);
+        formData.append("password", document.getElementById("signup-password").value);
+
+        // Append file inputs (files)
+        const idFrontFile = document.getElementById("id-front").files[0];
+        if (idFrontFile) {
+            formData.append("id_front", idFrontFile);
+        }
+        
+        const idBackFile = document.getElementById("id-back").files[0];
+        if (idBackFile) {
+            formData.append("id_back", idBackFile);
+        }
+
+        const proofOfSellerFile = document.getElementById("proof-of-seller").files[0];
+        if (proofOfSellerFile) {
+            formData.append("proof_of_seller", proofOfSellerFile);
+        }
+
+        try {
+            const response = await fetch('/backend/src/customer/route.php?route=customer/signup', {
+                method: 'POST', // Use POST method
+                body: formData // Send the FormData object as the request body
+            });
+
+            // Check if the response is okay
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+
+            // Parse the JSON response
+            const responseData = await response.json();
+            
+            // Log the response data or handle it as needed
+            console.log('Response:', responseData);
+        } catch (error) {
+            console.error('Error during fetch:', error);
+        }
+            
+    });
+    
 
     const signupPhoneField = document.getElementById("signup-phone-number");
     // Restrict phone number input to numeric only for the signup form
@@ -529,13 +572,53 @@ modal.style.display = "none";
 
 // Add event listeners to all product boxes to open modal
 document.querySelectorAll('.product-box').forEach(item => {
+
     item.addEventListener('click', function(event) {
+                        
         // Get product ID from the button
         var productId = this.querySelector('.add-to-cart-btn').getAttribute('data-product-id');
 
         // Prevent modal from opening if the product is already added to the cart
         if (addedToCart[productId]) {
             alert("This product is already in your cart.");
+            var userId = localStorage.getItem("user_id")
+            const data = new URLSearchParams({                
+                customer_id: "3",
+                items : JSON.stringify([
+                    {
+                        model_id: userId,
+                        quantity: 2,
+                        total: 1798
+                    },
+                    {
+                        model_id: "2",
+                        quantity: -1,
+                        total: -799
+                    }
+                ])
+                
+            });
+
+            // fetch('/backend/src/customer/route.php?route=customer/save/cart', {
+            //     method: 'POST',
+            //     body: data.toString(),
+            //     headers: {
+            //         'Content-Type': 'application/x-www-form-urlencoded'
+            //     }
+            //     })
+            //     .then(response => {
+            //         if (!response.ok) {
+            //             throw new Error('Network response was not ok');
+            //         }
+            //         return response.json();
+            //     })
+            //     .then(data => {
+            //         console.log(data);
+            //     })
+            //     .catch(error => {
+            //         console.error('There was a problem with the fetch operation:', error);
+            //     });
+
             return; // Don't show the modal if the product was already added
         }
 

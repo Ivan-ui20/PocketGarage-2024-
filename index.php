@@ -15,7 +15,7 @@
 <body>
     
 <!-- copy and paste this to the page para may header sila (if need nila ng header) -->
-    <?php include $_SERVER['DOCUMENT_ROOT'] . '/header.php';?>
+    <?php include './header.php';?>
    
     <section class="main-home">
         <div class="slider">
@@ -51,7 +51,7 @@
            
         </div>
         
-        <div id="product-list" class="product-container"></div>
+        <div id="product-list" class="product-container">    </div>
 
     </section>
 
@@ -119,9 +119,9 @@
         <p>&copy; 2024 PacketGarage. All rights reserved.</p>
     </footer>
 
-    <script src="java.js"></script>
     <script src="getProduct.js"></script>
-
+    <script src="java.js"></script>
+    
 </body>
 
 </html>

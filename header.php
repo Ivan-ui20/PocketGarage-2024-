@@ -1,5 +1,5 @@
 <?php
-
+    
     require_once './backend/database/db.php';
         
     $brand = "SELECT * FROM diecast_brand";
@@ -8,6 +8,7 @@
     $size = "SELECT * FROM diecast_size";
     $sizeResult = $conn->query($size);
 
+    $_SESSION['user_id'] = 3;
 ?>
 <header>
     <div class="top-nav">
@@ -66,15 +67,25 @@
                 </form>
             </div>
 
-            <div class="nav-icon-c">
-                <a href="#" id="cart-icon">
-                    <i class='bx bx-cart'></i>
-                    <span id="cart-count">0</span>
-                </a>
-            </div>
-
-            <div class="nav-icon-p">
-                <a href="Login.php"><i class='bx bx-user-circle'></i></a>
+            <div class="nav-icons">
+                <?php if (isset($_SESSION['user_id'])): ?>
+                    <!-- Show Cart and Profile icons if user is logged in -->
+                    <div class="nav-icon-c">
+                        <a href="#" id="cart-icon">
+                            <i class='bx bx-cart'></i>
+                            <span id="cart-count">0</span>
+                        </a>
+                    </div>
+                    
+                    <div class="nav-icon-p">
+                        <a href="Profile.php"><i class='bx bx-user-circle'></i></a>
+                    </div>
+                <?php else: ?>
+                    <!-- Show only login icon if user is not logged in -->
+                    <div class="nav-icon-p">
+                        <a href="Login.php"><i class='bx bx-user-circle'></i></a>
+                    </div>
+                <?php endif; ?>
             </div>
         </div>
     </div>

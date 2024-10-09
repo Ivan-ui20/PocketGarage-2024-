@@ -15,7 +15,7 @@
 <body>
 
     
-    <?php include $_SERVER['DOCUMENT_ROOT'] . '/header.php';?>
+    <?php include './header.php';?>
     
     <section class="ProductsL" id="products-1"> 
         <div class="center-text">
@@ -43,7 +43,8 @@
         <p>&copy; 2024 PacketGarage. All rights reserved.</p>
     </footer>
 
-    <script src="java.js"></script>    
     <script src="getProduct.js"></script>
+    <script src="java.js"></script>    
+    
 </body>
 </html>

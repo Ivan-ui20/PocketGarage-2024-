@@ -27,7 +27,7 @@
         }        
     }
 
-    function signup($connect, $payload) {        
+    function signup($connect, $payload, $frontIdUrl, $backIdUrl) {        
 
         try {
             $password = password_hash($payload['password'], PASSWORD_DEFAULT);
@@ -46,11 +46,11 @@
             }
 
             $stmt = $connect->prepare("INSERT INTO customer 
-                (first_name, last_name, contact_number, address, email_address, password) 
-                VALUES (?, ?, ?, ?, ?, ?)");
-            $stmt->bind_param("ssssss", $payload['first_name'], $payload['last_name'], 
+                (first_name, last_name, contact_number, address, email_address, password, front_id_url, back_id_url) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+            $stmt->bind_param("ssssssss", $payload['first_name'], $payload['last_name'], 
                 $payload['contact_number'], $payload['address'], 
-                $payload['email_address'], $password);
+                $payload['email_address'], $password, $frontIdUrl, $backIdUrl);
             
                 $stmt->execute();            
             if ($stmt->affected_rows <= 0) {

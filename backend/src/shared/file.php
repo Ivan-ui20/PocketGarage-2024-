@@ -16,7 +16,7 @@ function handleFileUpload($file) {
             return false;
         }
         
-        $uploadDir = '../../uploads/';
+        $uploadDir = '../../upload/';
         
         if (!is_dir($uploadDir)) {
             if (!mkdir($uploadDir, 0755, true)) {
