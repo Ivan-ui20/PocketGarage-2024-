@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 08, 2024 at 03:33 PM
+-- Generation Time: Oct 10, 2024 at 06:00 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -191,6 +191,9 @@ CREATE TABLE `customer` (
   `address` varchar(200) NOT NULL,
   `email_address` varchar(200) NOT NULL,
   `password` varchar(200) NOT NULL,
+  `role` enum('customer','seller') NOT NULL DEFAULT 'customer',
+  `front_id_url` text DEFAULT NULL,
+  `back_id_url` text DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -198,8 +201,9 @@ CREATE TABLE `customer` (
 -- Dumping data for table `customer`
 --
 
-INSERT INTO `customer` (`customer_id`, `first_name`, `last_name`, `contact_number`, `address`, `email_address`, `password`, `created_at`) VALUES
-(3, 'John 1', 'Doe', '1234567890', '123 Main St, Anytown, USA', 'johndoe@example.com', '$2y$10$4LJMnTd2rfj7ZIqCt5IRP.PDjhnvCYEquY0P.tt5Ic3LaTSXkCR.6', '2024-10-04 00:29:25');
+INSERT INTO `customer` (`customer_id`, `first_name`, `last_name`, `contact_number`, `address`, `email_address`, `password`, `role`, `front_id_url`, `back_id_url`, `created_at`) VALUES
+(3, 'John 1', 'Doe', '12345678901', '123 Main St, Anytown, USA', 'johndoe@example.com', '$2y$10$4LJMnTd2rfj7ZIqCt5IRP.PDjhnvCYEquY0P.tt5Ic3LaTSXkCR.6', 'customer', NULL, NULL, '2024-10-08 18:54:24'),
+(4, 'Manuel', 'Marin', '12345678901', '123 taguig city', 'admin@gmail.com', '$2y$10$vrS5fGfJDw6TmtrZJWLmWecq05PBjqewEssMM0dr4IOixbCvdX2Im', 'customer', 'uploads/6705f82de8a9b-P1.png', 'uploads/6705f82de8cbf-P2.png', '2024-10-09 03:55:00');
 
 -- --------------------------------------------------------
 
@@ -267,7 +271,7 @@ INSERT INTO `diecast_model` (`model_id`, `seller_id`, `size_id`, `brand_id`, `mo
 (10, 12, 1, 1, 'Honda Civic EK9 Type R', 'A detailed diecast model of Honda Civic EK9 Type R.', 1899, 100, 'Available', 'featured, new arrivals', 'Premium', 'upload/P2.png', '2024-10-04 22:55:02'),
 (11, 12, 4, 2, 'Model X', 'This is a detailed model of Model X.', 1999, 50, 'Available', 'Limited Edition, New Arrival', 'Premium', 'upload/P1.png', '2024-10-04 22:55:05'),
 (12, 12, 4, 2, 'Model X', 'This is a detailed model of Model X.', 1999, 50, 'Available', 'Limited Edition, New Arrival', 'Premium', 'upload/P2.png', '2024-10-04 22:55:22'),
-(13, 12, 4, 2, 'Model X', 'This is a detailed model of Model X.', 1999, 50, 'Available', 'Limited Edition, New Arrival', 'Premium', 'upload/P3.png', '2024-10-04 22:55:27'),
+(13, 12, 4, 2, 'Model Z', 'This is a detailed model of Model X.', 1999, 50, 'Available', 'Limited Edition, New Arrival', 'Premium', 'upload/P3.png', '2024-10-08 18:11:58'),
 (14, 12, 4, 2, 'Model X', 'This is a detailed model of Model X.', 1999, 50, 'Available', 'Limited Edition, New Arrival', 'Premium', 'upload/P1.png', '2024-10-04 22:55:10'),
 (15, 12, 4, 2, 'Model X', 'This is a detailed model of Model X.', 1999, 50, 'Available', 'Limited Edition, New Arrival', 'Premium', 'upload/P4.png', '2024-10-04 22:55:30'),
 (16, 12, 4, 2, 'Model X', 'This is a detailed model of Model X.', 1999, 50, 'Available', 'Limited Edition, New Arrival', 'Premium', 'upload/P1.png', '2024-10-04 22:55:12'),
@@ -380,6 +384,9 @@ CREATE TABLE `seller` (
   `address` varchar(200) NOT NULL,
   `email_address` varchar(200) NOT NULL,
   `password` varchar(200) NOT NULL,
+  `id_front_url` text DEFAULT NULL,
+  `id_back_url` text DEFAULT NULL,
+  `proof_seller_url` text DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -387,8 +394,8 @@ CREATE TABLE `seller` (
 -- Dumping data for table `seller`
 --
 
-INSERT INTO `seller` (`seller_id`, `first_name`, `last_name`, `contact_number`, `address`, `email_address`, `password`, `created_at`) VALUES
-(12, 'John', 'Doe', '1234567890', '123 Main St, Anytown, USA', 'johndoe@example.com', '$2y$10$IftVtSik9c9/qXCPaQhP2.IV3aWV5lNX9TFwUJofw84AsRXcEX/ma', '2024-10-03 23:54:36');
+INSERT INTO `seller` (`seller_id`, `first_name`, `last_name`, `contact_number`, `address`, `email_address`, `password`, `id_front_url`, `id_back_url`, `proof_seller_url`, `created_at`) VALUES
+(12, 'John', 'Doe', '1234567890', '123 Main St, Anytown, USA', 'johndoe@example.com', '$2y$10$IftVtSik9c9/qXCPaQhP2.IV3aWV5lNX9TFwUJofw84AsRXcEX/ma', NULL, NULL, NULL, '2024-10-03 23:54:36');
 
 --
 -- Indexes for dumped tables
@@ -551,7 +558,7 @@ ALTER TABLE `chat_room`
 -- AUTO_INCREMENT for table `customer`
 --
 ALTER TABLE `customer`
-  MODIFY `customer_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `customer_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `diecast_brand`
