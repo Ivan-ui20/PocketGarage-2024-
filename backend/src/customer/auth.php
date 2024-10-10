@@ -19,8 +19,14 @@
             if (!password_verify($password, $row['password'])) {                
                 return array("title" => "Failed", "message" => "Incorrect Password. Please try again", "data" => []);
             }
-
-            return array("title" => "Success", "message" => "Login Successful", "data" => []);
+            $_SESSION['user_id'] = $row['customer_id'];
+            return array(
+                "title" => "Success", 
+                "message" => "Login Successful", 
+                "data" => [
+                    "user_id" => $row['customer_id']
+                ]
+            );
         } catch (\Throwable $th) {
             
             return array("title" => "Success", "message" => "Something went wrong!", "data" => []);

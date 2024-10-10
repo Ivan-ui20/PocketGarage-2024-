@@ -31,8 +31,7 @@
         if (queryString.endsWith('&')) {
             queryString = queryString.slice(0, -1);
         }
-                   
-        localStorage.setItem("userId", 3)
+                           
         var userId = localStorage.getItem('userId');
         fetch(`./backend/src/customer/route.php?route=products&${queryString}`, {
             method: 'GET',                

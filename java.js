@@ -305,7 +305,7 @@ document.addEventListener("DOMContentLoaded", function() {
                         return response.json();
                     })
                     .then(data => {
-                                               
+                    
                         if (data.success === "Failed") {
                             phoneError.textContent = 'Invalid phone number or password.';
                             passwordError.textContent = 'Invalid phone number or password.';
@@ -314,7 +314,7 @@ document.addEventListener("DOMContentLoaded", function() {
                             if (rememberMeCheckbox.checked) {
                                 localStorage.setItem("phone-number", phoneNumber);
                                 localStorage.setItem("password", password);
-                                localStorage.setItem("userId", 3)
+                                localStorage.setItem("userId", data.data.user_id)
                             } else {
                                 localStorage.removeItem("phone-number");
                                 localStorage.removeItem("password");
@@ -460,8 +460,7 @@ document.addEventListener("DOMContentLoaded", function() {
         formData.append("address", document.getElementById("address").value);
         formData.append("email_address", document.getElementById("email").value);
         formData.append("password", document.getElementById("signup-password").value);
-
-        // Append file inputs (files)
+        
         const idFrontFile = document.getElementById("id-front").files[0];
         if (idFrontFile) {
             formData.append("id_front", idFrontFile);
@@ -471,12 +470,7 @@ document.addEventListener("DOMContentLoaded", function() {
         if (idBackFile) {
             formData.append("id_back", idBackFile);
         }
-
-        const proofOfSellerFile = document.getElementById("proof-of-seller").files[0];
-        if (proofOfSellerFile) {
-            formData.append("proof_of_seller", proofOfSellerFile);
-        }
-
+      
         try {
             const response = await fetch('/backend/src/customer/route.php?route=customer/signup', {
                 method: 'POST', // Use POST method
