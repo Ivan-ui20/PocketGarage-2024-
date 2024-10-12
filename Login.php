@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login&Signup</title>
-    <link rel="stylesheet" href="Login.css">
+    <link rel="stylesheet" href="./css/Login.css">
 </head>
 
 <body>
@@ -96,6 +96,6 @@
 
         </div>
     </div>
-    <script src="java.js"></script>
+    <script src="login.js"></script>
 </body>
 </html>

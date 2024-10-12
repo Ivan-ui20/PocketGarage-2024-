@@ -14,7 +14,7 @@
 <header>
     <div class="top-nav">
         <div class="left-section"> <!-- Wrap logo and navmenu in one container -->
-            <a href="#" class="logo"><img src="BG.PNG" alt="Logo"></a>
+            <a href="#" class="logo"><img src="./assets/BG.PNG" alt="Logo"></a>
             <ul class="navmenu">
                 <li><a href="index.php">Home</a></li>
                 <li class="dropdown">
@@ -166,4 +166,46 @@
 
 
     });
+</script>
+
+<script>
+    
+    // Toggle submenu display on click (optional for touch devices)
+
+
+    // document.addEventListener('DOMContentLoaded', function() {
+    //     const dropdown = document.querySelector('.navmenu .dropdown');
+
+    //     dropdown.addEventListener('click', function(event) {
+    //         event.stopPropagation();
+    //         this.querySelector('.submenu').classList.toggle('show');
+    //     });
+
+    //     document.addEventListener('click', function() {
+    //         document.querySelector('.submenu').classList.remove('show');
+    //     });
+    // });
+
+    // Searchbar
+    document.addEventListener('DOMContentLoaded', function() {
+        // Get the search query from the URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const query = urlParams.get('query') ? urlParams.get('query').toLowerCase() : '';
+
+        // Select all product boxes
+        const productBoxes = document.querySelectorAll('.product-box');
+
+        // If there's a search query, filter products based on the query
+        if (query) {
+            productBoxes.forEach(box => {
+                const productName = box.querySelector('.product-text h4').innerText.toLowerCase();
+                // Check if product name includes the query
+                if (productName.includes(query)) {
+                    box.classList.remove('hidden'); // Show product if it matches the query
+                } else {
+                    box.classList.add('hidden'); // Hide product if it does not match the query
+                }
+            });
+    }
+});
 </script>

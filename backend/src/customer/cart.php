@@ -47,14 +47,8 @@ function insertCartItem($connect, $payload, $items) {
             if ($result->num_rows > 0) {
 
                 $row = $result->fetch_assoc();
-                $newQuantity = $row['quantity'] + $item["quantity"];
-                $newTotal = $row['total'] + $item["total"];
-
-                if ($newQuantity < 0) {
-                    throw new Exception("Someting went wrong.");
-                }
-            
-                $updateItem->bind_param("ssss", $newQuantity, $newTotal, $cartId, $item["model_id"]);
+                     
+                $updateItem->bind_param("ssss", $item["quantity"], $item["total"], $cartId, $item["model_id"]);
                 $updateItem->execute();
 
                 if ($updateItem->affected_rows <= 0) {

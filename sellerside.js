@@ -38,7 +38,7 @@ function loadDashboard() {
 }
 function loadAddProduct(){
     mainSection.innerHTML = `
-    <link rel="stylesheet" href="addproductCSS.css">
+    <link rel="stylesheet" href="./css/addproductCSS.css">
 <div class="add-product-container">
     <h1>Add Product</h1>
     <form>
