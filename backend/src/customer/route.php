@@ -24,7 +24,7 @@
 
                     $response = login($conn, $contactnumber, $password);
 
-                    jsonResponse($response["title"], $response["message"]);
+                    jsonResponseWithData($response["title"], $response["message"], $response["data"]);
 
                 } else {
                     jsonResponse("Invalid Login", "Email and password are required.");

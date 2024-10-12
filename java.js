@@ -310,15 +310,16 @@ document.addEventListener("DOMContentLoaded", function() {
                             phoneError.textContent = 'Invalid phone number or password.';
                             passwordError.textContent = 'Invalid phone number or password.';
                         } else {
-
+                                                                      
                             if (rememberMeCheckbox.checked) {
                                 localStorage.setItem("phone-number", phoneNumber);
-                                localStorage.setItem("password", password);
-                                localStorage.setItem("userId", data.data.user_id)
+                                localStorage.setItem("password", password);                                
                             } else {
                                 localStorage.removeItem("phone-number");
                                 localStorage.removeItem("password");
                             }
+
+                            localStorage.setItem("userId", data.data.user_id)
             
                             // Redirect to index.html
                             window.location.href = 'index.php';
