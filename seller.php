@@ -41,7 +41,7 @@
             <h3>Analytics</h3>
           </a>
 
-          <a href="#" class = "active">
+          <a href="#" >
             <span class="material-symbols-outlined"> group </span>
             <h3>Customers</h3>
           </a>
@@ -75,9 +75,37 @@
       <!-- section end-->
 
       <!--main section start-->
+     
       <main id="main-section">
-        <iframe id="content-iframe" src="" frameborder="0" width="100%" height="100%"></iframe>
-      </main>
+            <div class="add-product-container" class = "active">
+                <h2>Add New Product</h2>
+                <form action="#" method="POST">
+                    <label for="product-name">Product Name</label>
+                    <input type="text" id="product-name" name="product-name" placeholder="Enter product name" />
+
+                    <label for="product-price">Price</label>
+                    <input type="number" id="product-price" name="product-price" placeholder="Enter product price" />
+
+                    <label for="product-description">Description</label>
+                    <textarea id="product-description" name="product-description" rows="4" placeholder="Enter product description"></textarea>
+
+                    <label for="product-image">Product Image</label>
+                    <input type="file" id="product-image" name="product-image" />
+
+                    <div class="button-group">
+                        <button type="submit" class="btn sell-btn">Sell Product</button>
+                        <button type="reset" class="btn cancel-btn">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </main>
+
+
+
+
+
+
+
       <!--main section end-->
 
       <div class="right">
@@ -94,10 +122,65 @@
             </div>
             <div class="profile-photo">
               <img src="profile.jpeg" alt="" />
+
+            </div>
+        </div>
+
+        </div>
+
+
+        <!--end-0f-top-->
+        <!--start orecentupdate-->
+        
+        <div class="recent_update">
+          <h2>Recent Update</h2>
+
+        <div class="Updates">
+          <div class ="Update">
+            <div class="profile-photo">
+              <img src="profile.jpeg" alt="">
+            </div>
+            <div class="message">
+              <p><b>Ivan Sisgado</b> Received his order</p>
             </div>
           </div>
+          </div>
+            
         </div>
+
+        <!--end of recent-->
+
+        <!--sales analytic-->
+
+        <div class="sales_analytics">
+          <h2> Sales Analytics</h2>
+
+          <div class="Item_online">
+            <div class="icon">
+            <span class="material-symbols-outlined">shopping_cart</span>
+            </div>
+            <div class="right-text">
+              <div class="info">
+                <h3> online orders</h3>
+                <small class="text-muted">Last seen 2 hours</small>
+              </div>
+              <h5 class="danger">-17%</h5>
+              <h3>20</h3>
+            </div>
+
+          </div>
+        </div>
+        
+
+
+
+
+
+
+         
       </div>
+
+
     </div>
 
     <script src="sellerside.js"></script>
