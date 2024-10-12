@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PacketGarage</title>
+    <title>PocketGarage</title>
 
     <!-- CSS-link -->
     <link rel="stylesheet" href="style.css">
@@ -116,7 +116,7 @@
     </div>
 
     <footer class="footer">
-        <p>&copy; 2024 PacketGarage. All rights reserved.</p>
+        <p>&copy; 2024 PocketGarage. All rights reserved.</p>
     </footer>
 
     <script src="getProduct.js"></script>
