@@ -13,6 +13,8 @@ function updateCartModal() {
     cartItemsElement.innerHTML = '';
     let totalPrice = 0;
     cartItems.forEach((item, index) => {
+        console.log(item);
+        
         const li = document.createElement('li');
         li.innerHTML = `
             <div class="cart-item">
@@ -25,7 +27,7 @@ function updateCartModal() {
                         <span>${item.quantity}</span>
                         <button class="quantity-increase" data-index="${index}">+</button>
                     </div>
-                    <button class="remove-btn" data-index="${index}">Remove</button>
+                    <button class="remove-btn" data-index="${index}" data-remove-id="${item.id}">Remove</button>
                 </div>
             </div>
         `;
@@ -176,6 +178,32 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         
     }
+    function removeCartItem(cartItemId) {
+        const data = new URLSearchParams({                    
+            cart_id: localStorage.getItem("cartId"),
+            model_id: cartItemId,            
+        });
+
+        fetch('/backend/src/customer/route.php?route=customer/delete/item/cart', {
+            method: 'POST',
+            body: data.toString(),
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log(data);
+        })
+        .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+        });
+    }
     function getCartItems () {
         var userId = localStorage.getItem('userId');
         fetch(`./backend/src/customer/route.php?route=customer/get/cart&customer_id=${userId}`, {
@@ -191,7 +219,8 @@ document.addEventListener('DOMContentLoaded', () => {
             return response.json();
         })
         .then(data => {        
-            const items = data.data
+            const items = data.data            
+            localStorage.setItem('cartId', data.data[0].cart_id);
             items.forEach(cartItem => {
                 
                 const existingItemIndex = cartItems.findIndex(item => item.id === cartItem.model_id);
@@ -240,9 +269,13 @@ document.addEventListener('DOMContentLoaded', () => {
     cartItemsElement.addEventListener('click', function (event) {
         if (event.target.classList.contains('remove-btn')) {
             const index = event.target.getAttribute('data-index');
+            const modelId = event.target.getAttribute('data-remove-id');
+            
+            removeCartItem(modelId)
             cartItems.splice(index, 1);
             cartCountElement.textContent = cartItems.reduce((sum, item) => sum + item.quantity, 0);
             updateCartModal();
+            return
         } else if (event.target.classList.contains('quantity-increase')) {
             const index = event.target.getAttribute('data-index');
             cartItems[index].quantity += 1;
@@ -256,8 +289,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 updateCartModal();
             }
         }
-        console.log(cartCountElement);
-        
+                
         saveCartItems(cartItems)
     });
 

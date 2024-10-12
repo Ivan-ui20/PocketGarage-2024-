@@ -88,7 +88,7 @@ function insertCartItem($connect, $payload, $items) {
 function deleteCartItem($connect, $modelId, $cartId) {
     try {   
 
-        $deleteCartItem = $connect->prepare("DELETE FROM cart_items WHERE model_id ? AND cart_id = ?");
+        $deleteCartItem = $connect->prepare("DELETE FROM cart_items WHERE model_id = ? AND cart_id = ?");
         $deleteCartItem->bind_param("ss", $modelId, $cartId);
         $deleteCartItem->execute();
 
