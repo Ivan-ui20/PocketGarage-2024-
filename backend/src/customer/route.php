@@ -63,7 +63,7 @@
 
             if ($route === 'customer/send/order') {
                 $requiredFields = ['customer_id', 'shipping_addr', 'order_total', 
-                    'order_payment_option', 'items'];
+                    'order_payment_option', 'items', 'cart_id'];
                                 
                 if (!array_diff_key(array_flip($requiredFields), $_POST)) {
                                 

@@ -55,15 +55,25 @@
             $orderId = $insertOrder->insert_id;
                                
             foreach ($items as $item) {
-                $checkStock = checkIfEnoughStocks($connect, $item["model_id"], $item["quantity"]);
+                $checkStock = checkIfEnoughStocks($connect, $item["id"], $item["quantity"]);
                 if ($checkStock) {
+                    $total = $item["quantity"] * $item["price"];
                     $insertItems = $connect->prepare("INSERT INTO order_items 
                     (order_id, model_id, quantity, total) VALUES (?, ?, ?, ?)");
-                    $insertItems->bind_param("ssss", $orderId, $item["model_id"], 
-                        $item["quantity"], $item["total"]);
+                    $insertItems->bind_param("ssss", $orderId, $item["id"], 
+                        $item["quantity"], $total);
                     $insertItems->execute();
         
                     if ($insertItems->affected_rows <= 0) {
+                        throw new Exception("We cannot process your order.");
+                    }
+                    
+                    $deleteItem = $connect->prepare("DELETE FROM cart_items 
+                    WHERE cart_id = ? AND model_id = ?");
+                    $deleteItem->bind_param("ss", $payload["cart_id"], $item["id"]);
+                    $deleteItem->execute();
+        
+                    if ($deleteItem->affected_rows <= 0) {
                         throw new Exception("We cannot process your order.");
                     }
                 } else {
@@ -71,16 +81,16 @@
                 }                
             }
             
-            $insertTracker = $connect->prepare("INSERT INTO order_tracker (order_id, current_track) VALUES (?, ?)");
-            $initialTrack = "Order Placed"; 
-            $insertTracker->bind_param("ss", $orderId, $initialTrack);
+            $insertTracker = $connect->prepare("INSERT INTO order_tracker (order_id) VALUES (?)");            
+            $insertTracker->bind_param("s", $orderId);
             $insertTracker->execute();
     
             if ($insertTracker->affected_rows <= 0) {
                 throw new Exception("We cannot process your order.");
-            }
-            
+            }            
             $connect->commit();
+
+
     
             return array(
                 "title" => "Success", 

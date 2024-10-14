@@ -930,3 +930,20 @@ header .logo {
     object-fit: cover;
     border-radius: 10px;
 }
+
+.checkout-product-list {
+    display: flex;
+    flex-direction: column;
+}
+
+
+.checkout-item {
+    display: flex;
+    justify-content: space-between;
+}
+
+.checkout-item-details{
+    display: flex;
+    gap:4px;
+    align-items: center;
+}

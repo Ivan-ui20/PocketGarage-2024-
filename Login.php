@@ -83,8 +83,8 @@
                     <input type="file" id="id-front" name="id-front" accept="image/*" required />
                     <label id="valid" for="id-back">Valid ID (Back):</label>
                     <input type="file" id="id-back" name="id-back" accept="image/*" required />
-                    <label id="valid" for="proof-of-seller">Proof of Seller: (optional)</label>
-                    <input type="file" id="proof-of-seller" name="proof-of-seller" accept="image/*" optional />
+                    <!-- <label id="valid" for="proof-of-seller">Proof of Seller: (optional)</label>
+                    <input type="file" id="proof-of-seller" name="proof-of-seller" accept="image/*" optional /> -->
                     
                     <div class="signup-button-container">
                         <button type="submit" id="signup-btn">Sign Up</button>

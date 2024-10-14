@@ -2,7 +2,9 @@ let cartItems = [];
 const checkoutModal = document.getElementById('checkout-modal');
 const closeCheckout = document.querySelector('.close-checkout');
 
-const cartItemsElement = document.getElementById('cart-items');    
+const cartItemsElement = document.getElementById('cart-items');   
+const checkoutItemsElement = document.getElementById('checkout-product-list');
+const checkoutTotalPrice = document.getElementById("checkout-total-price");
 const cartCountElement = document.getElementById('cart-count');
 const cartTotalPriceElement = document.getElementById('cart-total-price');
 const cartModal = document.getElementById('cart-modal');
@@ -11,9 +13,10 @@ const closeModal = document.querySelector('.cart-modal .close');
 function updateCartModal() {
 
     cartItemsElement.innerHTML = '';
+    checkoutItemsElement.innerHTML = '';
     let totalPrice = 0;
     cartItems.forEach((item, index) => {
-        console.log(item);
+     ;
         
         const li = document.createElement('li');
         li.innerHTML = `
@@ -31,12 +34,28 @@ function updateCartModal() {
                 </div>
             </div>
         `;
-                
         cartItemsElement.appendChild(li);
+
+        const li1 = document.createElement('li');
+        li1.innerHTML = `
+            <div class="checkout-item">
+                <span>${item.name}</span>
+                <div class="checkout-item-details">
+                    
+                    <span>₱${item.price}</span>
+                    <span>${item.quantity}</span>
+                </div>
+                
+            </div>
+        `;
+        checkoutItemsElement.appendChild(li1);        
+        
+        
         totalPrice += item.price * item.quantity;
     });
 
     // Format total price with commas
+    checkoutTotalPrice.textContent = `${totalPrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
     cartTotalPriceElement.textContent = `₱${totalPrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 }
 

@@ -4,12 +4,12 @@
         <span class="close-checkout">&times;</span>
         
         <!-- Product Details Section -->
-        <div id="checkout-product-list" class="checkout-product-list">
+        <ul id="checkout-product-list" class="checkout-product-list">
             <!-- Product items will be dynamically inserted here -->
-        </div>
+        </ul>
 
         <div class="checkout-total">
-            <p><strong>Total Price:</strong> <span id="checkout-total-price">₱0.00</span></p>
+            <p><strong>Total Price: ₱</strong> <span id="checkout-total-price"></span></p>
         </div>
 
         <form id="checkout-form">
@@ -36,21 +36,52 @@
         document.getElementById('checkout-form').addEventListener('submit', function(event) {
             event.preventDefault(); // Prevent the page from refreshing
             alert('Order has been placed! Thank you for shopping.');
-            const items = document.getElementById('cart-items')
-            console.log(items);
+
+            const totalPriceStr = checkoutTotalPrice.textContent.replace(/[^\d.]/g, ''); // Keep digits and decimal point
+            const totalPrice = parseFloat(totalPriceStr);
+                        
+            const data = new URLSearchParams({                    
+                customer_id: localStorage.getItem("userId"),                
+                shipping_addr: "shipping address",                
+                order_total: totalPrice,
+                order_payment_option: "Cash on delivery",
+                items : JSON.stringify(cartItems),
+                cart_id: localStorage.getItem("cartId")
+            });
+            
+            
+            fetch('/backend/src/customer/route.php?route=customer/send/order', {
+                method: 'POST',
+                body: data.toString(),
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log(data);
+            })
+            .catch(error => {
+                console.error('There was a problem with the fetch operation:', error);
+            });
             
             // Clear the cart and reset form (if applicable)
-            document.getElementById('cart-items').innerHTML = '';  // Clear cart items
-            document.getElementById('cart-total-price').textContent = '₱0.00';  // Reset total price
-
+            cartItems = []
+            updateCartModal()
+            cartCountElement.textContent = 0
             checkoutModal.style.display = 'none'; // Close the checkout modal after submission
         });
 
         document.getElementById('checkout-btn').addEventListener('click', function () {
+            
             if (cartItems.length > 0) {
                 checkoutModal.style.display = 'block';
-                alert('Proceeding to checkout...');
-                // Implement your checkout logic here
+                                                                
             } else {                
                 alert('Your cart is empty!');
                 
