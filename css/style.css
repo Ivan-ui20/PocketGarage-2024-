@@ -953,3 +953,19 @@ header .logo {
 .profile-dropdown a:hover {
   background-color: #f1f1f1;
 }
+
+.checkout-product-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.checkout-item {
+  display: flex;
+  justify-content: space-between;
+}
+
+.checkout-item-details {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
