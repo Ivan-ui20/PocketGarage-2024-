@@ -76,10 +76,21 @@
                         <span id="cart-count">0</span>
                     </a>
                 </div>
-                
+              <!-- Profile Icon with Dropdown Menu -->
                 <div class="nav-icon-p">
-                    <a href="#"><i class='bx bx-user-circle'></i></a>
+                    <a href="#" id="profile-icon">
+                        <i class='bx bx-user-circle'></i>
+                    </a>
+
+                    <!-- Dropdown Menu -->
+                    <div class="profile-dropdown" id="profile-dropdown">
+                        <a href="profile.php">My Profile</a>
+                        <a href="seller.php">Switch to Seller</a>
+                        <a href="shared/logout.php">Logout</a>
+                  
+                    </div>
                 </div>
+
             <?php else: ?>
                 <!-- Show only login icon if user is not logged in -->
                 <div class="nav-icon-p">
@@ -208,4 +219,19 @@
             });
     }
 });
+        //profile//
+        // Toggle profile dropdown on icon click
+        document.getElementById('profile-icon').addEventListener('click', function () {
+            const dropdown = document.getElementById('profile-dropdown');
+            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+        });
+
+        // Close the dropdown if clicked outside
+        window.addEventListener('click', function (e) {
+            const profileIcon = document.getElementById('profile-icon');
+            const dropdown = document.getElementById('profile-dropdown');
+            if (e.target !== profileIcon && !profileIcon.contains(e.target)) {
+                dropdown.style.display = 'none';
+            }
+        });
 </script>
