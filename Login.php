@@ -11,7 +11,7 @@
     <div class="bg-container">
         <div class="inner-container">
             <div class="box login-form">
-                <h1>LOGIN</h1>
+                <h1>Login as a Buyer</h1>
                 <form id="login-form">
                     <input type="text" id="phone-number" name="phone-number" placeholder="Phone Number" required maxlength="11" pattern="\d{11}" />
                     <span class="error-message" id="phone-error"></span>
@@ -51,7 +51,7 @@
             </div>
 
             <div class="box signup-form" id="signup-form">
-                <h1>SIGN UP</h1>
+                <h1>Sign Up as a Buyer</h1>
                 <form id="signup-step-1">
                     <div class="name-fields">
                         <input type="text" id="first-name" name="first-name" placeholder="First Name" required />
@@ -78,13 +78,10 @@
 
                 <form id="signup-step-2" style="display:none;">
                     <button type="button" id="back-btn" class="back-btn">Back</button>
-                    <h2 id="UD">Upload Documents</h2>
                     <label id="valid" for="id-front">Valid ID (Front):</label>
                     <input type="file" id="id-front" name="id-front" accept="image/*" required />
                     <label id="valid" for="id-back">Valid ID (Back):</label>
                     <input type="file" id="id-back" name="id-back" accept="image/*" required />
-                    <!-- <label id="valid" for="proof-of-seller">Proof of Seller: (optional)</label>
-                    <input type="file" id="proof-of-seller" name="proof-of-seller" accept="image/*" optional /> -->
                     
                     <div class="signup-button-container">
                         <button type="submit" id="signup-btn">Sign Up</button>

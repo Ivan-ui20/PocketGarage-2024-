@@ -63,7 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
       
     function getProductWithFilter(brand, size, modelType, query) {
         let queryString = '';
-        
+    
         if (brand) {
             const trimmedBrand = brand.trim(); 
             if (trimmedBrand) {
@@ -106,15 +106,23 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             return response.json();
         })
-        .then(data => {
+        .then(data => {  // Ensure `data` is defined here
             const productList = document.getElementById('product-list');
             productList.innerHTML = '';
                         
-            if (data.data.length !== 0) {                                
-                data.data.forEach(product => {
+            if (data.data.length !== 0) {
+                let limit = 8; // Default limit for index.php
+                const currentPage = window.location.pathname;
+                if (!currentPage.includes('index.php')) {
+                    limit = data.data.length; // No limit for other pages
+                }
+    
+                const latestProducts = data.data.slice(0, limit);  // Use the correct `data` here
+    
+                latestProducts.forEach(product => {
                     const productBox = document.createElement('div');
                     productBox.classList.add('product-box');
-                                    
+    
                     if (userId) {
                         productBox.innerHTML = `
                             <img src="http://localhost:3000/backend/${product.model_image_url}" alt="${product.model_name}">
@@ -143,21 +151,21 @@ document.addEventListener('DOMContentLoaded', () => {
                             <p class="login-prompt">Please log in to add items to your cart.</p>
                         `;
                     }
-                                                
+    
                     productList.appendChild(productBox);
                 });
-                
+    
                 // Add event listeners for all 'Add to Cart' buttons after loading products
                 attachAddToCartListeners();
             } else {
                 productList.innerHTML = 'No products here...';
             }
-            
         })
         .catch(error => {
             console.error('There was a problem with the fetch operation:', error);
         });
     }
+    
     getProductWithFilter("", "", "", "");
 
     function saveCartItems(cartItems) {
