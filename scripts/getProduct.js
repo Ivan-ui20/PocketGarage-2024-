@@ -107,6 +107,8 @@ document.addEventListener('DOMContentLoaded', () => {
             return response.json();
         })
         .then(data => {  // Ensure `data` is defined here
+            console.log(data);
+            
             const productList = document.getElementById('product-list');
             productList.innerHTML = '';
                         
@@ -118,7 +120,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
     
                 const latestProducts = data.data.slice(0, limit);  // Use the correct `data` here
-    
+                console.log(latestProducts);
+                
                 latestProducts.forEach(product => {
                     const productBox = document.createElement('div');
                     productBox.classList.add('product-box');
@@ -320,7 +323,74 @@ document.addEventListener('DOMContentLoaded', () => {
         saveCartItems(cartItems)
     });
 
+        
+    let brandFilter = "";
+    let sizeFilter = "";
+    let modelTypeFilter = "";
+    let searchFilter = "";
     
-    
+        const brandLinks = document.querySelectorAll('.brand-link');
+        const sizeLinks = document.querySelectorAll('.size-link');
+        const modelTypeLink = document.querySelectorAll('.model-type-link');
+
+        const searchForm = document.getElementById('search-form');
+                
+        searchForm.addEventListener('submit', function(event) {                    
+            event.preventDefault();
+                        
+            searchFilter = document.getElementById('search-query').value;     
+            
+            getProductWithFilter(
+                "", 
+                "", 
+                "", 
+                searchFilter
+            );
+        });
+
+        brandLinks.forEach(link => {
+            link.addEventListener('click', function(event) {
+                event.preventDefault();
+                
+                brandFilter = this.getAttribute('data-brand-id');
+
+                getProductWithFilter(
+                    brandFilter, 
+                    "", 
+                    "", 
+                    ""
+                );
+                
+            });
+        });
+        sizeLinks.forEach(link => {
+            link.addEventListener('click', function(event) {
+                event.preventDefault();
+                
+                sizeFilter = this.getAttribute('data-size-id');
+                getProductWithFilter(
+                    "", 
+                    sizeFilter, 
+                    "", 
+                    ""
+                );
+                
+            });
+        });
+
+        modelTypeLink.forEach(link => {
+            link.addEventListener('click', function(event) {
+                event.preventDefault();
+                
+                modelTypeFilter = this.getAttribute('data-model-type');                
+                getProductWithFilter(
+                    "", 
+                    "", 
+                    modelTypeFilter, 
+                    ""
+                );
+            });
+        });
+
     
 });
