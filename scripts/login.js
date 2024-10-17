@@ -83,7 +83,7 @@ document.addEventListener("DOMContentLoaded", function() {
                                 localStorage.removeItem("password");
                             }
 
-                            localStorage.setItem("userId", data.data.user_id)
+                            sessionStorage.setItem("userId", data.data.user_id)
             
                             // Redirect to index.html
                             window.location.href = 'index.php';

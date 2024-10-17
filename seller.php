@@ -1,3 +1,17 @@
+
+<?php
+
+
+// session_start()
+
+
+$_SESSION["seller_id"] = 12;
+
+
+
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -141,8 +155,9 @@
     <!-- Add Product Section -->
     <div id="add-product-section" class="section">
       <h2>Add New Product</h2>
-      <form action="#" method="POST">
+      <form action="#" method="POST" id="product-form">
         <div class="form-group">
+          <input type="text" hidden id="seller-id" value=<?php echo $_SESSION["seller_id"] ?>>
           <label for="product-name">Product Name</label>
           <input
             type="text"
@@ -292,6 +307,70 @@
       function hideSidebar() {
         document.querySelector(".sidebar").style.display = "none";
       }
+    </script>
+
+
+    <script>
+
+      document.getElementById('product-form').addEventListener('submit', function (event) {
+        event.preventDefault(); 
+
+        const sellerId = document.getElementById("seller-id").value
+        const productName = document.getElementById('product-name').value;
+        const productPrice = document.getElementById('product-price').value;
+        const modelStock = document.getElementById('model_stock').value;
+        const modelType = document.getElementById('model-type').value;
+        const description = document.getElementById('product-description').value;
+        const fileInput = document.querySelector('input[type="file"]'); 
+
+        const tags = Array.from(document.querySelectorAll('input[name="model-tags"]:checked'))
+        .map(checkbox => checkbox.value.replace(/_/g, ' '))
+        .map(tag => tag.split(' ')
+          .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+          .join(' ')
+        );
+      
+        const formData = new FormData();
+                        
+        formData.append('seller_id', sellerId);
+        formData.append('size_id', '4');
+        formData.append('brand_id', '2');
+        formData.append('model_name', productName);
+        formData.append('model_description', description);
+        formData.append('model_price', productPrice);
+        formData.append('model_stock', modelStock);
+        formData.append('model_availability', 'Available');
+        formData.append('model_tags', tags.length ? tags.join(', ') : '');
+        formData.append('model_type', 'Regular');
+                             
+        if (fileInput.files.length > 0) {
+            formData.append('model_image', fileInput.files[0]); 
+        } else {
+            console.error('No file selected for upload');
+            return; 
+        }
+        addProductWithFile()
+
+        async function addProductWithFile() {
+          try {
+            const response = await fetch('/backend/src/seller/route.php?route=seller/add/product', {
+                method: 'POST', 
+                body: formData 
+            });          
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }          
+            const responseData = await response.json();
+            
+            console.log("Product listed");
+            
+            console.log('Response:', responseData);
+          } catch (error) {
+              console.error('Error during fetch:', error);
+          }
+        }
+      });
+
     </script>
   </body>
 </html>

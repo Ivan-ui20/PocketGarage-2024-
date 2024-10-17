@@ -41,12 +41,12 @@
             const totalPrice = parseFloat(totalPriceStr);
                         
             const data = new URLSearchParams({                    
-                customer_id: localStorage.getItem("userId"),                
+                customer_id: sessionStorage.getItem("userId"),                
                 shipping_addr: "shipping address",                
                 order_total: totalPrice,
                 order_payment_option: "Cash on delivery",
                 items : JSON.stringify(cartItems),
-                cart_id: localStorage.getItem("cartId")
+                cart_id: sessionStorage.getItem("cartId")
             });
             
             

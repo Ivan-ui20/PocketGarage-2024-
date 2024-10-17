@@ -93,7 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
             queryString = queryString.slice(0, -1);
         }
                            
-        var userId = localStorage.getItem('userId');
+        var userId = sessionStorage.getItem('userId');
         fetch(`./backend/src/customer/route.php?route=products&${queryString}`, {
             method: 'GET',                
             headers: {
@@ -106,22 +106,20 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             return response.json();
         })
-        .then(data => {  // Ensure `data` is defined here
-            console.log(data);
-            
+        .then(data => {
+                        
             const productList = document.getElementById('product-list');
             productList.innerHTML = '';
                         
             if (data.data.length !== 0) {
-                let limit = 8; // Default limit for index.php
+                let limit = 8
                 const currentPage = window.location.pathname;
                 if (!currentPage.includes('index.php')) {
-                    limit = data.data.length; // No limit for other pages
+                    limit = data.data.length
                 }
     
-                const latestProducts = data.data.slice(0, limit);  // Use the correct `data` here
-                console.log(latestProducts);
-                
+                const latestProducts = data.data.slice(0, limit);
+                            
                 latestProducts.forEach(product => {
                     const productBox = document.createElement('div');
                     productBox.classList.add('product-box');
@@ -176,7 +174,7 @@ document.addEventListener('DOMContentLoaded', () => {
         cartItems.forEach(cartItem => {
                                     
             const data = new URLSearchParams({                    
-                customer_id: localStorage.getItem("userId"),                    
+                customer_id: sessionStorage.getItem("userId"),                    
                 items : JSON.stringify([
                     {
                         model_id: cartItem.id,
@@ -210,7 +208,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     function removeCartItem(cartItemId) {
         const data = new URLSearchParams({                    
-            cart_id: localStorage.getItem("cartId"),
+            cart_id: sessionStorage.getItem("cartId"),
             model_id: cartItemId,            
         });
 
@@ -235,7 +233,10 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
     function getCartItems () {
-        var userId = localStorage.getItem('userId');
+        var userId = sessionStorage.getItem('userId');
+        if (!userId) {
+            return
+        }
         fetch(`./backend/src/customer/route.php?route=customer/get/cart&customer_id=${userId}`, {
             method: 'GET',                
             headers: {
@@ -250,7 +251,7 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .then(data => {        
             const items = data.data            
-            localStorage.setItem('cartId', data.data[0].cart_id);
+            sessionStorage.setItem('cartId', data.data[0].cart_id);
             items.forEach(cartItem => {
                 
                 const existingItemIndex = cartItems.findIndex(item => item.id === cartItem.model_id);
@@ -340,12 +341,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         
             searchFilter = document.getElementById('search-query').value;     
             
-            getProductWithFilter(
-                "", 
-                "", 
-                "", 
-                searchFilter
-            );
+            window.location.href = `/products.php?search=${searchFilter}`;
         });
 
         brandLinks.forEach(link => {
@@ -353,14 +349,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 event.preventDefault();
                 
                 brandFilter = this.getAttribute('data-brand-id');
-
-                getProductWithFilter(
-                    brandFilter, 
-                    "", 
-                    "", 
-                    ""
-                );
-                
+                window.location.href = `/products.php?brand=${brandFilter}`;
             });
         });
         sizeLinks.forEach(link => {
@@ -368,12 +357,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 event.preventDefault();
                 
                 sizeFilter = this.getAttribute('data-size-id');
-                getProductWithFilter(
-                    "", 
-                    sizeFilter, 
-                    "", 
-                    ""
-                );
+                window.location.href = `/products.php?size=${sizeFilter}`;
                 
             });
         });
@@ -383,13 +367,30 @@ document.addEventListener('DOMContentLoaded', () => {
                 event.preventDefault();
                 
                 modelTypeFilter = this.getAttribute('data-model-type');                
-                getProductWithFilter(
-                    "", 
-                    "", 
-                    modelTypeFilter, 
-                    ""
-                );
+                window.location.href = `/products.php?model=${modelTypeFilter}`;
             });
+        });
+
+
+        function getQueryParameter(name) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name);
+        }
+        
+        // When the page loads, check for a brand filter
+        window.addEventListener('DOMContentLoaded', function() {
+            const brandFilter = getQueryParameter('brand');
+            const sizeFilter = getQueryParameter('size');
+            const modelFilter = getQueryParameter('model');
+            const searchFilter = getQueryParameter('search');
+                                                
+            getProductWithFilter(
+                brandFilter,
+                sizeFilter, 
+                modelFilter, 
+                searchFilter
+            );
+            
         });
 
     

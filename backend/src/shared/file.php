@@ -29,7 +29,7 @@ function handleFileUpload($file) {
         $filePath = $uploadDir . $fileName;
         
         if (move_uploaded_file($file['tmp_name'], $filePath)) {
-            $formatFilePath = "uploads/" . $fileName;
+            $formatFilePath = "upload/" . $fileName;
             return $formatFilePath; 
         } else {
             error_log("Failed to move uploaded file to: " . $filePath);
