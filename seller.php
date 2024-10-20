@@ -37,14 +37,6 @@ $_SESSION["seller_id"] = 12;
         display: block;
       }
 
-      /* Optional: Sidebar and layout tweaks */
-      .sidebar {
-        display: none;
-        flex-direction: column;
-        background-color: #f4f4f4;
-        padding: 10px;
-      }
-
       nav ul {
         list-style: none;
         padding: 0;
@@ -71,91 +63,106 @@ $_SESSION["seller_id"] = 12;
         background-color: red;
         color: white;
       }
+
+      body {
+        background: url('assets/BGM.jpg');
+        background-size: cover;
+}
     </style>
   </head>
 
   <body>
     <nav>
-      <ul class="sidebar">
-        <li onclick="hideSidebar()">
-          <a href="#">
-            <span class="material-symbols-outlined">close</span>
-          </a>
-        </li>
+      <div id="sidebar">
+            <ul class="sidebar">
+              <li onclick="hideSidebar()">
+                <a href="#">
+                  <span class="material-symbols-outlined">close</span>
+                </a>
+              </li>
 
-        <li>
-          <a href="#" onclick="showSection('orders-section')">
-            <span class="material-symbols-outlined">receipt_long</span>
-            <h3>Orders</h3>
-          </a>
-        </li>
-        <li>
-          <a href="#" onclick="showSection('customers-section')">
-            <span class="material-symbols-outlined">group</span>
-            <h3>Customers</h3>
-          </a>
-        </li>
-        <li>
-          <a href="#" onclick="showSection('add-product-section')">
-            <span class="material-symbols-outlined">sell</span>
-            <h3>Add Product</h3>
-          </a>
-        </li>
-        <li>
-          <a href="#">
-            <span class="material-symbols-outlined">inventory</span>
-            <h3>Auction</h3>
-          </a>
-        </li>
-        <li>
-          <a href="#">
-            <span class="material-symbols-outlined">mail</span>
-            <h3>Messages</h3>
-            <span class="msg_count">3</span>
-          </a>
-        </li>
-        <li>
-          <a href="#">
-            <span class="material-symbols-outlined">lab_profile</span>
-            <h3>Reports</h3>
-          </a>
-        </li>
-        <li>
-          <a href="#">
-            <span class="material-symbols-outlined">logout</span>
-            <h3>Logout</h3>
-          </a>
-        </li>
-      </ul>
+              <li>
+                <a href="#" onclick="showSection('orders-section')">
+                  <span class="material-symbols-outlined">receipt_long</span>
+                <h3>Orders</h3>
+              </a>
+            </li>
+            <li>
+              <a href="#" onclick="showSection('customers-section')">
+                <span class="material-symbols-outlined">group</span>
+                <h3>Customers</h3>
+              </a>
+            </li>
+            <li>
+              <a href="#" onclick="showSection('add-product-section')">
+                <span class="material-symbols-outlined">sell</span>
+                <h3>Add Product</h3>
+              </a>
+            </li>
+            <li>
+              <a href="#">
+                <span class="material-symbols-outlined">inventory</span>
+                <h3>Auction</h3>
+              </a>
+            </li>
+            <li>
+              <a href="#">
+                <span class="material-symbols-outlined">mail</span>
+                <h3>Messages</h3>
+                <span class="msg_count">3</span>
+              </a>
+            </li>
+            <li>
+              <a href="Login.php">
+                <span class="material-symbols-outlined">lab_profile</span>
+                <h3>Switch to Buyer</h3>
+              </a>
+            </li>
+            <li>
+              <a href="#">
+                <span class="material-symbols-outlined">logout</span>
+                <h3>Logout</h3>
+              </a>
+            </li>
+          </ul>
+      </div>
+      <div id="nav-bar">
+          <ul>
+            <li>
+              <a href="#" class="logo">
+                <img src="./assets/BG.PNG" alt="Logo" />
+              </a>
+            </li>
 
-      <ul>
-        <li>
-          <a href="#" class="logo">
-            <img src="./assets/BG.PNG" alt="Logo" />
-          </a>
-        </li>
+            <li class="profile" >
+              <div class="Info">
+                <p><b>Ivan Garcia</b></p>
+                <p>Seller</p>
+              </div>
+              <div class="profile-photo">
+                <img src="assets/profile.jpeg" alt="" />
+              </div>
+            </li>
+            <li class="menubtn" onclick="showSidebar()">
+              <a href="#">
+                <span class="material-symbols-outlined">menu</span>
+              </a>
 
-        <li class="profile">
-          <div class="Info">
-            <p><b>Ivan Garcia</b></p>
-            <p>Seller</p>
-          </div>
-          <div class="profile-photo">
-            <img src="assets/profile.jpeg" alt="" />
-          </div>
-        </li>
-        <li onclick="showSidebar()">
-          <a href="#">
-            <span class="material-symbols-outlined">menu</span>
-          </a>
-        </li>
-      </ul>
+
+              
+            </li>
+          </ul>
+      </div>
     </nav>
 
     <!-- Add Product Section -->
     <div id="add-product-section" class="section">
+
+
       <h2>Add New Product</h2>
       <form action="#" method="POST" id="product-form">
+
+      <div class="form-group-row">
         <div class="form-group">
           <input type="text" hidden id="seller-id" value=<?php echo $_SESSION["seller_id"] ?>>
           <label for="product-name">Product Name</label>
@@ -177,7 +184,8 @@ $_SESSION["seller_id"] = 12;
             placeholder="Enter product price"
             required
           />
-
+        </div>
+        <div class="form-group">
           <label for="model_stock">Stock available:</label>
           <input
             type="number"
@@ -187,6 +195,11 @@ $_SESSION["seller_id"] = 12;
             required
           />
         </div>
+
+
+      </div>
+      
+      <div class="form-group-row">
 
         <div class="form-group">
           <label for="model-type">Model Type</label>
@@ -231,7 +244,11 @@ $_SESSION["seller_id"] = 12;
             />
             <label for="best_seller">Best Seller</label>
           </div>
+        </div>
+      </div>
 
+
+      <div class="form-group">
           <label for="product-description">Description</label>
           <textarea
             id="product-description"
@@ -240,13 +257,17 @@ $_SESSION["seller_id"] = 12;
             placeholder="Enter product description"
             required
           ></textarea>
-
+      </div>
+      <div class="form-group">
           <label for="product-image">Product Image</label>
           <input type="file" id="product-image" name="product-image" />
+      </div>
 
-          <button type="submit" class="btn sell-btn">Sell Product</button>
-          <button type="reset" class="btn cancel-btn">Cancel</button>
-        </div>
+          <div class="button-group">
+            <button type="submit" class="btn sell-btn">Sell Product</button>
+            <button type="reset" class="btn cancel-btn">Cancel</button>
+          </div>
+  
       </form>
     </div>
 
@@ -290,6 +311,7 @@ $_SESSION["seller_id"] = 12;
     </div>
 
     <script>
+
       function showSection(sectionId) {
         const sections = document.querySelectorAll(".section");
         sections.forEach((section) => section.classList.remove("visible"));
@@ -300,13 +322,35 @@ $_SESSION["seller_id"] = 12;
         }
       }
 
+      const sidebar = document.querySelector(".sidebar");
+      const menuBtn = document.querySelector(".menubtn");
+
       function showSidebar() {
-        document.querySelector(".sidebar").style.display = "flex";
+        sidebar.style.display = "flex"; // Show the sidebar
+        document.addEventListener("click", handleOutsideClick); // Attach the click listener
       }
 
       function hideSidebar() {
-        document.querySelector(".sidebar").style.display = "none";
+        sidebar.style.display = "none"; // Hide the sidebar
+        document.removeEventListener("click", handleOutsideClick); // Remove the listener
       }
+
+      function handleOutsideClick(event) {
+        const isClickInsideSidebar = sidebar.contains(event.target);
+        const isClickOnMenuBtn = menuBtn.contains(event.target);
+
+        if (!isClickInsideSidebar && !isClickOnMenuBtn) {
+          hideSidebar(); // Hide sidebar if the click is outside both sidebar and menu button
+        }
+      }
+
+      // Attach event listeners
+      menuBtn.addEventListener("click", (event) => {
+        event.stopPropagation(); // Prevent the click from closing the sidebar immediately
+        showSidebar();
+      });
+
+      
     </script>
 
 
