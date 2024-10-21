@@ -183,7 +183,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     }                       
                 ])
             });
-    
+            
             fetch('/backend/src/customer/route.php?route=customer/save/cart', {
                 method: 'POST',
                 body: data.toString(),
@@ -199,6 +199,7 @@ document.addEventListener('DOMContentLoaded', () => {
             })
             .then(data => {
                 console.log(data);
+                alert("item added to cart")
             })
             .catch(error => {
                 console.error('There was a problem with the fetch operation:', error);
@@ -227,6 +228,7 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .then(data => {
             console.log(data);
+            alert("item deleted in the cart")
         })
         .catch(error => {
             console.error('There was a problem with the fetch operation:', error);

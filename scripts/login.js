@@ -84,7 +84,7 @@ document.addEventListener("DOMContentLoaded", function() {
                             }
 
                             sessionStorage.setItem("userId", data.data.user_id)
-            
+                            alert("login success")
                             // Redirect to index.html
                             window.location.href = 'index.php';
                         }                                                                    
@@ -252,6 +252,7 @@ document.getElementById("signup-btn").addEventListener("click", async function(e
         
         // Log the response data or handle it as needed
         console.log('Response:', responseData);
+        alert("signup successfull")
     } catch (error) {
         console.error('Error during fetch:', error);
     }

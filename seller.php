@@ -365,6 +365,7 @@ $_SESSION["seller_id"] = 12;
             console.log("Product listed");
             
             console.log('Response:', responseData);
+            alert('product added')
           } catch (error) {
               console.error('Error during fetch:', error);
           }
