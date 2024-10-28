@@ -65,10 +65,12 @@ $_SESSION["seller_id"] = 12;
       }
 
       body {
-        background: url('assets/BGM.jpg');
+        background: url('assets/bgl.png');
         background-size: cover;
-}
+      } 
     </style>
+
+
   </head>
 
   <body>
@@ -80,33 +82,46 @@ $_SESSION["seller_id"] = 12;
                   <span class="material-symbols-outlined">close</span>
                 </a>
               </li>
-
-              <li>
-                <a href="#" onclick="showSection('orders-section')">
-                  <span class="material-symbols-outlined">receipt_long</span>
-                <h3>Orders</h3>
-              </a>
-            </li>
-            <li>
-              <a href="#" onclick="showSection('customers-section')">
-                <span class="material-symbols-outlined">group</span>
-                <h3>Customers</h3>
-              </a>
-            </li>
-            <li>
-              <a href="#" onclick="showSection('add-product-section')">
-                <span class="material-symbols-outlined">sell</span>
-                <h3>Add Product</h3>
-              </a>
-            </li>
-            <li>
-              <a href="#">
+            <li class="dropdown">
+              <a href="javascript:void(0)" class="dropdown-btn" onclick="toggleDropdown('manage-products-dropdown')">
                 <span class="material-symbols-outlined">inventory</span>
+                <h3>Manage Products</h3>
+                <span class="dropdown-arrow">▼</span>
+              </a>
+              <ul id="manage-products-dropdown" class="dropdown-content">
+                  <li><a href="#" onclick="showSection('view-product-section')">
+                    <span class="material-symbols-outlined">storefront</span>
+                      <h3>View Products</h3>
+                    </a>
+                  </li>
+                  <li><a href="#" onclick="showSection('add-product-section')">
+                  <span class="material-symbols-outlined">sell</span>
+                      <h3>Add Product</h3>
+                  </a>
+                </li>
+                  <li>
+                  <a href="#" onclick="showSection('orders-section')">
+                    <span class="material-symbols-outlined">receipt_long</span>
+                  <h3>Orders</h3>
+                 </a>
+                 </li>
+
+                  <li>
+                 <a href="#" onclick="showSection('customers-section')">
+                  <span class="material-symbols-outlined">group</span>
+                  <h3>Customers</h3>
+                </a>
+               </li>
+              </ul>
+            </li>
+            <li>
+              <a href="#" onclick="showSection('auction-section')">
+              <span class="material-symbols-outlined">shopping_basket</span>
                 <h3>Auction</h3>
               </a>
             </li>
             <li>
-              <a href="#">
+              <a href="#" onclick="showSection('message-section')">
                 <span class="material-symbols-outlined">mail</span>
                 <h3>Messages</h3>
                 <span class="msg_count">3</span>
@@ -119,31 +134,36 @@ $_SESSION["seller_id"] = 12;
               </a>
             </li>
             <li>
-              <a href="#">
+                <a href="shared/logout.php">
                 <span class="material-symbols-outlined">logout</span>
                 <h3>Logout</h3>
               </a>
             </li>
           </ul>
       </div>
+
       <div id="nav-bar">
           <ul>
             <li>
-              <a href="#" class="logo">
+              <a href="#" class="logo" onclick="showSection('dashboard-section')">
                 <img src="./assets/BG.PNG" alt="Logo" />
               </a>
             </li>
-
-            <li class="profile" >
+          
+            <li class="profile"  >
               <div class="Info">
                 <p><b>Ivan Garcia</b></p>
-                <p>Seller</p>
+                <p>Verified Seller</p>
               </div>
-              <div class="profile-photo">
+
+              <div class="profile-photo" href="#" >
                 <img src="assets/profile.jpeg" alt="" />
+                
               </div>
+               
             </li>
-            <li class="menubtn" onclick="showSidebar()">
+            
+            <li class="menubtn" onclick="showSidebar()">  
               <a href="#">
                 <span class="material-symbols-outlined">menu</span>
               </a>
@@ -153,7 +173,176 @@ $_SESSION["seller_id"] = 12;
             </li>
           </ul>
       </div>
+
+      
     </nav>
+
+     <div class="content">
+        <!-- Dashboard Section -->
+        <div id="dashboard-section" class="section">
+            <h1>Overview</h1>
+
+          <!--start orecentupdate-->
+          
+          <div class="recent_update">
+            <h2>Recent Update</h2>
+
+            <div class="form">
+              <div class ="Update">
+                <div class="message">
+                  <p><b>Ivan Sisgado</b> Received order</p>
+                </div>
+              </div>
+            </div>
+
+            
+            
+        </div>
+
+        <div class="all_products">
+            <h2>All Products</h2>
+
+            <div class="form">
+            <a href="#" class="logo" onclick="showSection('dashboard-section')"></a>
+            <h1> 2 </h1>
+            <a href="#" onclick="showSection('view-product-section')">
+                      <h3>View Products</h3>
+            </a>
+            </div>
+
+        </div>
+
+        <div class="all_bidding">
+
+            <h2>All bidding</h2>
+            <div class="form">
+            <a href="#" class="logo" onclick="showSection('dashboard-section')"></a>
+            <h1> 2 </h1>
+             <a href="#" onclick="showSection('auction-section')">
+                <h3>View Bidding</h3>
+              </a>
+            </div>
+        </div>
+
+        <div class="all_messages">
+            <h2>Recent Messages</h2>
+              <div>
+                <div class="chat-list" id="chat-list">
+                  <div class="chat-list-item" onclick="openChat(1)">
+                    John Doe - <small>Last message: Hi, I have a question...</small>
+                  </div>
+                  <div class="chat-list-item" onclick="openChat(2)">
+                    Jane Smith - <small>Last message: Thanks for the delivery!</small>
+                  </div>
+
+                  <div class="chat-list-item" onclick="openChat(3)">
+                    Baxter Sisgado - <small>Last message: Mine po..</small>
+                  </div>
+                </div>
+
+              </div>
+        </div>
+
+
+
+
+
+
+
+
+
+
+
+
+      </div>
+
+    </div>
+
+     <!--view  productSection -->
+   
+    <div id="view-product-section" class="section">
+      <h2>Product Details</h2>
+    
+
+     <div class="all-products">
+     <div class="product-card">
+        <!-- Product Image -->
+        <div class="product-image">
+            <img src="assets/P1.png" alt="Product Image">
+        </div>
+
+        <!-- Product Information -->
+        <div class="product-info">
+            <h3>Product Name</h3>
+            <p class="product-description">This is a detailed description of the product. It provides key features and insights about the product for potential buyers.</p>
+            <p class="product-price"><b>Price:</b> $29.99</p>
+            <p class="product-stock"><b>In Stock:</b> Yes</p>
+            
+            <!-- Product Actions -->
+            <div class="product-actions">
+            <button onclick="openEditForm()">Edit</button>
+            <button onclick="deleteProduct()">Delete</button>
+          </div>
+        </div>
+      </div>
+      
+
+       <div class="product-card">
+        <!-- Product Image -->
+        <div class="product-image">
+            <img src="assets/P1.png" alt="Product Image">
+        </div>
+
+        
+
+        <!-- Product Information -->
+        <div class="product-info">
+          <h3>Product Name</h3>
+          <p class="product-description">
+            This is a detailed description of the product. It provides key features and insights about the product for potential buyers.
+          </p>
+          <p class="product-price"><b>Price:</b> $29.99</p>
+          <p class="product-stock"><b>In Stock:</b> Yes</p>
+
+          <!-- Product Actions -->
+          <div class="product-actions">
+            <button onclick="openEditForm()">Edit</button>
+            <button onclick="deleteProduct()">Delete</button>
+          </div>
+        </div>
+
+        <!-- Edit Product Form -->
+        <div class="edit-product-form" id="editForm" style="display: none;">
+          <h3>Edit Product</h3>
+          <form onsubmit="submitEditForm(event)">
+            <label for="edit-name">Product Name</label>
+            <input type="text" id="edit-name" name="name" value="Product Name">
+
+            <label for="edit-description">Description</label>
+            <textarea id="edit-description" name="description">This is a detailed description of the product.</textarea>
+
+            <label for="edit-price">Price</label>
+            <input type="number" id="edit-price" name="price" value="29.99">
+
+            <label for="edit-stock">In Stock</label>
+            <select id="edit-stock" name="stock">
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
+            </select>
+
+            <div class="form-actions">
+              <button type="submit">Save</button>
+              <button type="button" onclick="closeEditForm()">Cancel</button>
+            </div>
+          </form>
+        </div>
+
+    </div>
+    </div>
+</div>
+
+
+   
 
     <!-- Add Product Section -->
     <div id="add-product-section" class="section">
@@ -204,8 +393,8 @@ $_SESSION["seller_id"] = 12;
         <div class="form-group">
           <label for="model-type">Model Type</label>
           <select id="model-type" name="model-type" required>
-            <option value="physical">Physical</option>
-            <option value="digital">Digital</option>
+            <option value="regular">Regular</option>
+            <option value="premium">Premium</option>
           </select>
         </div>
 
@@ -274,14 +463,13 @@ $_SESSION["seller_id"] = 12;
     <!-- Customer Section -->
     <div id="customers-section" class="section">
       <h2>Customers</h2>
-      <ul class="customer-list">
-        <li>John Doe - johndoe@gmail.com</li>
-        <li>Jane Smith - janesmith@yahoo.com</li>
-        <li>Michael Johnson - mjohnson@hotmail.com</li>
+      <ul class="customer-list" id="customer-list">
+        <!-- Customer data will load here dynamically -->
       </ul>
     </div>
 
     <!-- Orders Section -->
+
     <div id="orders-section" class="section">
       <h2>Orders</h2>
       <table>
@@ -291,6 +479,8 @@ $_SESSION["seller_id"] = 12;
             <th>Customer</th>
             <th>Product</th>
             <th>Status</th>
+            <th>Tracking Number</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -298,29 +488,290 @@ $_SESSION["seller_id"] = 12;
             <td>#001</td>
             <td>John Doe</td>
             <td>Car Engine</td>
-            <td>Shipped</td>
+            <td>
+              <select class="order-status" data-order-id="1">
+                <option value="Order placed">Order placed</option>
+                <option value="Waiting for courier">Waiting for courier</option>
+                <option value="In Transit">In Transit</option>
+                <option value="Order delivered">Delivered</option>
+              </select>
+            </td>
+            <td>
+              <input type="text" class="tracking-number" data-order-id="1" placeholder="Enter tracking number" />
+            </td>
+            <td>
+              <button class="update-btn" onclick="updateOrder(1)">Update</button>
+            </td>
           </tr>
           <tr>
             <td>#002</td>
             <td>Jane Smith</td>
             <td>Tire Set</td>
-            <td>Processing</td>
+            <td>
+              <select class="order-status" data-order-id="2">
+                <option value="Order placed">Order placed</option>
+                <option value="Waiting for courier">Waiting for courier</option>
+                <option value="In Transit">In Transit</option>
+                <option value="Order delivered">Delivered</option>
+              </select>
+            </td>
+            <td>
+              <input type="text" class="tracking-number" data-order-id="2" placeholder="Enter tracking number" />
+            </td>
+            <td>
+              <button   class="update-btn" onclick="updateOrder(2)">Update</button>
+            </td>
           </tr>
         </tbody>
       </table>
     </div>
 
+     <!-- Auction Section -->
+    <div id="auction-section" class="section">
+      <h2>Auction</h2><div class="ongoing-bids">
+
+      <!-- Ongoing Auction  -->
+        <h3>Ongoing Bids</h3>
+        <ul class="auction-list" id="ongoing-bids-list">
+          <li>
+            <strong>Product:</strong> Car Engine
+            <br />
+            <strong>Highest Bid:</strong> $500
+            <br />
+            <strong>Status:</strong> Active
+            <div class="auction-actions">
+              <button class="btn cancel-btn" onclick="cancelBid(1)">Cancel Bid</button>
+            </div>
+          </li>
+          <li>
+            <strong>Product:</strong> Tire Set
+            <br />
+            <strong>Highest Bid:</strong> $150
+            <br />
+            <strong>Status:</strong> Active
+            <div class="auction-actions">
+              <button class="btn cancel-btn" onclick="cancelBid(2)">Cancel Bid</button>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <div class="add-bid">
+        <h3>Add New Bid<span class="plus-icon" onclick="toggleBidForm()">+</span></h3>
+      </div>
+
+
+
+      <!-- Add Auction Bid Form -->
+      <div class="add-bid-form">
+        <h3>Add New Bid</h3>
+        <form action="#" method="POST" id="auction-form">
+         
+          <div class="form-group">
+            <label for="auction-product-name">Product Name</label>
+            <input
+              type="text"
+              id="auction-product-name"
+              name="auction-product-name"
+              placeholder="Enter product name"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="auction-details">Details</label>
+            <input
+              type="text"
+              id="auction-product-name"
+              name="auction-product-name"
+              placeholder="Enter product name"
+              required
+            />
+          </div>
+          <div class="form-group-row">
+          <div class="form-group">
+          <label for="model-type">Model Type</label>
+          <select id="model-type" name="model-type" required>
+            <option value="physical">Physical</option>
+            <option value="digital">Digital</option>
+          </select>
+        </div>
+
+          <div class="form-group">
+          <label>Model Tags</label>
+          <div>
+            <input
+              type="checkbox"
+              id="limited_edition"
+              name="model-tags"
+              value="limited_edition"
+            />
+            <label for="limited_edition">Limited Edition</label>
+
+            <input
+              type="checkbox"
+              id="new_arrivals"
+              name="model-tags"
+              value="new_arrivals"
+            />
+            <label for="new_arrivals">New Arrivals</label>
+
+            <input
+              type="checkbox"
+              id="featured"
+              name="model-tags"
+              value="featured"
+            />
+            <label for="featured">Featured</label>
+
+            <input
+              type="checkbox"
+              id="best_seller"
+              name="model-tags"
+              value="best_seller"
+            />
+            <label for="best_seller">Best Seller</label>
+          </div>
+        </div>
+
+          <div class="form-group">
+          <label for="product-image">Product Image</label>
+          <input type="file" id="product-image" name="product-image" />
+          </div>
+          </div>
+          <div class="form-group">
+            <label for="starting-bid">Starting Bid ($)</label>
+            <input
+              type="number"
+              id="starting-bid"
+              name="starting-bid"
+              placeholder="Enter starting bid"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="auction-end-date">End Date</label>
+            <input type="date" id="auction-end-date" name="auction-end-date" required />
+          </div>
+
+          <button type="submit" class="btn sell-btn">Add Bid</button>
+        </form>
+        </div>
+      </div>
+      
+      
+    </div>
+
+      <!-- Messages Section -->
+      <div id="message-section" class="section">
+      <h2>Messages</h2>
+
+      <div class="chat-container">
+        <!-- Left Chat List -->
+        <div class="chat-list" id="chat-list">
+          <div class="chat-list-item" onclick="openChat(1)">
+            John Doe - <small>Last message: Hi, I have a question...</small>
+          </div>
+          <div class="chat-list-item" onclick="openChat(2)">
+            Jane Smith - <small>Last message: Thanks for the delivery!</small>
+          </div>
+
+          <div class="chat-list-item" onclick="openChat(3)">
+            Baxter Sisgado - <small>Last message: Mine po..</small>
+          </div>
+        </div>
+
+        <!-- Right Chat Box -->
+        <div class="chat-box" id="chat-box">
+          <div class="messages" id="messages">
+            <!-- Messages will load here -->
+          </div>
+          <div class="message-input">
+            <input type="text" id="message-input" placeholder="Type your message here..." />
+            
+            <!-- Hidden file input -->
+            <input type="file" id="image-input" accept="image/*" style="display: none;" />
+            
+            <!-- Icon to trigger file selection -->
+            <span class="material-symbols-outlined" id="file-icon" onclick="document.getElementById('image-input').click();">
+              attach_file
+            </span>
+
+  <button onclick="sendMessage()">Send</button>
+</div>
+        </div>
+      </div>
+    </div>
+
+
     <script>
 
-      function showSection(sectionId) {
-        const sections = document.querySelectorAll(".section");
-        sections.forEach((section) => section.classList.remove("visible"));
+      function toggleDropdown(dropdownId) {
+        const dropdown = document.getElementById(dropdownId);
+        const arrow = dropdown.previousElementSibling.querySelector('.dropdown-arrow');
+        dropdown.classList.toggle('show'); 
+        arrow.classList.toggle('rotate');
 
-        const selectedSection = document.getElementById(sectionId);
-        if (selectedSection) {
-          selectedSection.classList.add("visible");
-        }
+         // Calculate the dropdown height for smooth transition
+          if (dropdown.classList.contains('show')) {
+              dropdown.style.maxHeight = dropdown.scrollHeight + "px"; // Set maxHeight to its scrollHeight when shown
+          } else {
+              dropdown.style.maxHeight = "0"; // Reset maxHeight to 0 when hidden
+          }
       }
+
+    function showSection(sectionId) {
+        try {
+            // Hide all sections first
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(section => section.classList.remove('active'));
+
+            // Show the selected section based on the ID
+            const selectedSection = document.getElementById(sectionId);
+            if (selectedSection) {
+                selectedSection.classList.add('active');
+                localStorage.setItem('activeSection', sectionId); // Save the active section in localStorage
+            } else {
+                console.error(`Section with ID '${sectionId}' not found.`);
+            }
+        } catch (error) {
+            console.error('Error showing section:', error);
+        }
+    }
+
+    // Function to load the last active section on page load
+    window.addEventListener('DOMContentLoaded', () => {
+        try {
+            // Retrieve the last active section from localStorage, default to 'dashboard' if none found
+            const savedSection = localStorage.getItem('activeSection') || 'dashboard';
+            
+            // Verify the section exists before displaying
+            const sectionExists = document.getElementById(savedSection);
+            if (sectionExists) {
+                showSection(savedSection);
+                console.log(`Loaded section from storage: ${savedSection}`);
+            } else {
+                console.warn(`Saved section '${savedSection}' not found. Loading default section.`);
+                showSection('dashboard');
+            }
+        } catch (error) {
+            console.error('Error loading saved section:', error);
+            showSection('dashboard'); // Default to dashboard on error
+        }
+    });
+
+    function hideDash(){
+      const dash = document.querySelectorAll(".dash");
+      
+
+      dash.classList.remove("visible");
+      dash.forEach((dashElement) => dashElement.classList.remove("visible"));
+
+      
+
+    }
+
 
       const sidebar = document.querySelector(".sidebar");
       const menuBtn = document.querySelector(".menubtn");
@@ -349,6 +800,15 @@ $_SESSION["seller_id"] = 12;
         event.stopPropagation(); // Prevent the click from closing the sidebar immediately
         showSidebar();
       });
+
+
+      function openEditForm() {
+        document.getElementById('editForm').style.display = 'block';
+      }
+
+      function closeEditForm() {
+        document.getElementById('editForm').style.display = 'none';
+      }
 
       
     </script>
@@ -415,6 +875,43 @@ $_SESSION["seller_id"] = 12;
           }
         }
       });
+
+    </script>
+   
+    <script>
+       // Sample data for demo purposesReplace this with actual data retrieval in real implementation 
+    const messagesData = {
+      1: [
+        { sender: 'John Doe', text: 'Hi, I have a question about the product.' },
+        { sender: 'Seller', text: 'Sure, I’d be happy to help. What’s your question?' },
+      ],
+      2: [
+        { sender: 'Jane Smith', text: 'Thanks for the delivery! Everything is perfect.' },
+        { sender: 'Seller', text: 'Glad to hear it! Let me know if you need anything else.' },
+      ],
+     3: [
+        { sender: 'Baxter Sisgado', text: 'Mine po.  NISSAN SKYLINE 2000 GT-X' },
+        { sender: 'Seller', text: 'Glad to hear it!' },
+      ],
+    };
+
+    // Function to open a chat and display messages in the chat box
+    function openChat(chatId) {
+      const chatBox = document.getElementById('messages');
+      chatBox.innerHTML = ''; // Clear previous messages
+
+      const chatMessages = messagesData[chatId];
+      
+      // Populate the chat box with messages
+      chatMessages.forEach((message) => {
+        const messageElement = document.createElement('div');
+        messageElement.classList.add('message');
+        messageElement.innerHTML = `<strong>${message.sender}:</strong> ${message.text}`;
+        chatBox.appendChild(messageElement);
+      });
+    }
+
+ 
 
     </script>
   </body>
