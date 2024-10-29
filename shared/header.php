@@ -26,7 +26,7 @@
                     </ul>
                 </li>
                 <li class="dropdown">
-                    <a href="#" class="nonclickable">Sizes</a>
+                    <a href="#" class="nonclickable">Scale</a>
                     <ul class="dropdown-menu">
                         <?php                            
                             if ($sizeResult->num_rows > 0) {                            
@@ -104,7 +104,80 @@
 </div>
 </header>
 
+<script>
+    
+    let brandFilter = "";
+    let sizeFilter = "";
+    let modelTypeFilter = "";
+    let searchFilter = "";
 
+    document.addEventListener("DOMContentLoaded", function() {        
+        const brandLinks = document.querySelectorAll('.brand-link');
+        const sizeLinks = document.querySelectorAll('.size-link');
+        const modelTypeLink = document.querySelectorAll('.model-type-link');
+
+        const searchForm = document.getElementById('search-form');
+                
+        searchForm.addEventListener('submit', function(event) {                    
+            event.preventDefault();
+                        
+            searchFilter = document.getElementById('search-query').value;     
+            
+            getProductWithFilter(
+                brandFilter, 
+                sizeFilter, 
+                modelTypeFilter, 
+                searchFilter
+            );
+        });
+
+        brandLinks.forEach(link => {
+            link.addEventListener('click', function(event) {
+                event.preventDefault();
+                
+                brandFilter = this.getAttribute('data-brand-id');
+
+                getProductWithFilter(
+                    brandFilter, 
+                    sizeFilter, 
+                    modelTypeFilter, 
+                    searchFilter
+                );
+                
+            });
+        });
+        sizeLinks.forEach(link => {
+            link.addEventListener('click', function(event) {
+                event.preventDefault();
+                
+                sizeFilter = this.getAttribute('data-size-id');
+                getProductWithFilter(
+                    brandFilter, 
+                    sizeFilter, 
+                    modelTypeFilter, 
+                    searchFilter
+                );
+                
+            });
+        });
+
+        modelTypeLink.forEach(link => {
+            link.addEventListener('click', function(event) {
+                event.preventDefault();
+                
+                modelTypeFilter = this.getAttribute('data-model-type');                
+                getProductWithFilter(
+                    brandFilter, 
+                    sizeFilter, 
+                    modelTypeFilter, 
+                    searchFilter
+                );
+            });
+        });
+
+
+    });
+</script>
 
 <script>
     

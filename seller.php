@@ -384,57 +384,148 @@ $_SESSION["seller_id"] = 12;
             required
           />
         </div>
-
-
       </div>
       
       <div class="form-group-row">
+            <div class="form-group">
+              <label for="auction-product-brand">Model Brand</label>
+              <select id="model-brand" name="model-brand" required onchange="toggleOtherBrandInput()">
+                <option value="auto-world">Auto World</option>
+                <option value="bburago">Bburago</option>
+                <option value="greenlight">Greenlight</option>
+                <option value="hotwheels">Hot Wheels</option>
+                <option value="jada-toys">Jada Toys</option>
+                <option value="m2-machines">M2 Machines</option>
+                <option value="matchbox">Matchbox</option>
+                <option value="tomica">Tomica</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
 
-        <div class="form-group">
-          <label for="model-type">Model Type</label>
-          <select id="model-type" name="model-type" required>
-            <option value="regular">Regular</option>
-            <option value="premium">Premium</option>
-          </select>
-        </div>
+              <!-- Input field for custom brand -->
+              <div id="other-brand" style="display: none; margin-top: 10px;">
+                <label for="custom-brand">Enter Other Brand</label>
+                <input type="text" id="custom-brand" name="custom-brand">
+              </div>
+           
 
-        <div class="form-group">
-          <label>Model Tags</label>
-          <div>
-            <input
-              type="checkbox"
-              id="limited_edition"
-              name="model-tags"
-              value="limited_edition"
-            />
-            <label for="limited_edition">Limited Edition</label>
+            <div class="form-group">
+              <label for="model-type">Model Type</label>
+              <select id="model-type" name="model-type" required>
+                <option value="physical">Regular</option>
+                <option value="digital">Premium</option>
+              </select>
+            </div>
+      </div>
 
-            <input
-              type="checkbox"
-              id="new_arrivals"
-              name="model-tags"
-              value="new_arrivals"
-            />
-            <label for="new_arrivals">New Arrivals</label>
+      <div class="form-group-row">
+            <div class="form-group">
+              <label for="model-packaging">Packaging</label>
+              <select id="model-packaging" name="model-packaging" required>
+                <option value="unopened">Unopened</option>
+                <option value="original-packaging">Original Packaging</option>
+                <option value="none">None</option>
+              </select>
+            </div>
 
-            <input
-              type="checkbox"
-              id="featured"
-              name="model-tags"
-              value="featured"
-            />
-            <label for="featured">Featured</label>
+            <div class="form-group">
+              <label for="model-scale">Scale</label>
+              <select id="model-scale" name="model-scale" required>
+                <option value="1:18">1:18</option>
+                <option value="1:24">1:24</option>
+                <option value="1:32">1:32</option>
+                <option value="1:43">1:43</option>
+                <option value="1:64">1:64</option>
+              </select>
+            </div>
+          </div>
+          
 
-            <input
-              type="checkbox"
-              id="best_seller"
-              name="model-tags"
-              value="best_seller"
-            />
-            <label for="best_seller">Best Seller</label>
+
+       <div class="form-group-row">
+          <div class="form-group">
+            <label>Condition</label>
+            <div>
+              <input
+                type="checkbox"
+                id="mint"
+                name="model-condition"
+                value="mint"
+              />
+              <label for="mint">Mint</label>
+
+              <input
+                type="checkbox"
+                id="good-condition"
+                name="model-condition"
+                value="good-condition"
+              />
+              <label for="good-condition">Good Condition</label>
+
+
+              <input
+                type="checkbox"
+                id="near_mint"
+                name="model-condition"
+                value="near_mint"
+              />
+              <label for="near_mint">Near Mint</label>
+
+              <input
+                type="checkbox"
+                id="non-mint"
+                name="model-condition"
+                value="non-mint"
+              />
+              <label for="non-mint">Non Mint</label>
+
+              <input
+                type="checkbox"
+                id="played"
+                name="model-condition"
+                value="played"
+              />
+              <label for="played">Played</label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Model Tags</label>
+            <div>
+              <input
+                type="checkbox"
+                id="limited_edition"
+                name="model-tags"
+                value="limited_edition"
+              />
+              <label for="limited_edition">Limited Edition</label>
+
+              <input
+                type="checkbox"
+                id="new_arrivals"
+                name="model-tags"
+                value="new_arrivals"
+              />
+              <label for="new_arrivals">New Arrivals</label>
+
+              <input
+                type="checkbox"
+                id="featured"
+                name="model-tags"
+                value="featured"
+              />
+              <label for="featured">Featured</label>
+
+              <input
+                type="checkbox"
+                id="best_seller"
+                name="model-tags"
+                value="best_seller"
+              />
+              <label for="best_seller">Best Seller</label>
+            </div>
           </div>
         </div>
-      </div>
 
 
       <div class="form-group">
@@ -528,46 +619,63 @@ $_SESSION["seller_id"] = 12;
 
      <!-- Auction Section -->
     <div id="auction-section" class="section">
-      <h2>Auction</h2><div class="ongoing-bids">
+      <h2>Auction</h2>
+      
+      <div class="ongoing-bids">
 
-      <!-- Ongoing Auction  -->
+        <!-- Ongoing Auction  -->
         <h3>Ongoing Bids</h3>
-        <ul class="auction-list" id="ongoing-bids-list">
-          <li>
+
+
+        <div class="auction-list" id="ongoing-bids-list">
+
+          <div  class="bid-card">
             <strong>Product:</strong> Car Engine
             <br />
             <strong>Highest Bid:</strong> $500
             <br />
             <strong>Status:</strong> Active
+            <br />
+            <strong>Start Time:</strong> 2024-10-28 10:00 AM
+            <br />
+            <strong>End Time:</strong> 2024-10-30 10:00 AM
+
             <div class="auction-actions">
               <button class="btn cancel-btn" onclick="cancelBid(1)">Cancel Bid</button>
             </div>
-          </li>
-          <li>
-            <strong>Product:</strong> Tire Set
-            <br />
-            <strong>Highest Bid:</strong> $150
-            <br />
-            <strong>Status:</strong> Active
-            <div class="auction-actions">
-              <button class="btn cancel-btn" onclick="cancelBid(2)">Cancel Bid</button>
+          </div>
+
+          <div class="bid-card">
+            <strong>Product:</strong> Car Engine
+              <br />
+              <strong>Highest Bid:</strong> $500
+              <br />
+              <strong>Status:</strong> Active
+              <br />
+              <strong>Start Time:</strong> 2024-10-28 10:00 AM
+              <br />
+              <strong>End Time:</strong> 2024-10-30 10:00 AM
+
+              <div class="auction-actions">
+                <button class="btn cancel-btn" onclick="cancelBid(1)">Cancel Bid</button>
             </div>
-          </li>
-        </ul>
+          </div>
+
+        </div>
+
       </div>
 
       <div class="add-bid">
-        <h3>Add New Bid<span class="plus-icon" onclick="toggleBidForm()">+</span></h3>
+        <h3>Add New Bid <span class="plus-icon" onclick="toggleBidForm()">+</span></h3>
       </div>
 
-
-
       <!-- Add Auction Bid Form -->
-      <div class="add-bid-form">
-        <h3>Add New Bid</h3>
+      <div id="add-bid-form"  class="form" style="display: none;">
         <form action="#" method="POST" id="auction-form">
          
           <div class="form-group">
+            <input type="text" hidden id="seller-id" value=<?php echo $_SESSION["seller_id"] ?>>
+
             <label for="auction-product-name">Product Name</label>
             <input
               type="text"
@@ -584,78 +692,191 @@ $_SESSION["seller_id"] = 12;
               type="text"
               id="auction-product-name"
               name="auction-product-name"
-              placeholder="Enter product name"
+              placeholder="Enter product details"
               required
             />
           </div>
+          
           <div class="form-group-row">
+            <div class="form-group">
+              <label for="auction-product-brand">Model Brand</label>
+              <select id="model-brand" name="model-brand" required onchange="toggleOtherBrandInput()">
+                <option value="auto-world">Auto World</option>
+                <option value="bburago">Bburago</option>
+                <option value="greenlight">Greenlight</option>
+                <option value="hotwheels">Hot Wheels</option>
+                <option value="jada-toys">Jada Toys</option>
+                <option value="m2-machines">M2 Machines</option>
+                <option value="matchbox">Matchbox</option>
+                <option value="tomica">Tomica</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+
+              <!-- Input field for custom brand -->
+              <div id="other-brand" style="display: none; margin-top: 10px;">
+                <label for="custom-brand">Enter Other Brand</label>
+                <input type="text" id="custom-brand" name="custom-brand">
+              </div>
+           
+
+            <div class="form-group">
+              <label for="model-type">Model Type</label>
+              <select id="model-type" name="model-type" required>
+                <option value="physical">Regular</option>
+                <option value="digital">Premium</option>
+              </select>
+            </div>
+          </div>
+
+
+          <div class="form-group-row">
+            <div class="form-group">
+              <label for="model-packaging">Packaging</label>
+              <select id="model-packaging" name="model-packaging" required>
+                <option value="unopened">Unopened</option>
+                <option value="original-packaging">Original Packaging</option>
+                <option value="none">None</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="model-scale">Scale</label>
+              <select id="model-scale" name="model-scale" required>
+                <option value="1:18">1:18</option>
+                <option value="1:24">1:24</option>
+                <option value="1:32">1:32</option>
+                <option value="1:43">1:43</option>
+                <option value="1:64">1:64</option>
+              </select>
+            </div>
+          </div>
+          
+
+        <div class="form-group-row">
           <div class="form-group">
-          <label for="model-type">Model Type</label>
-          <select id="model-type" name="model-type" required>
-            <option value="physical">Physical</option>
-            <option value="digital">Digital</option>
-          </select>
-        </div>
+            <label>Condition</label>
+            <div>
+              <input
+                type="checkbox"
+                id="mint"
+                name="model-condition"
+                value="mint"
+              />
+              <label for="mint">Mint</label>
+
+              <input
+                type="checkbox"
+                id="good-condition"
+                name="model-condition"
+                value="good-condition"
+              />
+              <label for="good-condition">Good Condition</label>
+
+
+              <input
+                type="checkbox"
+                id="near_mint"
+                name="model-condition"
+                value="near_mint"
+              />
+              <label for="near_mint">Near Mint</label>
+
+              <input
+                type="checkbox"
+                id="non-mint"
+                name="model-condition"
+                value="non-mint"
+              />
+              <label for="non-mint">Non Mint</label>
+
+              <input
+                type="checkbox"
+                id="played"
+                name="model-condition"
+                value="played"
+              />
+              <label for="played">Played</label>
+            </div>
+          </div>
 
           <div class="form-group">
-          <label>Model Tags</label>
-          <div>
-            <input
-              type="checkbox"
-              id="limited_edition"
-              name="model-tags"
-              value="limited_edition"
-            />
-            <label for="limited_edition">Limited Edition</label>
+            <label>Model Tags</label>
+            <div>
+              <input
+                type="checkbox"
+                id="limited_edition"
+                name="model-tags"
+                value="limited_edition"
+              />
+              <label for="limited_edition">Limited Edition</label>
 
-            <input
-              type="checkbox"
-              id="new_arrivals"
-              name="model-tags"
-              value="new_arrivals"
-            />
-            <label for="new_arrivals">New Arrivals</label>
+              <input
+                type="checkbox"
+                id="new_arrivals"
+                name="model-tags"
+                value="new_arrivals"
+              />
+              <label for="new_arrivals">New Arrivals</label>
 
-            <input
-              type="checkbox"
-              id="featured"
-              name="model-tags"
-              value="featured"
-            />
-            <label for="featured">Featured</label>
+              <input
+                type="checkbox"
+                id="featured"
+                name="model-tags"
+                value="featured"
+              />
+              <label for="featured">Featured</label>
 
-            <input
-              type="checkbox"
-              id="best_seller"
-              name="model-tags"
-              value="best_seller"
-            />
-            <label for="best_seller">Best Seller</label>
+              <input
+                type="checkbox"
+                id="best_seller"
+                name="model-tags"
+                value="best_seller"
+              />
+              <label for="best_seller">Best Seller</label>
+            </div>
           </div>
         </div>
 
+
           <div class="form-group">
-          <label for="product-image">Product Image</label>
-          <input type="file" id="product-image" name="product-image" />
-          </div>
-          </div>
-          <div class="form-group">
-            <label for="starting-bid">Starting Bid ($)</label>
-            <input
-              type="number"
-              id="starting-bid"
-              name="starting-bid"
-              placeholder="Enter starting bid"
-              required
-            />
+            <label for="product-image">Product Image</label>
+            <input type="file" id="product-image" name="product-image" />
           </div>
 
           <div class="form-group">
-            <label for="auction-end-date">End Date</label>
-            <input type="date" id="auction-end-date" name="auction-end-date" required />
+              <label for="starting-bid">Starting Bid (₱)</label>
+              <input
+                type="number"
+                id="starting-bid"
+                name="starting-bid"
+                placeholder="Enter starting bid"
+                required
+              />
+            </div>
+
+            <div class="form-group-row">
+              <div class="form-group">
+                <label for="auction-start-date">Start Date</label>
+                <input type="date" id="auction-start-date" name="auction-start-date" required />
+              </div>
+
+              <div class="form-group">
+                <label for="auction-end-date">End Date</label>
+                <input type="date" id="auction-end-date" name="auction-end-date" required />
+              </div>
+            </div>
+
+
+            <div class="button-group">
+              <button type="submit" class="btn sell-btn">Add Bid</button>
+              <button type="reset" class="btn cancel-btn">Cancel</button>
+            </div>
           </div>
 
-          <button type="submit" class="btn sell-btn">Add Bid</button>
+
+
+
         </form>
         </div>
       </div>
@@ -665,11 +886,12 @@ $_SESSION["seller_id"] = 12;
 
       <!-- Messages Section -->
       <div id="message-section" class="section">
-      <h2>Messages</h2>
 
       <div class="chat-container">
+
         <!-- Left Chat List -->
         <div class="chat-list" id="chat-list">
+        <h2>Chat List</h2>
           <div class="chat-list-item" onclick="openChat(1)">
             John Doe - <small>Last message: Hi, I have a question...</small>
           </div>
@@ -683,27 +905,42 @@ $_SESSION["seller_id"] = 12;
         </div>
 
         <!-- Right Chat Box -->
-        <div class="chat-box" id="chat-box">
-          <div class="messages" id="messages">
-            <!-- Messages will load here -->
-          </div>
-          <div class="message-input">
-            <input type="text" id="message-input" placeholder="Type your message here..." />
-            
-            <!-- Hidden file input -->
-            <input type="file" id="image-input" accept="image/*" style="display: none;" />
-            
-            <!-- Icon to trigger file selection -->
-            <span class="material-symbols-outlined" id="file-icon" onclick="document.getElementById('image-input').click();">
-              attach_file
-            </span>
+       <div class="chat-box" id="chat-box">
+      <div class="messages" id="messages">
+        <!-- Messages will load here -->
+        <div class="message sent">Hello!</div>
+        <div class="message received">Hi, how can I help you?</div>
+      </div>
+      
+      <div class="message-input">
+        <input type="text" id="message-input" placeholder="Type your message here..." />
+        
+        <!-- Hidden file input -->
+        <input type="file" id="image-input" accept="image/*" style="display: none;" />
+        
+        <!-- Icon to trigger file selection -->
+        <span class="material-symbols-outlined" id="file-icon" onclick="document.getElementById('image-input').click();">
+          attach_file
+        </span>
 
-  <button onclick="sendMessage()">Send</button>
-</div>
-        </div>
+        <button onclick="sendMessage()">Send</button>
       </div>
     </div>
+  </div>
 
+    </div>
+
+    <script>
+            function toggleOtherBrandInput() {
+              const select = document.getElementById('model-brand');
+              const otherBrandInput = document.getElementById('other-brand');
+              if (select.value === 'other') {
+                otherBrandInput.style.display = 'block';
+              } else {
+                otherBrandInput.style.display = 'none';
+              }
+            }
+    </script>
 
     <script>
 
@@ -809,6 +1046,26 @@ $_SESSION["seller_id"] = 12;
       function closeEditForm() {
         document.getElementById('editForm').style.display = 'none';
       }
+
+
+      function toggleBidForm() {
+          const form = document.getElementById("add-bid-form");
+          form.style.display = form.style.display === "none" ? "block" : "none";
+        }
+
+        function addNewBid() {
+          // Example function to handle adding the bid
+          const product = document.getElementById("product").value;
+          const bid = document.getElementById("bid").value;
+
+          if (product && bid) {
+            // Add bid logic here
+            alert(`New bid added for ${product} with starting bid $${bid}`);
+            toggleBidForm(); // Hide the form after submission
+          } else {
+            alert("Please fill out all fields.");
+          }
+        }
 
       
     </script>
