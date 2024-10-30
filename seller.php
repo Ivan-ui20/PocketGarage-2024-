@@ -1,13 +1,17 @@
 
 <?php
 
-
-// session_start()
+require_once './backend/database/db.php';
+session_start();
 
 
 $_SESSION["seller_id"] = 12;
 
+$brand = "SELECT * FROM diecast_brand";
+$brandResult = $conn->query($brand);
 
+$size = "SELECT * FROM diecast_size";
+$sizeResult = $conn->query($size);
 
 ?>
 
@@ -178,6 +182,7 @@ $_SESSION["seller_id"] = 12;
     </nav>
 
      <div class="content">
+        <input id="seller-id" type="text" hidden value="<?php echo $_SESSION["seller_id"]?>">
         <!-- Dashboard Section -->
         <div id="dashboard-section" class="section">
             <h1>Overview</h1>
@@ -194,9 +199,7 @@ $_SESSION["seller_id"] = 12;
                 </div>
               </div>
             </div>
-
-            
-            
+                        
         </div>
 
         <div class="all_products">
@@ -204,7 +207,19 @@ $_SESSION["seller_id"] = 12;
 
             <div class="form">
             <a href="#" class="logo" onclick="showSection('dashboard-section')"></a>
-            <h1> 2 </h1>
+            
+              <?php                 
+                $stmt = $conn->prepare("SELECT COUNT(*) FROM diecast_model WHERE seller_id = ?");
+                $stmt->bind_param("s", $_SESSION["seller_id"]);
+                $stmt->execute();
+                
+                $result = $stmt->get_result();
+                $count = $result->fetch_row()[0]; 
+                
+                $stmt->close();
+              ?> 
+              <h1><?php echo $count; ?></h1>
+
             <a href="#" onclick="showSection('view-product-section')">
                       <h3>View Products</h3>
             </a>
@@ -217,7 +232,17 @@ $_SESSION["seller_id"] = 12;
             <h2>All bidding</h2>
             <div class="form">
             <a href="#" class="logo" onclick="showSection('dashboard-section')"></a>
-            <h1> 2 </h1>
+              <?php                 
+                $stmt = $conn->prepare("SELECT COUNT(*) FROM bid_room WHERE seller_id = ?");
+                $stmt->bind_param("s", $_SESSION["seller_id"]);
+                $stmt->execute();
+                
+                $result = $stmt->get_result();
+                $count = $result->fetch_row()[0]; 
+                
+                $stmt->close();
+              ?> 
+              <h1><?php echo $count; ?></h1>
              <a href="#" onclick="showSection('auction-section')">
                 <h3>View Bidding</h3>
               </a>
@@ -227,31 +252,11 @@ $_SESSION["seller_id"] = 12;
         <div class="all_messages">
             <h2>Recent Messages</h2>
               <div>
-                <div class="chat-list" id="chat-list">
-                  <div class="chat-list-item" onclick="openChat(1)">
-                    John Doe - <small>Last message: Hi, I have a question...</small>
-                  </div>
-                  <div class="chat-list-item" onclick="openChat(2)">
-                    Jane Smith - <small>Last message: Thanks for the delivery!</small>
-                  </div>
-
-                  <div class="chat-list-item" onclick="openChat(3)">
-                    Baxter Sisgado - <small>Last message: Mine po..</small>
-                  </div>
+                <div class="chat-list" id="chat-list">                  
                 </div>
 
               </div>
         </div>
-
-
-
-
-
-
-
-
-
-
 
 
       </div>
@@ -265,52 +270,61 @@ $_SESSION["seller_id"] = 12;
     
 
      <div class="all-products">
-     <div class="product-card">
-        <!-- Product Image -->
-        <div class="product-image">
-            <img src="assets/P1.png" alt="Product Image">
-        </div>
 
-        <!-- Product Information -->
-        <div class="product-info">
-            <h3>Product Name</h3>
-            <p class="product-description">This is a detailed description of the product. It provides key features and insights about the product for potential buyers.</p>
-            <p class="product-price"><b>Price:</b> $29.99</p>
-            <p class="product-stock"><b>In Stock:</b> Yes</p>
-            
-            <!-- Product Actions -->
-            <div class="product-actions">
-            <button onclick="openEditForm()">Edit</button>
-            <button onclick="deleteProduct()">Delete</button>
-          </div>
-        </div>
-      </div>
+     <?php
+        $stmt = $conn->prepare("SELECT diecast_brand.*, diecast_size.*, diecast_model.* 
+            FROM diecast_model 
+            LEFT JOIN diecast_brand ON diecast_brand.brand_id = diecast_model.brand_id
+            LEFT JOIN diecast_size ON diecast_size.size_id = diecast_model.size_id
+            WHERE diecast_model.seller_id = ?");
+        $stmt->bind_param("s", $_SESSION["seller_id"]);
+        $stmt->execute();
+
+        $result = $stmt->get_result();
+      
+        if ($result->num_rows > 0) {          
+            while ($row = $result->fetch_assoc()) {
+                $modelId = $row['model_id'];
+                $modelName = htmlspecialchars($row['model_name']);
+                $modelDescription = htmlspecialchars($row['model_description']);
+                $modelPrice = htmlspecialchars($row['model_price']);
+                $modelStock = htmlspecialchars($row['model_stock']);
+                $modelImageUrl = htmlspecialchars($row['model_image_url']);
+                $brandName = htmlspecialchars($row['brand_name']);
+                $sizeName = htmlspecialchars($row['ratio']);
+                              
+                echo '<div class="product-card">';
+                                
+                echo '<div class="product-image">';
+                echo '<img src="http://localhost:3000/backend/' . $modelImageUrl . '" alt="' . $modelName . '">';
+                echo '</div>';
+                
+                echo '<div class="product-info">';
+                echo '<h3>' . $modelName . '</h3>';
+                echo '<p class="product-description">' . $modelDescription . '</p>';
+                echo '<p class="product-price"><b>Price:</b> $' . $modelPrice . '</p>';
+                echo '<p class="product-stock"><b>In Stock:</b> ' . ($modelStock > 0 ? 'Yes' : 'No') . '</p>';
+                echo '<p class="product-brand"><b>Brand:</b> ' . $brandName . '</p>';
+                echo '<p class="product-size"><b>Size:</b> ' . $sizeName . '</p>';
+                
+                echo '<div class="product-actions">';
+                echo '<button onclick="openEditForm(' . $modelId . ')">Edit</button>';
+                echo '<button onclick="deleteProduct(' . $modelId . ')">Delete</button>';
+                echo '</div>';
+                echo '</div>';
+                echo '</div>';
+            }
+        } else {
+            echo '<p>No products found for this seller.</p>';
+        }
+
+        $stmt->close();
+      ?>
+
       
 
        <div class="product-card">
-        <!-- Product Image -->
-        <div class="product-image">
-            <img src="assets/P1.png" alt="Product Image">
-        </div>
-
-        
-
-        <!-- Product Information -->
-        <div class="product-info">
-          <h3>Product Name</h3>
-          <p class="product-description">
-            This is a detailed description of the product. It provides key features and insights about the product for potential buyers.
-          </p>
-          <p class="product-price"><b>Price:</b> $29.99</p>
-          <p class="product-stock"><b>In Stock:</b> Yes</p>
-
-          <!-- Product Actions -->
-          <div class="product-actions">
-            <button onclick="openEditForm()">Edit</button>
-            <button onclick="deleteProduct()">Delete</button>
-          </div>
-        </div>
-
+                
         <!-- Edit Product Form -->
         <div class="edit-product-form" id="editForm" style="display: none;">
           <h3>Edit Product</h3>
@@ -343,11 +357,8 @@ $_SESSION["seller_id"] = 12;
 
 
    
-
     <!-- Add Product Section -->
     <div id="add-product-section" class="section">
-
-
       <h2>Add New Product</h2>
       <form action="#" method="POST" id="product-form">
 
@@ -390,15 +401,13 @@ $_SESSION["seller_id"] = 12;
             <div class="form-group">
               <label for="auction-product-brand">Model Brand</label>
               <select id="model-brand" name="model-brand" required onchange="toggleOtherBrandInput()">
-                <option value="auto-world">Auto World</option>
-                <option value="bburago">Bburago</option>
-                <option value="greenlight">Greenlight</option>
-                <option value="hotwheels">Hot Wheels</option>
-                <option value="jada-toys">Jada Toys</option>
-                <option value="m2-machines">M2 Machines</option>
-                <option value="matchbox">Matchbox</option>
-                <option value="tomica">Tomica</option>
-                <option value="other">Other</option>
+                <?php                            
+                  if ($brandResult->num_rows > 0) {                            
+                      while ($row = $brandResult->fetch_assoc()) {
+                          echo '<option value="' . htmlspecialchars($row['brand_id']) . '">' . htmlspecialchars($row['brand_name']) . '</option>';
+                      }
+                  } 
+                ?>
               </select>
             </div>
 
@@ -412,8 +421,8 @@ $_SESSION["seller_id"] = 12;
             <div class="form-group">
               <label for="model-type">Model Type</label>
               <select id="model-type" name="model-type" required>
-                <option value="physical">Regular</option>
-                <option value="digital">Premium</option>
+                <option value="Regular">Regular</option>
+                <option value="Premium">Premium</option>
               </select>
             </div>
       </div>
@@ -430,12 +439,14 @@ $_SESSION["seller_id"] = 12;
 
             <div class="form-group">
               <label for="model-scale">Scale</label>
-              <select id="model-scale" name="model-scale" required>
-                <option value="1:18">1:18</option>
-                <option value="1:24">1:24</option>
-                <option value="1:32">1:32</option>
-                <option value="1:43">1:43</option>
-                <option value="1:64">1:64</option>
+              <select id="model-scale" name="model-scale" required>               
+                <?php                            
+                  if ($sizeResult->num_rows > 0) {                            
+                      while ($row = $sizeResult->fetch_assoc()) {
+                        echo '<option value="' . htmlspecialchars($row['size_id']) . '">' . htmlspecialchars($row['ratio']) . '</option>';
+                      }
+                  }
+                ?>
               </select>
             </div>
           </div>
@@ -555,7 +566,44 @@ $_SESSION["seller_id"] = 12;
     <div id="customers-section" class="section">
       <h2>Customers</h2>
       <ul class="customer-list" id="customer-list">
-        <!-- Customer data will load here dynamically -->
+        <?php
+          $stmt = $conn->prepare("SELECT 
+              DISTINCT customer.customer_id,
+              CONCAT(customer.first_name, ' ', customer.last_name) AS customer_name,            
+              customer.address,
+              customer.contact_number
+          FROM 
+              order_info 
+          LEFT JOIN 
+              order_items ON order_info.order_id = order_items.order_id
+          LEFT JOIN 
+              diecast_model ON diecast_model.model_id = order_items.model_id
+          LEFT JOIN 
+              customer ON customer.customer_id = order_info.customer_id
+          WHERE 
+              diecast_model.seller_id = ?
+          ");
+          $stmt->bind_param("s", $_SESSION["seller_id"]);
+          $stmt->execute();
+
+          $result = $stmt->get_result();
+
+          if ($result->num_rows > 0) {          
+              while ($row = $result->fetch_assoc()) {
+                  echo "<li>";
+                  echo "Customer ID: " . htmlspecialchars($row['customer_id']) . "<br>";
+                  echo "Customer Name: " . htmlspecialchars($row['customer_name']) . "<br>";
+                  echo "Address: " . htmlspecialchars($row['address']) . "<br>";
+                  echo "Contact Number: " . htmlspecialchars($row['contact_number']) . "<br><br>";
+                  echo "</li>";
+              }
+          } else {
+              echo "No customers found.";
+          }
+
+          $stmt->close();
+        ?>
+
       </ul>
     </div>
 
@@ -575,44 +623,62 @@ $_SESSION["seller_id"] = 12;
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>#001</td>
-            <td>John Doe</td>
-            <td>Car Engine</td>
-            <td>
-              <select class="order-status" data-order-id="1">
-                <option value="Order placed">Order placed</option>
-                <option value="Waiting for courier">Waiting for courier</option>
-                <option value="In Transit">In Transit</option>
-                <option value="Order delivered">Delivered</option>
-              </select>
-            </td>
-            <td>
-              <input type="text" class="tracking-number" data-order-id="1" placeholder="Enter tracking number" />
-            </td>
-            <td>
-              <button class="update-btn" onclick="updateOrder(1)">Update</button>
-            </td>
-          </tr>
-          <tr>
-            <td>#002</td>
-            <td>Jane Smith</td>
-            <td>Tire Set</td>
-            <td>
-              <select class="order-status" data-order-id="2">
-                <option value="Order placed">Order placed</option>
-                <option value="Waiting for courier">Waiting for courier</option>
-                <option value="In Transit">In Transit</option>
-                <option value="Order delivered">Delivered</option>
-              </select>
-            </td>
-            <td>
-              <input type="text" class="tracking-number" data-order-id="2" placeholder="Enter tracking number" />
-            </td>
-            <td>
-              <button   class="update-btn" onclick="updateOrder(2)">Update</button>
-            </td>
-          </tr>
+        <?php
+          $stmt = $conn->prepare("SELECT 
+                          order_info.order_id,
+                          order_info.order_ref_no,
+                          order_info.order_status,
+                          customer.customer_id,
+                          CONCAT(customer.first_name, ' ', customer.last_name) AS customer_name,
+                          diecast_model.model_id,
+                          diecast_model.model_name
+                      FROM 
+                          order_info 
+                      LEFT JOIN 
+                          order_items ON order_info.order_id = order_items.order_id
+                      LEFT JOIN 
+                          diecast_model ON diecast_model.model_id = order_items.model_id
+                      LEFT JOIN 
+                          customer ON customer.customer_id = order_info.customer_id
+                      WHERE 
+                          diecast_model.seller_id = ?
+                      ");
+          $stmt->bind_param("s", $_SESSION["seller_id"]);
+          $stmt->execute();
+
+          $result = $stmt->get_result();
+
+          if ($result->num_rows > 0) {          
+              while ($row = $result->fetch_assoc()) {
+                  echo '<tr>
+                      <td>' . htmlspecialchars($row['order_ref_no']) . '</td>
+                      <td>' . htmlspecialchars($row['customer_name']) . '</td>
+                      <td>' . htmlspecialchars($row['model_name']) . '</td>
+                      <td>
+                          <select class="order-status" data-order-id="' . htmlspecialchars($row['order_id']) . '">
+                              <option value="">Select a status</option>
+                              <option value="Order Placed"' . ($row['order_status'] === 'Order Placed' ? ' selected' : '') . '> Order Placed </option>
+                              <option value="Waiting for courier"' . ($row['order_status'] === 'Waiting for courier' ? ' selected' : '') . '> Waiting for courier </option>
+                              <option value="In Transit"' . ($row['order_status'] === 'In Transit' ? ' selected' : '') . '> In Transit </option>
+                              <option value="Delivered"' . ($row['order_status'] === 'Delivered' ? ' selected' : '') . '> Delivered </option>
+                          </select>
+                      </td>
+                      <td>
+                          <input type="text" class="tracking-number" data-order-id="' . htmlspecialchars($row['order_id']) . '" placeholder="Enter tracking number" />
+                      </td>
+                      <td>
+                          <button class="update-btn" onclick="updateOrder(' . htmlspecialchars($row['order_id']) . ')">Update</button>
+                      </td>
+                  </tr>';
+              }
+          } else {
+              echo "<tr><td colspan='6'>No orders found.</td></tr>";
+          }
+
+          $stmt->close();
+        ?>
+
+                    
         </tbody>
       </table>
     </div>
@@ -887,48 +953,48 @@ $_SESSION["seller_id"] = 12;
       <!-- Messages Section -->
       <div id="message-section" class="section">
 
-      <div class="chat-container">
+        <div class="chat-container">
 
-        <!-- Left Chat List -->
-        <div class="chat-list" id="chat-list">
-        <h2>Chat List</h2>
-          <div class="chat-list-item" onclick="openChat(1)">
-            John Doe - <small>Last message: Hi, I have a question...</small>
-          </div>
-          <div class="chat-list-item" onclick="openChat(2)">
-            Jane Smith - <small>Last message: Thanks for the delivery!</small>
+          <!-- Left Chat List -->
+          <div class="chat-list" id="chat-list">
+          <h2>Chat List</h2>
+            <div class="chat-list-item" onclick="openChat(1)">
+              John Doe - <small>Last message: Hi, I have a question...</small>
+            </div>
+            <div class="chat-list-item" onclick="openChat(2)">
+              Jane Smith - <small>Last message: Thanks for the delivery!</small>
+            </div>
+
+            <div class="chat-list-item" onclick="openChat(3)">
+              Baxter Sisgado - <small>Last message: Mine po..</small>
+            </div>
           </div>
 
-          <div class="chat-list-item" onclick="openChat(3)">
-            Baxter Sisgado - <small>Last message: Mine po..</small>
+          <!-- Right Chat Box -->
+        <div class="chat-box" id="chat-box">
+            <div class="messages" id="messages">
+              <!-- Messages will load here -->
+              <div class="message sent">Hello!</div>
+              <div class="message received">Hi, how can I help you?</div>
+            </div>
+            
+            <div class="message-input">
+              <input type="text" id="message-input" placeholder="Type your message here..." />
+              
+              <!-- Hidden file input -->
+              <input type="file" id="image-input" accept="image/*" style="display: none;" />
+              
+              <!-- Icon to trigger file selection -->
+              <span class="material-symbols-outlined" id="file-icon" onclick="document.getElementById('image-input').click();">
+                attach_file
+              </span>
+
+              <button onclick="sendMessage()">Send</button>
+            </div>
           </div>
         </div>
 
-        <!-- Right Chat Box -->
-       <div class="chat-box" id="chat-box">
-      <div class="messages" id="messages">
-        <!-- Messages will load here -->
-        <div class="message sent">Hello!</div>
-        <div class="message received">Hi, how can I help you?</div>
       </div>
-      
-      <div class="message-input">
-        <input type="text" id="message-input" placeholder="Type your message here..." />
-        
-        <!-- Hidden file input -->
-        <input type="file" id="image-input" accept="image/*" style="display: none;" />
-        
-        <!-- Icon to trigger file selection -->
-        <span class="material-symbols-outlined" id="file-icon" onclick="document.getElementById('image-input').click();">
-          attach_file
-        </span>
-
-        <button onclick="sendMessage()">Send</button>
-      </div>
-    </div>
-  </div>
-
-    </div>
 
     <script>
             function toggleOtherBrandInput() {
@@ -1078,11 +1144,15 @@ $_SESSION["seller_id"] = 12;
 
         const sellerId = document.getElementById("seller-id").value
         const productName = document.getElementById('product-name').value;
+        const productBrand = document.getElementById('model-brand').value;
+        const productSize = document.getElementById('model-scale').value;
+        const productType = document.getElementById('model-type').value;
         const productPrice = document.getElementById('product-price').value;
         const modelStock = document.getElementById('model_stock').value;
         const modelType = document.getElementById('model-type').value;
         const description = document.getElementById('product-description').value;
         const fileInput = document.querySelector('input[type="file"]'); 
+       
 
         const tags = Array.from(document.querySelectorAll('input[name="model-tags"]:checked'))
         .map(checkbox => checkbox.value.replace(/_/g, ' '))
@@ -1094,15 +1164,15 @@ $_SESSION["seller_id"] = 12;
         const formData = new FormData();
                         
         formData.append('seller_id', sellerId);
-        formData.append('size_id', '4');
-        formData.append('brand_id', '2');
+        formData.append('size_id', productSize);
+        formData.append('brand_id', productBrand);
         formData.append('model_name', productName);
         formData.append('model_description', description);
         formData.append('model_price', productPrice);
         formData.append('model_stock', modelStock);
         formData.append('model_availability', 'Available');
         formData.append('model_tags', tags.length ? tags.join(', ') : '');
-        formData.append('model_type', 'Regular');
+        formData.append('model_type', productType);
                              
         if (fileInput.files.length > 0) {
             formData.append('model_image', fileInput.files[0]); 
@@ -1131,33 +1201,64 @@ $_SESSION["seller_id"] = 12;
               console.error('Error during fetch:', error);
           }
         }
-      });
+      });          
+    </script>
+
+    <script>
+      const messagesData = {};
+      const sellerId = document.getElementById("seller-id").value;
+      fetch(`/backend/src/chat/route.php?route=last/chat/get&seller_id=${sellerId}`, {
+        method: 'GET',                
+        headers: {
+            'Content-Type': 'application/json'
+        }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(chat => {            
+            const chatListDiv = document.getElementById("chat-list");
+            chatListDiv.innerHTML = ""; 
+            console.log(chat);
+            
+            chat.data.forEach(chat => {                            
+                const chatItem = document.createElement("div");
+                chatItem.className = "chat-list-item";
+                chatItem.onclick = () => openChat(chat.message_id); 
+
+                chatItem.innerHTML = `
+                    ${chat.seller_name} - <small>Last message: ${chat.message}</small>
+                `;
+                
+                chatListDiv.appendChild(chatItem); 
+                const chatId = chat.message_id; 
+    
+                if (!messagesData[chatId]) {
+                    messagesData[chatId] = [];
+                }                              
+                messagesData[chatId].push({ type: chat.sender_type, sender: chat.customer_name, text: chat.message });
+                console.log(messagesData);
+                
+            });
+        })
+        .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+        });
 
     </script>
    
     <script>
-       // Sample data for demo purposesReplace this with actual data retrieval in real implementation 
-    const messagesData = {
-      1: [
-        { sender: 'John Doe', text: 'Hi, I have a question about the product.' },
-        { sender: 'Seller', text: 'Sure, I’d be happy to help. What’s your question?' },
-      ],
-      2: [
-        { sender: 'Jane Smith', text: 'Thanks for the delivery! Everything is perfect.' },
-        { sender: 'Seller', text: 'Glad to hear it! Let me know if you need anything else.' },
-      ],
-     3: [
-        { sender: 'Baxter Sisgado', text: 'Mine po.  NISSAN SKYLINE 2000 GT-X' },
-        { sender: 'Seller', text: 'Glad to hear it!' },
-      ],
-    };
-
+        
     // Function to open a chat and display messages in the chat box
     function openChat(chatId) {
       const chatBox = document.getElementById('messages');
-      chatBox.innerHTML = ''; // Clear previous messages
-
-      const chatMessages = messagesData[chatId];
+      chatBox.innerHTML = ''; // Clear previous messages      
+      
+      const chatMessages = messagesData[chatId];      
+      console.log(chatMessages);
       
       // Populate the chat box with messages
       chatMessages.forEach((message) => {

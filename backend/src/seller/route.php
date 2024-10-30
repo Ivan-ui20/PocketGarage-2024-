@@ -111,8 +111,8 @@
 
                 } else {
                     jsonResponse("Invalid request", "All fields are required.");
-                }
-            } 
+                    }
+                } 
 
             if ($route === 'seller/delete/product') {
                 $requiredFields = ['model_id', 'seller_id'];

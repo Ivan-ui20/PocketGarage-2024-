@@ -108,7 +108,7 @@
                 chat_message.message_id,
                 chat_message.encrypted_message AS message,
                 chat_message.attachment,
-                chat_message.sent_at,
+                chat_message.sent_at,                
                 CONCAT(customer.first_name, ' ', customer.last_name) AS customer_name,
                 CONCAT(seller.first_name, ' ', seller.last_name) AS seller_name,                
                 CASE
@@ -124,8 +124,7 @@
             LEFT JOIN customer ON chat_room.customer_id = customer.customer_id
             LEFT JOIN seller ON chat_room.seller_id = seller.seller_id            
             WHERE 
-                chat_message.room_id = ? 
-                AND chat_message.sent_at >= NOW() - INTERVAL 1 DAY            
+                chat_message.room_id = ?                 
             ORDER BY chat_message.sent_at ASC
             LIMIT ? OFFSET ?");
 
@@ -144,7 +143,8 @@
                     'attachment' => $row['attachment'],
                     'sent_at' => $row['sent_at'],
                     'customer_name' => $row['customer_name'],
-                    'seller_name' => $row['seller_name']
+                    'seller_name' => $row['seller_name'],
+                    'sender_type' => $row['sender_type']
                 ];
             }
             
@@ -163,6 +163,81 @@
                 "data" => []
             );
         }
+    }
+
+    function getLastMessage($connect, $payload) {
+        try {            
+            $roomQuery = $connect->prepare("SELECT room_id FROM chat_room WHERE seller_id = ?");
+            $roomQuery->bind_param("i", $payload["seller_id"]);
+            $roomQuery->execute();
+            $roomResult = $roomQuery->get_result();
+            
+            if ($roomResult->num_rows > 0) {
+                $room = $roomResult->fetch_assoc();                
+                $room_id = $room['room_id'];
+                        
+                $getMessage = $connect->prepare("SELECT 
+                    chat_message.message_id,
+                    chat_message.encrypted_message AS message,
+                    chat_message.attachment,
+                    chat_message.sent_at,                    
+                    CONCAT(customer.first_name, ' ', customer.last_name) AS customer_name,
+                    CONCAT(seller.first_name, ' ', seller.last_name) AS seller_name,
+                    CASE
+                        WHEN chat_message.sender_id = chat_room.customer_id THEN 'customer'
+                        WHEN chat_message.sender_id = chat_room.seller_id THEN 'seller'
+                    END AS sender_type
+                FROM 
+                    chat_message
+                INNER JOIN chat_room ON chat_message.room_id = chat_room.room_id
+                LEFT JOIN customer ON chat_room.customer_id = customer.customer_id
+                LEFT JOIN seller ON chat_room.seller_id = seller.seller_id
+                WHERE 
+                    chat_message.room_id = ?                     
+                ORDER BY chat_message.sent_at DESC
+                LIMIT 1"); // Get only the most recent message
+        
+                // Bind the room_id
+                $getMessage->bind_param("i", $room_id);
+                $getMessage->execute();
+                $result = $getMessage->get_result();
+        
+                $messages = [];
+                if ($row = $result->fetch_assoc()) {
+                    $decrypted_message = decryptMessage($row['message']);
+        
+                    $messages[] = [
+                        'message_id' => $row['message_id'],
+                        'message' => $decrypted_message,
+                        'attachment' => $row['attachment'],
+                        'sent_at' => $row['sent_at'],
+                        'customer_name' => $row['customer_name'],
+                        'seller_name' => $row['seller_name'],
+                        'sender_type' => $row['sender_type']
+                    ];
+                }
+        
+                return array(
+                    "title" => "Success",
+                    "message" => "Most recent message fetched successfully",
+                    "data" => $messages
+                );
+
+            } else {
+                return array(
+                    "title" => "No Room Found",
+                    "message" => "No chat room found for this seller.",
+                    "data" => []
+                );
+            }
+        } catch (\Throwable $th) {
+            return array(
+                "title" => "Failed",
+                "message" => "Something went wrong! " . $th->getMessage() . " Please try again later",
+                "data" => []
+            );
+        }
+        
     }
 
 
