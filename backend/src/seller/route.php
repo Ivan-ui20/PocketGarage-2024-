@@ -87,25 +87,25 @@
             }
             
             if ($route === 'seller/edit/product') {
-                $requiredFields = ['model_id', 'seller_id', 'size_id', 'brand_id', 'model_name', 
-                'model_description', 'model_price', 'model_stock', 'model_availability', 
-                'model_tags', 'model_type', 'model_image_url'];
+                $requiredFields = ['model_id', 'seller_id', 'model_name', 
+                'model_description', 'model_price', 'model_availability', ];
 
-                $isImageEdited = $_POST["image_edited"];
+                // $isImageEdited = $_POST["image_edited"];
 
                 if (!array_diff_key(array_flip($requiredFields), $_POST)) {
                     
                     $payload = array_intersect_key($_POST, array_flip($requiredFields));
 
-                    $imageUrl = $payload['model_image_url'];
-                    if ($isImageEdited) {
-                        $imageUrl = handleFileUpload($_FILES['model_image']);
-                        if ($imageUrl === false) {
-                            jsonResponse("File Upload Failed", "There was an error uploading the image. Please try again.");
-                            return;
-                        }
-                    }                                     
-                    $response = editDiecastProduct($conn, $payload, $imageUrl);
+                    // $imageUrl = $payload['model_image_url'];
+                    // if ($isImageEdited) {
+                    //     $imageUrl = handleFileUpload($_FILES['model_image']);
+                    //     if ($imageUrl === false) {
+                    //         jsonResponse("File Upload Failed", "There was an error uploading the image. Please try again.");
+                    //         return;
+                    //     }
+                    // }
+
+                    $response = editDiecastProduct($conn, $payload);
 
                     jsonResponse($response["title"], $response["message"]);
 
@@ -116,13 +116,13 @@
 
             if ($route === 'seller/delete/product') {
                 $requiredFields = ['model_id', 'seller_id'];
-
+                
                 if (!array_diff_key(array_flip($requiredFields), $_POST)) {
                     
                     $payload = array_intersect_key($_POST, array_flip($requiredFields));
 
-                    $response = deleteCartItem($conn, $payload['model_id'], $payload['seller_id']);
-
+                    $response = deleteDiecastProduct($conn, $payload['model_id'], $payload['seller_id']);
+                    
                     jsonResponse($response["title"], $response["message"]);
 
                 } else {

@@ -6,6 +6,7 @@ session_start();
 
 
 $_SESSION["seller_id"] = 12;
+$_SESSION["seller_name"] = "Ivan Garcia";
 
 $brand = "SELECT * FROM diecast_brand";
 $brandResult = $conn->query($brand);
@@ -156,7 +157,7 @@ $sizeResult = $conn->query($size);
           
             <li class="profile"  >
               <div class="Info">
-                <p><b>Ivan Garcia</b></p>
+                <p><b><?php echo $_SESSION["seller_name"] ?></b></p>
                 <p>Verified Seller</p>
               </div>
 
@@ -252,7 +253,7 @@ $sizeResult = $conn->query($size);
         <div class="all_messages">
             <h2>Recent Messages</h2>
               <div>
-                <div class="chat-list" id="chat-list">                  
+                <div class="chat-list" id="chat-list">
                 </div>
 
               </div>
@@ -285,6 +286,7 @@ $sizeResult = $conn->query($size);
         if ($result->num_rows > 0) {          
             while ($row = $result->fetch_assoc()) {
                 $modelId = $row['model_id'];
+                $sellerId = $row['seller_id'];
                 $modelName = htmlspecialchars($row['model_name']);
                 $modelDescription = htmlspecialchars($row['model_description']);
                 $modelPrice = htmlspecialchars($row['model_price']);
@@ -308,8 +310,8 @@ $sizeResult = $conn->query($size);
                 echo '<p class="product-size"><b>Size:</b> ' . $sizeName . '</p>';
                 
                 echo '<div class="product-actions">';
-                echo '<button onclick="openEditForm(' . $modelId . ')">Edit</button>';
-                echo '<button onclick="deleteProduct(' . $modelId . ')">Delete</button>';
+                echo '<button onclick="openEditForm(' . $modelId . ', \'' . addslashes($modelName) . '\', \'' . addslashes($modelDescription) . '\', ' . $modelPrice . ', \'' . ($modelStock > 0 ? 'Yes' : 'No') . '\')">Edit</button>';
+                echo '<button onclick="deleteProduct(' . $modelId . ', ' . $sellerId . ')">Delete</button>';
                 echo '</div>';
                 echo '</div>';
                 echo '</div>';
@@ -330,13 +332,16 @@ $sizeResult = $conn->query($size);
           <h3>Edit Product</h3>
           <form onsubmit="submitEditForm(event)">
             <label for="edit-name">Product Name</label>
-            <input type="text" id="edit-name" name="name" value="Product Name">
+            <input type="hidden" id="seller-id" value=<?php echo $_SESSION["seller_id"] ?>>
+            <input type="hidden" id="edit-model-id" name="modelId">
+
+            <input type="text" id="edit-name" name="name">
 
             <label for="edit-description">Description</label>
-            <textarea id="edit-description" name="description">This is a detailed description of the product.</textarea>
+            <textarea id="edit-description" name="description"></textarea>
 
             <label for="edit-price">Price</label>
-            <input type="number" id="edit-price" name="price" value="29.99">
+            <input type="number" id="edit-price" name="price">
 
             <label for="edit-stock">In Stock</label>
             <select id="edit-stock" name="stock">
@@ -351,11 +356,9 @@ $sizeResult = $conn->query($size);
           </form>
         </div>
 
+      </div>
+      </div>
     </div>
-    </div>
-</div>
-
-
    
     <!-- Add Product Section -->
     <div id="add-product-section" class="section">
@@ -608,7 +611,6 @@ $sizeResult = $conn->query($size);
     </div>
 
     <!-- Orders Section -->
-
     <div id="orders-section" class="section">
       <h2>Orders</h2>
       <table>
@@ -624,50 +626,59 @@ $sizeResult = $conn->query($size);
         </thead>
         <tbody>
         <?php
-          $stmt = $conn->prepare("SELECT 
-                          order_info.order_id,
-                          order_info.order_ref_no,
-                          order_info.order_status,
-                          customer.customer_id,
-                          CONCAT(customer.first_name, ' ', customer.last_name) AS customer_name,
-                          diecast_model.model_id,
-                          diecast_model.model_name
-                      FROM 
-                          order_info 
-                      LEFT JOIN 
-                          order_items ON order_info.order_id = order_items.order_id
-                      LEFT JOIN 
-                          diecast_model ON diecast_model.model_id = order_items.model_id
-                      LEFT JOIN 
-                          customer ON customer.customer_id = order_info.customer_id
-                      WHERE 
-                          diecast_model.seller_id = ?
-                      ");
+          $stmt = $conn->prepare("
+              SELECT 
+                  order_info.order_id,
+                  order_info.order_ref_no,
+                  order_info.order_status,
+                  customer.customer_id,
+                  CONCAT(customer.first_name, ' ', customer.last_name) AS customer_name,
+                  GROUP_CONCAT(diecast_model.model_name SEPARATOR ', ') AS model_names  -- Concatenate model names
+              FROM 
+                  order_info 
+              LEFT JOIN 
+                  order_items ON order_info.order_id = order_items.order_id
+              LEFT JOIN 
+                  diecast_model ON diecast_model.model_id = order_items.model_id
+              LEFT JOIN 
+                  customer ON customer.customer_id = order_info.customer_id
+              WHERE 
+                  diecast_model.seller_id = ?
+              GROUP BY 
+                  order_info.order_id, order_info.order_ref_no, order_info.order_status, customer.customer_id
+          ");
+
           $stmt->bind_param("s", $_SESSION["seller_id"]);
           $stmt->execute();
-
           $result = $stmt->get_result();
 
           if ($result->num_rows > 0) {          
               while ($row = $result->fetch_assoc()) {
+                  $refNo = htmlspecialchars($row['order_ref_no']);
                   echo '<tr>
-                      <td>' . htmlspecialchars($row['order_ref_no']) . '</td>
+                      <td>' . $refNo . '</td>
                       <td>' . htmlspecialchars($row['customer_name']) . '</td>
-                      <td>' . htmlspecialchars($row['model_name']) . '</td>
+                      <td>' . htmlspecialchars($row['model_names']) . '</td>
                       <td>
-                          <select class="order-status" data-order-id="' . htmlspecialchars($row['order_id']) . '">
-                              <option value="">Select a status</option>
-                              <option value="Order Placed"' . ($row['order_status'] === 'Order Placed' ? ' selected' : '') . '> Order Placed </option>
-                              <option value="Waiting for courier"' . ($row['order_status'] === 'Waiting for courier' ? ' selected' : '') . '> Waiting for courier </option>
-                              <option value="In Transit"' . ($row['order_status'] === 'In Transit' ? ' selected' : '') . '> In Transit </option>
-                              <option value="Delivered"' . ($row['order_status'] === 'Delivered' ? ' selected' : '') . '> Delivered </option>
-                          </select>
+                        <select class="order-status" id="order-status-' . htmlspecialchars($row['order_id']) . '">
+                            <option value="">Select a status</option>
+                            <option value="Order Placed"' . ($row['order_status'] === 'Order Placed' ? ' selected' : '') . '> Order Placed </option>
+                            <option value="Waiting for courier"' . ($row['order_status'] === 'Waiting for courier' ? ' selected' : '') . '> Waiting for courier </option>
+                            <option value="In Transit"' . ($row['order_status'] === 'In Transit' ? ' selected' : '') . '> In Transit </option>
+                            <option value="Delivered"' . ($row['order_status'] === 'Delivered' ? ' selected' : '') . '> Delivered </option>
+                        </select>
                       </td>
                       <td>
                           <input type="text" class="tracking-number" data-order-id="' . htmlspecialchars($row['order_id']) . '" placeholder="Enter tracking number" />
                       </td>
                       <td>
-                          <button class="update-btn" onclick="updateOrder(' . htmlspecialchars($row['order_id']) . ')">Update</button>
+                          <button
+                            type="button" 
+                            class="update-btn" 
+                            onclick="updateOrder(' . htmlspecialchars($row['order_id']) . ', \'' . addslashes($refNo) . '\', \'' . addslashes($row['order_status']) . '\')"
+                          >
+                            Update
+                          </button>
                       </td>
                   </tr>';
               }
@@ -676,7 +687,8 @@ $sizeResult = $conn->query($size);
           }
 
           $stmt->close();
-        ?>
+          ?>
+
 
                     
         </tbody>
@@ -956,26 +968,12 @@ $sizeResult = $conn->query($size);
         <div class="chat-container">
 
           <!-- Left Chat List -->
-          <div class="chat-list" id="chat-list">
-          <h2>Chat List</h2>
-            <div class="chat-list-item" onclick="openChat(1)">
-              John Doe - <small>Last message: Hi, I have a question...</small>
-            </div>
-            <div class="chat-list-item" onclick="openChat(2)">
-              Jane Smith - <small>Last message: Thanks for the delivery!</small>
-            </div>
-
-            <div class="chat-list-item" onclick="openChat(3)">
-              Baxter Sisgado - <small>Last message: Mine po..</small>
-            </div>
+          <div class="chat-list" id="chat-list1">                      
           </div>
 
           <!-- Right Chat Box -->
         <div class="chat-box" id="chat-box">
-            <div class="messages" id="messages">
-              <!-- Messages will load here -->
-              <div class="message sent">Hello!</div>
-              <div class="message received">Hi, how can I help you?</div>
+            <div class="messages" id="messages">             
             </div>
             
             <div class="message-input">
@@ -1024,56 +1022,56 @@ $sizeResult = $conn->query($size);
           }
       }
 
-    function showSection(sectionId) {
-        try {
-            // Hide all sections first
-            const sections = document.querySelectorAll('.section');
-            sections.forEach(section => section.classList.remove('active'));
+      function showSection(sectionId) {
+          try {
+              // Hide all sections first
+              const sections = document.querySelectorAll('.section');
+              sections.forEach(section => section.classList.remove('active'));
 
-            // Show the selected section based on the ID
-            const selectedSection = document.getElementById(sectionId);
-            if (selectedSection) {
-                selectedSection.classList.add('active');
-                localStorage.setItem('activeSection', sectionId); // Save the active section in localStorage
-            } else {
-                console.error(`Section with ID '${sectionId}' not found.`);
-            }
-        } catch (error) {
-            console.error('Error showing section:', error);
-        }
-    }
+              // Show the selected section based on the ID
+              const selectedSection = document.getElementById(sectionId);
+              if (selectedSection) {
+                  selectedSection.classList.add('active');
+                  localStorage.setItem('activeSection', sectionId); // Save the active section in localStorage
+              } else {
+                  console.error(`Section with ID '${sectionId}' not found.`);
+              }
+          } catch (error) {
+              console.error('Error showing section:', error);
+          }
+      }
 
-    // Function to load the last active section on page load
-    window.addEventListener('DOMContentLoaded', () => {
-        try {
-            // Retrieve the last active section from localStorage, default to 'dashboard' if none found
-            const savedSection = localStorage.getItem('activeSection') || 'dashboard';
-            
-            // Verify the section exists before displaying
-            const sectionExists = document.getElementById(savedSection);
-            if (sectionExists) {
-                showSection(savedSection);
-                console.log(`Loaded section from storage: ${savedSection}`);
-            } else {
-                console.warn(`Saved section '${savedSection}' not found. Loading default section.`);
-                showSection('dashboard');
-            }
-        } catch (error) {
-            console.error('Error loading saved section:', error);
-            showSection('dashboard'); // Default to dashboard on error
-        }
-    });
+      // Function to load the last active section on page load
+      window.addEventListener('DOMContentLoaded', () => {
+          try {
+              // Retrieve the last active section from localStorage, default to 'dashboard' if none found
+              const savedSection = localStorage.getItem('activeSection') || 'dashboard';
+              
+              // Verify the section exists before displaying
+              const sectionExists = document.getElementById(savedSection);
+              if (sectionExists) {
+                  showSection(savedSection);
+                  console.log(`Loaded section from storage: ${savedSection}`);
+              } else {
+                  console.warn(`Saved section '${savedSection}' not found. Loading default section.`);
+                  showSection('dashboard');
+              }
+          } catch (error) {
+              console.error('Error loading saved section:', error);
+              showSection('dashboard'); // Default to dashboard on error
+          }
+      });
 
-    function hideDash(){
-      const dash = document.querySelectorAll(".dash");
-      
+      function hideDash(){
+        const dash = document.querySelectorAll(".dash");
+        
 
-      dash.classList.remove("visible");
-      dash.forEach((dashElement) => dashElement.classList.remove("visible"));
+        dash.classList.remove("visible");
+        dash.forEach((dashElement) => dashElement.classList.remove("visible"));
 
-      
+        
 
-    }
+      }
 
 
       const sidebar = document.querySelector(".sidebar");
@@ -1104,10 +1102,55 @@ $sizeResult = $conn->query($size);
         showSidebar();
       });
 
+      async function submitEditForm(event) {
+        event.preventDefault();
 
-      function openEditForm() {
+        const sellerId = document.getElementById('seller-id').value;
+        const modelId = document.getElementById('edit-model-id').value;
+        const name = document.getElementById('edit-name').value;
+        const description = document.getElementById('edit-description').value;
+        const price = document.getElementById('edit-price').value;
+        const stock = document.getElementById('edit-stock').value;
+        
+        const formData = new URLSearchParams({
+          seller_id: sellerId,
+          model_id: modelId,
+          model_name: name,
+          model_description: description,
+          model_price: price,
+          model_availability: stock === "Yes" ? "Available" : "Out of stock"
+        });
+        
+        try {
+        const response = await fetch('/backend/src/seller/route.php?route=seller/edit/product', {
+              method: 'POST', 
+              body: formData 
+          });          
+          if (!response.ok) {
+              throw new Error(`HTTP error! Status: ${response.status}`);
+          }          
+          const responseData = await response.json();
+                                      
+          alert('product edited')
+          closeEditForm();
+          window.location.reload()
+        } catch (error) {
+            console.error('Error during fetch:', error);
+        }
+      }
+
+
+      function openEditForm(modelId, name, description, price, stock) {
+        
+        document.getElementById('edit-name').value = name;
+        document.getElementById('edit-description').value = description;
+        document.getElementById('edit-price').value = price;
+        document.getElementById('edit-stock').value = stock;                
+        document.getElementById('edit-model-id').value = modelId
+        
         document.getElementById('editForm').style.display = 'block';
       }
+
 
       function closeEditForm() {
         document.getElementById('editForm').style.display = 'none';
@@ -1135,7 +1178,6 @@ $sizeResult = $conn->query($size);
 
       
     </script>
-
 
     <script>
 
@@ -1221,28 +1263,40 @@ $sizeResult = $conn->query($size);
         })
         .then(chat => {            
             const chatListDiv = document.getElementById("chat-list");
+            const chatListDiv1 = document.getElementById("chat-list1");
             chatListDiv.innerHTML = ""; 
-            console.log(chat);
+            chatListDiv1.innerHTML = ""; 
+
+            const title = document.createElement("h2");
+            title.innerHTML = `Chat List`
+            chatListDiv1.appendChild(title); 
             
+                        
             chat.data.forEach(chat => {                            
                 const chatItem = document.createElement("div");
                 chatItem.className = "chat-list-item";
-                chatItem.onclick = () => openChat(chat.message_id); 
-
+                chatItem.onclick = () => openChat(chat.room_id);                 
                 chatItem.innerHTML = `
                     ${chat.seller_name} - <small>Last message: ${chat.message}</small>
                 `;
+
+                const chatItem1 = document.createElement("div");
+                chatItem1.className = "chat-list-item";
+                chatItem1.onclick = () => openChat(chat.room_id);                 
+                chatItem1.innerHTML = `
+                    ${chat.seller_name} - <small>Last message: ${chat.message}</small>
+                `;
                 
-                chatListDiv.appendChild(chatItem); 
-                const chatId = chat.message_id; 
-    
+                chatListDiv.appendChild(chatItem);                 
+                chatListDiv1.appendChild(chatItem1); 
+                const chatId = chat.room_id; 
+                                
                 if (!messagesData[chatId]) {
                     messagesData[chatId] = [];
                 }                              
-                messagesData[chatId].push({ type: chat.sender_type, sender: chat.customer_name, text: chat.message });
-                console.log(messagesData);
-                
+                messagesData[chatId].push({ id: chat.message_id, type: chat.sender_type, sender: chat.customer_name, text: chat.message });                
             });
+                        
         })
         .catch(error => {
             console.error('There was a problem with the fetch operation:', error);
@@ -1251,23 +1305,109 @@ $sizeResult = $conn->query($size);
     </script>
    
     <script>
+
+      async function updateOrder(orderId, refNo, status) {
+                
+        const newStatus = document.getElementById(`order-status-${orderId}`).value
+                
+        if (status === newStatus || newStatus === "")  {         
+          return
+        }
+
+        const data = new URLSearchParams({                
+          order_id: orderId,
+          order_ref_no: refNo,
+          order_status: newStatus
+        });
+        try {
+          const response = await fetch('/backend/src/seller/route.php?route=seller/update/status/order', {
+              method: 'POST', 
+              body: data 
+          });          
+          if (!response.ok) {
+              throw new Error(`HTTP error! Status: ${response.status}`);
+          }          
+          const responseData = await response.json();
+                                              
+          alert('order updated')
+          window.location.reload();
+        } catch (error) {
+            console.error('Error during fetch:', error);
+        }
+      }
+
+      async function deleteProduct(modelId, sellerid) {        
+          const data = new URLSearchParams({                
+            model_id: modelId,
+            seller_id: sellerId
+          });
+          try {
+            const response = await fetch('/backend/src/seller/route.php?route=seller/delete/product', {
+                method: 'POST', 
+                body: data 
+            });          
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }          
+            const responseData = await response.json();
+                                                
+            alert('product deleted')
+            window.location.reload();
+          } catch (error) {
+              console.error('Error during fetch:', error);
+          }
         
-    // Function to open a chat and display messages in the chat box
-    function openChat(chatId) {
-      const chatBox = document.getElementById('messages');
-      chatBox.innerHTML = ''; // Clear previous messages      
-      
-      const chatMessages = messagesData[chatId];      
-      console.log(chatMessages);
-      
-      // Populate the chat box with messages
-      chatMessages.forEach((message) => {
-        const messageElement = document.createElement('div');
-        messageElement.classList.add('message');
-        messageElement.innerHTML = `<strong>${message.sender}:</strong> ${message.text}`;
-        chatBox.appendChild(messageElement);
-      });
-    }
+      }
+            
+      function openChat(chatId) {
+        const chatBox = document.getElementById('messages');
+        chatBox.innerHTML = ''; // Clear previous messages      
+        
+        fetch(`/backend/src/chat/route.php?route=chat/get&room_id=${chatId}&limit=10&offset=0`, {
+          method: 'GET',                
+          headers: {
+              'Content-Type': 'application/json'
+          }
+          })
+          .then(response => {
+              if (!response.ok) {
+                  throw new Error('Network response was not ok');
+              }
+              return response.json();
+          })
+          .then(chat => {
+            
+            chat.data.forEach(chat => {    
+                        
+              if (!messagesData[chatId]) {
+                  messagesData[chatId] = [];
+              }                                
+              const messageExists = messagesData[chatId].some(message => message.id === chat.message_id);
+              if (!messageExists) {
+                messagesData[chatId].push({ id: chat.message_id, type: chat.sender_type, sender: chat.name, text: chat.message });
+              }
+            })
+            const chatMessages = messagesData[chatId];      
+              
+            // Populate the chat box with messages
+          
+            chatMessages.forEach((message) => {
+              const messageElement = document.createElement('div');
+                                          
+              messageElement.classList.add('message');
+              
+              if (message.type === "seller") {
+                messageElement.innerHTML = ` <div class="message sent"> <strong>${message.sender}:</strong> ${message.text} </div>`;               
+              } else {                               
+                messageElement.innerHTML = ` <div class="message received"> <strong>${message.sender}:</strong> ${message.text} </div>`;
+              }            
+              chatBox.appendChild(messageElement);
+            });
+          })
+          .catch(error => {
+              console.error('There was a problem with the fetch operation:', error);
+          });                  
+      }
 
  
 

@@ -349,6 +349,7 @@ nav li:first-child {
 
 #orders-section .update-btn{
    background-color: #141520;
+   cursor: pointer;
   color: #fff;
   transition: background-color 0.3s;
   padding: 0.5rem;

@@ -114,8 +114,7 @@
                 CASE
                     WHEN chat_message.sender_id = chat_room.customer_id THEN 'customer'
                     WHEN chat_message.sender_id = chat_room.seller_id THEN 'seller'
-                END AS sender_type
-                
+                END AS sender_type                
             FROM 
                 chat_message
                         
@@ -125,25 +124,25 @@
             LEFT JOIN seller ON chat_room.seller_id = seller.seller_id            
             WHERE 
                 chat_message.room_id = ?                 
-            ORDER BY chat_message.sent_at ASC
-            LIMIT ? OFFSET ?");
+            ORDER BY chat_message.sent_at ASC");
 
         
-            $getMessages->bind_param("iii", $payload["room_id"], $limit, $offset);
+            $getMessages->bind_param("i", $payload["room_id"]);
             $getMessages->execute();
             $result = $getMessages->get_result();
                 
             $messages = [];
             while ($row = $result->fetch_assoc()) {                
                 $decrypted_message = decryptMessage($row['message']);
-                                
+
+                $name = $row['sender_type'] === "seller" ? $row['seller_name'] : $row['customer_name'];
+
                 $messages[] = [
                     'message_id' => $row['message_id'],
                     'message' => $decrypted_message, 
                     'attachment' => $row['attachment'],
-                    'sent_at' => $row['sent_at'],
-                    'customer_name' => $row['customer_name'],
-                    'seller_name' => $row['seller_name'],
+                    'sent_at' => $row['sent_at'],                
+                    'name' => $name,
                     'sender_type' => $row['sender_type']
                 ];
             }
@@ -176,7 +175,8 @@
                 $room = $roomResult->fetch_assoc();                
                 $room_id = $room['room_id'];
                         
-                $getMessage = $connect->prepare("SELECT 
+                $getMessage = $connect->prepare("SELECT
+                    chat_room.room_id, 
                     chat_message.message_id,
                     chat_message.encrypted_message AS message,
                     chat_message.attachment,
@@ -205,8 +205,10 @@
                 $messages = [];
                 if ($row = $result->fetch_assoc()) {
                     $decrypted_message = decryptMessage($row['message']);
-        
+                    
+                    
                     $messages[] = [
+                        'room_id' => $row['room_id'],
                         'message_id' => $row['message_id'],
                         'message' => $decrypted_message,
                         'attachment' => $row['attachment'],
