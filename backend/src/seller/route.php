@@ -8,6 +8,7 @@
     require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/src/seller/auth.php';    
     require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/src/seller/transaction.php';
     require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/src/seller/diecast.php';
+    require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/src/seller/bidding.php';
     
         
     if ($_SERVER['REQUEST_METHOD'] === 'POST' ) {
@@ -130,6 +131,60 @@
                 }
             } 
 
+            if ($route === 'seller/post/bid') {
+                $requiredFields = ['seller_id', 'size_id', 'brand_id', 'model_name', 
+                'model_description', 'model_price', 'model_stock', 'model_availability', 
+                'model_tags', 'model_type', 'details', 'start_amount', 'start_time', 'end_time'];
+
+                if (!array_diff_key(array_flip($requiredFields), $_POST)) {
+                    
+                    $payload = array_intersect_key($_POST, array_flip($requiredFields));
+
+                    $imageUrl = handleFileUpload($_FILES['model_image']);
+                    if ($imageUrl === false) {
+                        jsonResponse("File Upload Failed", "There was an error uploading the image. Please try again.");
+                        return;
+                    }
+                    
+                    $response = postBidItem($conn, $payload, $imageUrl);
+
+                    jsonResponse($response["title"], $response["message"]);
+
+                } else {
+                    jsonResponse("Invalid request", "All fields are required.");
+                }
+            }
+
+            if ($route === 'seller/close/bid') {
+                $requiredFields = ['bidding_id'];
+                if (!array_diff_key(array_flip($requiredFields), $_POST)) {
+                    
+                    $payload = array_intersect_key($_POST, array_flip($requiredFields));
+                    
+                    $response = closeBidItem($conn, $payload);
+
+                    jsonResponse($response["title"], $response["message"]);
+
+                } else {
+                    jsonResponse("Invalid request", "All fields are required.");
+                }
+            }
+
+            if ($route === 'seller/cancel/bid') {
+                $requiredFields = ['bidding_id'];
+                if (!array_diff_key(array_flip($requiredFields), $_POST)) {
+                                                            
+                    $response = cancelBidItem($conn, $_POST["bidding_id"]);
+
+                    jsonResponse($response["title"], $response["message"]);
+
+                } else {
+                    jsonResponse("Invalid request", "All fields are required.");
+                }
+            }
+
+
+
         } catch (\Throwable $th) {            
             return array("title" => "Error", "message" => "Something went wrong!", "data" => []);
         }
@@ -172,6 +227,26 @@
                 }
             }
 
+            if ($route === 'seller/get/bid/post') {
+                $requiredFields = ['seller_id'];
+
+                if (!array_diff_key(array_flip($requiredFields), $_GET)) {
+                    
+                    $sellerId = $_GET['seller_id'];
+                    
+                    $response = getBidItem($conn, $sellerId);
+                    
+                    jsonResponseWithData(
+                        $response["title"], 
+                        $response["message"], 
+                        $response["data"]
+                    );
+            
+                } else {
+                    jsonResponse("Invalid cart item", "All fields are required.");
+                }
+            }
+
             if ($route === 'account/view') {
                 $sellerId = $_GET['seller_id'];
 
@@ -184,6 +259,8 @@
                 );
 
             }
+
+            
         } catch (\Throwable $th) {            
             return array("title" => "Error", "message" => "Something went wrong!", "data" => []);
         }

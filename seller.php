@@ -7,12 +7,28 @@ session_start();
 
 $_SESSION["seller_id"] = 12;
 $_SESSION["seller_name"] = "Ivan Garcia";
+$_SESSION["user_type"] = "seller";
 
 $brand = "SELECT * FROM diecast_brand";
 $brandResult = $conn->query($brand);
 
+if ($brandResult) {    
+    $brandData = $brandResult->fetch_all(MYSQLI_ASSOC);
+    $brandResult->free(); 
+} else {
+    $brandData = [];
+}
+
+
 $size = "SELECT * FROM diecast_size";
 $sizeResult = $conn->query($size);
+
+if ($sizeResult) {
+    $sizeData = $sizeResult->fetch_all(MYSQLI_ASSOC);
+    $sizeResult->free(); 
+} else {
+    $sizeData = [];
+}
 
 ?>
 
@@ -404,12 +420,10 @@ $sizeResult = $conn->query($size);
             <div class="form-group">
               <label for="auction-product-brand">Model Brand</label>
               <select id="model-brand" name="model-brand" required onchange="toggleOtherBrandInput()">
-                <?php                            
-                  if ($brandResult->num_rows > 0) {                            
-                      while ($row = $brandResult->fetch_assoc()) {
-                          echo '<option value="' . htmlspecialchars($row['brand_id']) . '">' . htmlspecialchars($row['brand_name']) . '</option>';
-                      }
-                  } 
+                <?php
+                  foreach ($brandData as $row) {
+                    echo '<option value="' . htmlspecialchars($row['brand_id']) . '">' . htmlspecialchars($row['brand_name']) . '</option>';
+                  }
                 ?>
               </select>
             </div>
@@ -443,11 +457,9 @@ $sizeResult = $conn->query($size);
             <div class="form-group">
               <label for="model-scale">Scale</label>
               <select id="model-scale" name="model-scale" required>               
-                <?php                            
-                  if ($sizeResult->num_rows > 0) {                            
-                      while ($row = $sizeResult->fetch_assoc()) {
-                        echo '<option value="' . htmlspecialchars($row['size_id']) . '">' . htmlspecialchars($row['ratio']) . '</option>';
-                      }
+               <?php
+                  foreach ($sizeData as $row) {
+                    echo '<option value="' . htmlspecialchars($row['size_id']) . '">' . htmlspecialchars($row['ratio']) . '</option>';
                   }
                 ?>
               </select>
@@ -706,38 +718,81 @@ $sizeResult = $conn->query($size);
 
 
         <div class="auction-list" id="ongoing-bids-list">
+          <?php
+            $stmt = $conn->prepare("
+                SELECT 
+                    bid_room.bidding_id,
+                    bid_room.seller_id,
+                    bid_room.model_id,
+                    bid_room.details,
+                    bid_room.start_amount,
+                    bid_room.end_amount,
+                    bid_room.bid_status,
+                    bid_room.start_time,
+                    bid_room.end_time,
+                    diecast_size.ratio,
+                    diecast_brand.brand_name,
+                    diecast_model.model_name,
+                    diecast_model.model_description,
+                    diecast_model.model_tags,
+                    diecast_model.model_type,
+                    diecast_model.model_image_url                    
+                FROM 
+                    bid_room
+                LEFT JOIN 
+                    diecast_model ON diecast_model.model_id = bid_room.model_id
+                LEFT JOIN 
+                    diecast_size ON diecast_size.size_id = diecast_model.size_id
+                LEFT JOIN 
+                    diecast_brand ON diecast_brand.brand_id = diecast_model.brand_id
+                WHERE 
+                    bid_room.seller_id = ?
+            ");
+            
+           
+            $stmt->bind_param("s", $_SESSION["seller_id"]);
+            $stmt->execute();
+            $result = $stmt->get_result();
 
-          <div  class="bid-card">
-            <strong>Product:</strong> Car Engine
-            <br />
-            <strong>Highest Bid:</strong> $500
-            <br />
-            <strong>Status:</strong> Active
-            <br />
-            <strong>Start Time:</strong> 2024-10-28 10:00 AM
-            <br />
-            <strong>End Time:</strong> 2024-10-30 10:00 AM
+           
+            if ($result->num_rows > 0) {
+               
+                while ($row = $result->fetch_assoc()) {
+                   
+                    $highestBid = $row['end_amount'] ?? $row['start_amount'];
+                   
+                    $currentDateTime = new DateTime();
+                    $endDateTime = new DateTime($row['end_time']);
+                    $status = "Closed";
+                    if ($row["bid_status"] !== "Closed") {
+                      $status = ($currentDateTime < $endDateTime) ? "Active" : "Ended";
+                    }
+                    
 
-            <div class="auction-actions">
-              <button class="btn cancel-btn" onclick="cancelBid(1)">Cancel Bid</button>
-            </div>
-          </div>
+                   
+                    echo '<div class="bid-card">';
+                    echo '<strong>Product:</strong> ' . htmlspecialchars($row['model_name']) . '<br />';
+                    echo '<strong>Highest Bid:</strong> $' . htmlspecialchars($highestBid) . '<br />';
+                    echo '<strong>Status:</strong> ' . $status . '<br />';
+                    echo '<strong>Start Time:</strong> ' . date("Y-m-d h:i A", strtotime($row['start_time'])) . '<br />';
+                    echo '<strong>End Time:</strong> ' . date("Y-m-d h:i A", strtotime($row['end_time'])) . '<br />';
 
-          <div class="bid-card">
-            <strong>Product:</strong> Car Engine
-              <br />
-              <strong>Highest Bid:</strong> $500
-              <br />
-              <strong>Status:</strong> Active
-              <br />
-              <strong>Start Time:</strong> 2024-10-28 10:00 AM
-              <br />
-              <strong>End Time:</strong> 2024-10-30 10:00 AM
+                    if ($status !== "Closed") {
+                      echo '<div class="auction-actions">';
+                      echo '<button class="btn cancel-btn" onclick="cancelBid(' . htmlspecialchars($row['bidding_id']) . ')">Cancel Bid</button>';
+                      echo '</div>';
+                    }
+                    
 
-              <div class="auction-actions">
-                <button class="btn cancel-btn" onclick="cancelBid(1)">Cancel Bid</button>
-            </div>
-          </div>
+                    echo '</div>';
+                }
+            } else {
+                echo "You don't have posted a bid yet. You can post a bid by clicking the 'Add New Bid'.";
+            }
+
+           
+            $stmt->close();
+          ?>
 
         </div>
 
@@ -752,7 +807,7 @@ $sizeResult = $conn->query($size);
         <form action="#" method="POST" id="auction-form">
          
           <div class="form-group">
-            <input type="text" hidden id="seller-id" value=<?php echo $_SESSION["seller_id"] ?>>
+            <input type="hidden" id="seller-id" value=<?php echo $_SESSION["seller_id"] ?>>
 
             <label for="auction-product-name">Product Name</label>
             <input
@@ -768,8 +823,8 @@ $sizeResult = $conn->query($size);
             <label for="auction-details">Details</label>
             <input
               type="text"
-              id="auction-product-name"
-              name="auction-product-name"
+              id="auction-details"
+              name="auction-details"
               placeholder="Enter product details"
               required
             />
@@ -779,15 +834,11 @@ $sizeResult = $conn->query($size);
             <div class="form-group">
               <label for="auction-product-brand">Model Brand</label>
               <select id="model-brand" name="model-brand" required onchange="toggleOtherBrandInput()">
-                <option value="auto-world">Auto World</option>
-                <option value="bburago">Bburago</option>
-                <option value="greenlight">Greenlight</option>
-                <option value="hotwheels">Hot Wheels</option>
-                <option value="jada-toys">Jada Toys</option>
-                <option value="m2-machines">M2 Machines</option>
-                <option value="matchbox">Matchbox</option>
-                <option value="tomica">Tomica</option>
-                <option value="other">Other</option>
+                <?php
+                  foreach ($brandData as $row) {
+                    echo '<option value="' . htmlspecialchars($row['brand_id']) . '">' . htmlspecialchars($row['brand_name']) . '</option>';
+                  }
+                ?>
               </select>
             </div>
 
@@ -821,11 +872,11 @@ $sizeResult = $conn->query($size);
             <div class="form-group">
               <label for="model-scale">Scale</label>
               <select id="model-scale" name="model-scale" required>
-                <option value="1:18">1:18</option>
-                <option value="1:24">1:24</option>
-                <option value="1:32">1:32</option>
-                <option value="1:43">1:43</option>
-                <option value="1:64">1:64</option>
+                <?php
+                    foreach ($sizeData as $row) {
+                      echo '<option value="' . htmlspecialchars($row['size_id']) . '">' . htmlspecialchars($row['ratio']) . '</option>';
+                    }
+                  ?>
               </select>
             </div>
           </div>
@@ -918,8 +969,8 @@ $sizeResult = $conn->query($size);
 
 
           <div class="form-group">
-            <label for="product-image">Product Image</label>
-            <input type="file" id="product-image" name="product-image" />
+            <label for="product-bid-image">Product Image</label>
+            <input type="file" id="product-bid-image" name="product-bid-image" />
           </div>
 
           <div class="form-group">
@@ -976,19 +1027,23 @@ $sizeResult = $conn->query($size);
             <div class="messages" id="messages">             
             </div>
             
-            <div class="message-input">
-              <input type="text" id="message-input" placeholder="Type your message here..." />
-              
-              <!-- Hidden file input -->
-              <input type="file" id="image-input" accept="image/*" style="display: none;" />
-              
-              <!-- Icon to trigger file selection -->
-              <span class="material-symbols-outlined" id="file-icon" onclick="document.getElementById('image-input').click();">
-                attach_file
-              </span>
+            <form id="message-form">
+              <div class="message-input">
+                <input type="hidden" id="room-id" value="">
+                <input type="hidden" id="seller-id" value="<?php echo $_SESSION["seller_id"]?>">
+                <input type="hidden" id="user-type" value="<?php echo $_SESSION["user_type"]?>">
 
-              <button onclick="sendMessage()">Send</button>
-            </div>
+                <input type="text" id="message-input" placeholder="Type your message here..." />
+                                  
+                <input type="file" id="image-input" accept="image/*" style="display: none;" />
+                                  
+                <span class="material-symbols-outlined" id="file-icon" onclick="document.getElementById('image-input').click();">
+                    attach_file
+                </span>
+
+                <button type="button" onclick="sendMessage()">Send</button>
+              </div>
+            </form>
           </div>
         </div>
 
@@ -1194,7 +1249,7 @@ $sizeResult = $conn->query($size);
         const modelType = document.getElementById('model-type').value;
         const description = document.getElementById('product-description').value;
         const fileInput = document.querySelector('input[type="file"]'); 
-       
+
 
         const tags = Array.from(document.querySelectorAll('input[name="model-tags"]:checked'))
         .map(checkbox => checkbox.value.replace(/_/g, ' '))
@@ -1234,16 +1289,81 @@ $sizeResult = $conn->query($size);
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }          
             const responseData = await response.json();
-            
-            console.log("Product listed");
-            
-            console.log('Response:', responseData);
+                                  
             alert('product added')
           } catch (error) {
               console.error('Error during fetch:', error);
           }
         }
-      });          
+      });
+
+      document.getElementById('auction-form').addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent form submission for testing display
+
+        const sellerId = document.getElementById('seller-id').value
+        const productName = document.getElementById('auction-product-name').value;
+        const productDetails = document.getElementById('auction-details').value;
+        const productBrand = document.getElementById('model-brand').value;
+        const productSize = document.getElementById('model-scale').value;
+        const productType = document.getElementById('model-type').value;
+        const productPrice = document.getElementById('product-price').value;        
+        const bidStartAmount = document.getElementById('starting-bid').value;
+        const bidStartDate = document.getElementById('auction-start-date').value;
+        const bidEndDate = document.getElementById('auction-end-date').value;
+        const fileInput = document.getElementById('product-bid-image').files[0];; 
+        
+        const tags = Array.from(document.querySelectorAll('input[name="model-tags"]:checked'))
+        .map(checkbox => checkbox.value.replace(/_/g, ' '))
+        .map(tag => tag.split(' ')
+          .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+          .join(' ')
+        );
+      
+        const formData = new FormData();
+                        
+        formData.append('seller_id', sellerId);
+        formData.append('size_id', productSize);
+        formData.append('brand_id', productBrand);
+        formData.append('model_name', productName);
+        formData.append('model_description', "Empty Description");
+        formData.append('model_price', 0);
+        formData.append('model_stock', 1);
+        formData.append('model_availability', 'Available');
+        formData.append('model_tags', tags.length ? tags.join(', ') : '');
+        formData.append('model_type', productType);
+        formData.append('details', productDetails);
+        formData.append('start_amount', bidStartAmount);
+        formData.append('start_time', bidStartDate);
+        formData.append('end_time', bidEndDate);
+                             
+        if (fileInput) {
+            formData.append('model_image', fileInput); 
+        } else {
+            console.error('No file selected for upload');
+            return; 
+        }
+        
+        postBitItem()
+
+        async function postBitItem() {
+          try {
+            const response = await fetch('/backend/src/seller/route.php?route=seller/post/bid', {
+                method: 'POST', 
+                body: formData 
+            });          
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }          
+            const responseData = await response.json();
+                                  
+            alert('bid posted')
+          } catch (error) {
+              console.error('Error during fetch:', error);
+          }
+        }
+        
+      });
+
     </script>
 
     <script>
@@ -1288,13 +1408,7 @@ $sizeResult = $conn->query($size);
                 `;
                 
                 chatListDiv.appendChild(chatItem);                 
-                chatListDiv1.appendChild(chatItem1); 
-                const chatId = chat.room_id; 
-                                
-                if (!messagesData[chatId]) {
-                    messagesData[chatId] = [];
-                }                              
-                messagesData[chatId].push({ id: chat.message_id, type: chat.sender_type, sender: chat.customer_name, text: chat.message });                
+                chatListDiv1.appendChild(chatItem1);                
             });
                         
         })
@@ -1305,6 +1419,77 @@ $sizeResult = $conn->query($size);
     </script>
    
     <script>
+
+      async function sendMessage() {
+        event.preventDefault()
+        
+        const roomId = document.getElementById("room-id").value
+        const senderId = document.getElementById("seller-id").value
+        const userType = document.getElementById("user-type").value
+        const message = document.getElementById('message-input').value;
+                
+        const file = document.getElementById('image-input').files[0];        
+        
+        const data = new URLSearchParams({          
+          room_id: roomId,
+          sender_id: senderId,
+          user_type: userType,
+          message: message,
+          attachment: file ? file : null,
+        });
+
+        const formData = new FormData();
+                        
+        formData.append('room_id', roomId);
+        formData.append('sender_id', senderId);
+        formData.append('user_type', userType);
+        formData.append('message', message);
+        formData.append('attachment', file);
+       
+        fetch('/backend/src/chat/route.php?route=chat/send', {
+          method: 'POST',
+          body: formData,          
+          })
+          .then(response => {
+              if (!response.ok) {
+                  throw new Error('Network response was not ok');
+              }
+              return response.json();
+          })
+          .then(data => {
+              console.log(data);              
+              alert("message sent")
+              document.getElementById('message-form').reset();
+          })
+          .catch(error => {
+              console.error('There was a problem with the fetch operation:', error);
+          });
+
+        
+
+      }
+
+      async function cancelBid(biddingId) {
+        
+        const data = new URLSearchParams({
+          bidding_id: biddingId
+        });
+        try {
+          const response = await fetch('/backend/src/seller/route.php?route=seller/cancel/bid', {
+              method: 'POST', 
+              body: data 
+          });          
+          if (!response.ok) {
+              throw new Error(`HTTP error! Status: ${response.status}`);
+          }          
+          const responseData = await response.json();
+                                              
+          alert('bid item cancelled')
+          window.location.reload();
+        } catch (error) {
+            console.error('Error during fetch:', error);
+        }
+      }
 
       async function updateOrder(orderId, refNo, status) {
                 
@@ -1389,8 +1574,10 @@ $sizeResult = $conn->query($size);
             })
             const chatMessages = messagesData[chatId];      
               
-            // Populate the chat box with messages
-          
+            
+            const roomId = document.getElementById("room-id");
+            roomId.value = chatId;
+
             chatMessages.forEach((message) => {
               const messageElement = document.createElement('div');
                                           

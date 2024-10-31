@@ -14,7 +14,9 @@
                 LEFT JOIN diecast_brand ON diecast_brand.brand_id = diecast_model.brand_id
                 LEFT JOIN diecast_size ON diecast_size.size_id = diecast_model.size_id
                 LEFT JOIN seller ON seller.seller_id = diecast_model.seller_id
-                WHERE 1=1 ";
+                WHERE 
+                    1=1 AND 
+                diecast_model.model_price != 0";
             
             $params = [];
             $paramTypes = "";
