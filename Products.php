@@ -31,7 +31,12 @@
     <?php include './shared/checkoutModal.php';?>
 
     <footer class="footer">
-        <p>&copy; 2024 PacketGarage. All rights reserved.</p>
+    <p>&copy; 2024 PocketGarage. All rights reserved.</p>
+    <p>
+        <a href="/about">About</a> |
+        <a href="/terms-of-service">Terms of Service</a> |
+        <a href="/privacy-policy">Privacy Policy</a> 
+    </p>
     </footer>
 
     <script src="./scripts/getProduct.js"></script>

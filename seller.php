@@ -143,47 +143,45 @@ $_SESSION["seller_id"] = 12;
       </div>
 
       <div id="nav-bar">
-          <ul>
-            <li>
-              <a href="#" class="logo" onclick="showSection('dashboard-section')">
-                <img src="./assets/BG.PNG" alt="Logo" />
-              </a>
-            </li>
-          
-            <li class="profile"  >
-              <div class="Info">
-                <p><b>Ivan Garcia</b></p>
-                <p>Verified Seller</p>
-              </div>
+        <ul>
+          <li>
+            <a href="#" class="logo" onclick="showSection('dashboard-section')">
+              <img src="./assets/BG.PNG" alt="Logo" />
+            </a>
+          </li>
+        
+          <li class="profile"  >
+            <div class="Info">
+              <p><b>Ivan Garcia</b></p>
+              <p>Verified Seller</p>
+            </div>
 
-              <div class="profile-photo" href="#" >
-                <img src="assets/profile.jpeg" alt="" />
-                
-              </div>
-               
-            </li>
-            
-            <li class="menubtn" onclick="showSidebar()">  
-              <a href="#">
-                <span class="material-symbols-outlined">menu</span>
-              </a>
-
-
+            <div class="profile-photo"  onclick="showSection('user-profile-section')">
+              <img src="assets/profile.jpeg" alt="" />
               
-            </li>
-          </ul>
-      </div>
+            </div>
+              
+          </li>
+            
+          <li class="menubtn" onclick="showSidebar()">  
+            <a href="#">
+              <span class="material-symbols-outlined">menu</span>
+            </a>
 
-      
+
+            
+          </li>
+        </ul>
+      </div>
     </nav>
 
-     <div class="content">
-        <!-- Dashboard Section -->
-        <div id="dashboard-section" class="section">
-            <h1>Overview</h1>
+    <!-- For Dashboard Section -->
+    <div class="content">
+      <div id="dashboard-section" class="section">
+          <h1>Overview</h1>
 
-          <!--start orecentupdate-->
-          
+         <!--start orecentupdate-->
+        
           <div class="recent_update">
             <h2>Recent Update</h2>
 
@@ -194,96 +192,141 @@ $_SESSION["seller_id"] = 12;
                 </div>
               </div>
             </div>
+          </div>
 
-            
-            
-        </div>
+          <div class="all_products">
+              <h2>All Products</h2>
+              <div class="form">
+                <a href="#" class="logo" onclick="showSection('dashboard-section')"></a>
+                <h1> 2 </h1>
+                <a href="#" onclick="showSection('view-product-section')">
+                          <h3>View Products</h3>
+                </a>
+              </div>
+          </div>
 
-        <div class="all_products">
-            <h2>All Products</h2>
+          <div class="all_bidding">
+              <h2>All bidding</h2>
+              <div class="form">
+                <a href="#" class="logo" onclick="showSection('dashboard-section')"></a>
+              <h1> 2 </h1>
+                <a href="#" onclick="showSection('auction-section')">
+                  <h3>View Bidding</h3>
+                </a>
+              </div>
+          </div>
 
-            <div class="form">
-            <a href="#" class="logo" onclick="showSection('dashboard-section')"></a>
-            <h1> 2 </h1>
-            <a href="#" onclick="showSection('view-product-section')">
-                      <h3>View Products</h3>
-            </a>
-            </div>
+          <div class="all_messages">
+              <h2>Recent Messages</h2>
+                <div>
+                  <div class="chat-list" id="chat-list">
+                    <div class="chat-list-item" onclick="openChat(1)">
+                      John Doe - <small>Last message: Hi, I have a question...</small>
+                    </div>
+                    <div class="chat-list-item" onclick="openChat(2)">
+                      Jane Smith - <small>Last message: Thanks for the delivery!</small>
+                    </div>
 
-        </div>
-
-        <div class="all_bidding">
-
-            <h2>All bidding</h2>
-            <div class="form">
-            <a href="#" class="logo" onclick="showSection('dashboard-section')"></a>
-            <h1> 2 </h1>
-             <a href="#" onclick="showSection('auction-section')">
-                <h3>View Bidding</h3>
-              </a>
-            </div>
-        </div>
-
-        <div class="all_messages">
-            <h2>Recent Messages</h2>
-              <div>
-                <div class="chat-list" id="chat-list">
-                  <div class="chat-list-item" onclick="openChat(1)">
-                    John Doe - <small>Last message: Hi, I have a question...</small>
-                  </div>
-                  <div class="chat-list-item" onclick="openChat(2)">
-                    Jane Smith - <small>Last message: Thanks for the delivery!</small>
-                  </div>
-
-                  <div class="chat-list-item" onclick="openChat(3)">
-                    Baxter Sisgado - <small>Last message: Mine po..</small>
+                    <div class="chat-list-item" onclick="openChat(3)">
+                      Baxter Sisgado - <small>Last message: Mine po..</small>
+                    </div>
                   </div>
                 </div>
-
-              </div>
-        </div>
-
-
-
-
-
-
-
-
-
-
-
-
-      </div>
-
+          </div>
     </div>
 
-     <!--view  productSection -->
-   
+
+      
+    <!-- For User Profile Section -->
+
+  <div id="user-profile-section" class="section">
+    <div id="settings-container" class="settings-container">
+
+      <div id="user-settings-section">
+        <h2>User Settings</h2>
+        <ul>
+          <li><a href="#" onclick="showUserInfo()">User Info</a></li>
+          <li><a href="#">Account Settings</a></li>
+          <li><a href="#">Privacy</a></li>
+          <li><a href="#">Logout</a></li>
+        </ul>
+      </div>
+        
+    
+      <div id="user-info">
+    <div class="container">
+      <h1>User Profile</h1>
+      <form id="profileForm" method="post" action="">
+        <div class="form-group">
+          <label for="fullname">Full Name:</label>
+          <input type="text" id="fullname" name="fullname" value="<?php echo $fullname; ?>" required>
+        </div>
+        <div class="form-group">
+          <label for="email">Email:</label>
+          <input type="email" id="email" name="email" value="<?php echo $email; ?>" required>
+        </div>
+        <div class="form-group">
+          <label for="phone">Phone Number:</label>
+          <input type="tel" id="phone" name="phone" value="<?php echo $phone; ?>" required>
+        </div>
+        <div class="form-group">
+          <label for="address">Address:</label>
+          <input type="text" id="address" name="address" value="<?php echo $address; ?>" required>
+        </div>
+        <div class="form-group">
+          <label for="gender">Gender:</label>
+          <select id="gender" name="gender" required>
+            <option value="" <?php echo ($gender == "") ? "selected" : ""; ?>>Select...</option>
+            <option value="male" <?php echo ($gender == "male") ? "selected" : ""; ?>>Male</option>
+            <option value="female" <?php echo ($gender == "female") ? "selected" : ""; ?>>Female</option>
+            <option value="other" <?php echo ($gender == "other") ? "selected" : ""; ?>>Other</option>
+          </select>
+        </div>
+        <button type="submit">Save Changes</button>
+      </form>
+
+      <?php if ($_SERVER["REQUEST_METHOD"] == "POST"): ?>
+        <div class="profile-data">
+          <h2>Your Profile Data</h2>
+          <p><strong>Full Name:</strong> <?php echo $fullname; ?></p>
+          <p><strong>Email:</strong> <?php echo $email; ?></p>
+          <p><strong>Phone Number:</strong> <?php echo $phone; ?></p>
+          <p><strong>Address:</strong> <?php echo $address; ?></p>
+          <p><strong>Gender:</strong> <?php echo $gender; ?></p>
+        </div>
+      <?php endif; ?>
+      
+    </div>
+    </div>
+    </div>
+  </div>
+
+
+    <!--view  productSection -->
     <div id="view-product-section" class="section">
       <h2>Product Details</h2>
     
 
      <div class="all-products">
-     <div class="product-card">
-        <!-- Product Image -->
-        <div class="product-image">
-            <img src="assets/P1.png" alt="Product Image">
-        </div>
+      <div class="product-card">
+          <!-- Product Image -->
+          <div class="product-image">
+              <img src="assets/P1.png" alt="Product Image">
+          </div>
 
         <!-- Product Information -->
-        <div class="product-info">
-            <h3>Product Name</h3>
-            <p class="product-description">This is a detailed description of the product. It provides key features and insights about the product for potential buyers.</p>
-            <p class="product-price"><b>Price:</b> $29.99</p>
-            <p class="product-stock"><b>In Stock:</b> Yes</p>
+          <div class="product-info">
+              <h3>Product Name</h3>
+              <p class="product-description">This is a detailed description of the product. It provides key features and insights about the product for potential buyers.</p>
+              <p class="product-price"><b>Price:</b> $29.99</p>
+              <p class="product-stock"><b>In Stock:</b> Yes</p>
             
             <!-- Product Actions -->
-            <div class="product-actions">
+          <div class="product-actions">
             <button onclick="openEditForm()">Edit</button>
             <button onclick="deleteProduct()">Delete</button>
           </div>
-        </div>
+      </div>
       </div>
       
 
@@ -339,10 +382,7 @@ $_SESSION["seller_id"] = 12;
 
     </div>
     </div>
-</div>
-
-
-   
+    </div>
 
     <!-- Add Product Section -->
     <div id="add-product-section" class="section">
@@ -560,7 +600,6 @@ $_SESSION["seller_id"] = 12;
     </div>
 
     <!-- Orders Section -->
-
     <div id="orders-section" class="section">
       <h2>Orders</h2>
       <table>
@@ -885,13 +924,13 @@ $_SESSION["seller_id"] = 12;
     </div>
 
       <!-- Messages Section -->
-      <div id="message-section" class="section">
+    <div id="message-section" class="section">
 
       <div class="chat-container">
 
         <!-- Left Chat List -->
         <div class="chat-list" id="chat-list">
-        <h2>Chat List</h2>
+        <h2>Chat</h2>
           <div class="chat-list-item" onclick="openChat(1)">
             John Doe - <small>Last message: Hi, I have a question...</small>
           </div>
@@ -926,20 +965,35 @@ $_SESSION["seller_id"] = 12;
         <button onclick="sendMessage()">Send</button>
       </div>
     </div>
-  </div>
-
+    </div>
     </div>
 
     <script>
-            function toggleOtherBrandInput() {
-              const select = document.getElementById('model-brand');
-              const otherBrandInput = document.getElementById('other-brand');
-              if (select.value === 'other') {
-                otherBrandInput.style.display = 'block';
-              } else {
-                otherBrandInput.style.display = 'none';
-              }
-            }
+
+/*
+    function showUserInfo() {
+      document.getElementById('user-info-section').style.display = 'block';
+    }
+
+    function editUserInfo() {
+      document.getElementById('username').readOnly = false;
+      document.getElementById('email').readOnly = false;
+      document.getElementById('phone').readOnly = false;
+      document.getElementById('address').readOnly = false;
+    }
+
+    function saveUserInfo() {
+      document.getElementById('username').readOnly = true;
+      document.getElementById('email').readOnly = true;
+      document.getElementById('phone').readOnly = true;
+      document.getElementById('address').readOnly = true;
+      alert("User information saved successfully!");
+    }
+
+    function goBackToSettings() {
+      document.getElementById('user-info-section').style.display = 'none';
+    }
+    */
     </script>
 
     <script>
@@ -957,6 +1011,7 @@ $_SESSION["seller_id"] = 12;
               dropdown.style.maxHeight = "0"; // Reset maxHeight to 0 when hidden
           }
       }
+
 
     function showSection(sectionId) {
         try {
