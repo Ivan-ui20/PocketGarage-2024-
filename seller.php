@@ -1,13 +1,34 @@
 
 <?php
 
-
-// session_start()
+require_once './backend/database/db.php';
+session_start();
 
 
 $_SESSION["seller_id"] = 12;
+$_SESSION["seller_name"] = "Ivan Garcia";
+$_SESSION["user_type"] = "seller";
+
+$brand = "SELECT * FROM diecast_brand";
+$brandResult = $conn->query($brand);
+
+if ($brandResult) {    
+    $brandData = $brandResult->fetch_all(MYSQLI_ASSOC);
+    $brandResult->free(); 
+} else {
+    $brandData = [];
+}
 
 
+$size = "SELECT * FROM diecast_size";
+$sizeResult = $conn->query($size);
+
+if ($sizeResult) {
+    $sizeData = $sizeResult->fetch_all(MYSQLI_ASSOC);
+    $sizeResult->free(); 
+} else {
+    $sizeData = [];
+}
 
 ?>
 
@@ -179,6 +200,11 @@ $_SESSION["seller_id"] = 12;
     <div class="content">
       <div id="dashboard-section" class="section">
           <h1>Overview</h1>
+     <div class="content">
+        <input id="seller-id" type="text" hidden value="<?php echo $_SESSION["seller_id"]?>">
+        <!-- Dashboard Section -->
+        <div id="dashboard-section" class="section">
+            <h1>Overview</h1>
 
          <!--start orecentupdate-->
         
@@ -226,6 +252,11 @@ $_SESSION["seller_id"] = 12;
                     <div class="chat-list-item" onclick="openChat(2)">
                       Jane Smith - <small>Last message: Thanks for the delivery!</small>
                     </div>
+        <div class="all_messages">
+            <h2>Recent Messages</h2>
+              <div>
+                <div class="chat-list" id="chat-list">
+                </div>
 
                     <div class="chat-list-item" onclick="openChat(3)">
                       Baxter Sisgado - <small>Last message: Mine po..</small>
@@ -300,6 +331,13 @@ $_SESSION["seller_id"] = 12;
     </div>
     </div>
   </div>
+              </div>
+        </div>
+
+
+      </div>
+
+    </div>
 
 
     <!--view  productSection -->
@@ -354,18 +392,77 @@ $_SESSION["seller_id"] = 12;
           </div>
         </div>
 
+
+     <?php
+        $stmt = $conn->prepare("SELECT diecast_brand.*, diecast_size.*, diecast_model.* 
+            FROM diecast_model 
+            LEFT JOIN diecast_brand ON diecast_brand.brand_id = diecast_model.brand_id
+            LEFT JOIN diecast_size ON diecast_size.size_id = diecast_model.size_id
+            WHERE diecast_model.seller_id = ?");
+        $stmt->bind_param("s", $_SESSION["seller_id"]);
+        $stmt->execute();
+
+        $result = $stmt->get_result();
+      
+        if ($result->num_rows > 0) {          
+            while ($row = $result->fetch_assoc()) {
+                $modelId = $row['model_id'];
+                $sellerId = $row['seller_id'];
+                $modelName = htmlspecialchars($row['model_name']);
+                $modelDescription = htmlspecialchars($row['model_description']);
+                $modelPrice = htmlspecialchars($row['model_price']);
+                $modelStock = htmlspecialchars($row['model_stock']);
+                $modelImageUrl = htmlspecialchars($row['model_image_url']);
+                $brandName = htmlspecialchars($row['brand_name']);
+                $sizeName = htmlspecialchars($row['ratio']);
+                              
+                echo '<div class="product-card">';
+                                
+                echo '<div class="product-image">';
+                echo '<img src="http://localhost:3000/backend/' . $modelImageUrl . '" alt="' . $modelName . '">';
+                echo '</div>';
+                
+                echo '<div class="product-info">';
+                echo '<h3>' . $modelName . '</h3>';
+                echo '<p class="product-description">' . $modelDescription . '</p>';
+                echo '<p class="product-price"><b>Price:</b> $' . $modelPrice . '</p>';
+                echo '<p class="product-stock"><b>In Stock:</b> ' . ($modelStock > 0 ? 'Yes' : 'No') . '</p>';
+                echo '<p class="product-brand"><b>Brand:</b> ' . $brandName . '</p>';
+                echo '<p class="product-size"><b>Size:</b> ' . $sizeName . '</p>';
+                
+                echo '<div class="product-actions">';
+                echo '<button onclick="openEditForm(' . $modelId . ', \'' . addslashes($modelName) . '\', \'' . addslashes($modelDescription) . '\', ' . $modelPrice . ', \'' . ($modelStock > 0 ? 'Yes' : 'No') . '\')">Edit</button>';
+                echo '<button onclick="deleteProduct(' . $modelId . ', ' . $sellerId . ')">Delete</button>';
+                echo '</div>';
+                echo '</div>';
+                echo '</div>';
+            }
+        } else {
+            echo '<p>No products found for this seller.</p>';
+        }
+
+        $stmt->close();
+      ?>
+
+      
+
+       <div class="product-card">
+                
         <!-- Edit Product Form -->
         <div class="edit-product-form" id="editForm" style="display: none;">
           <h3>Edit Product</h3>
           <form onsubmit="submitEditForm(event)">
             <label for="edit-name">Product Name</label>
-            <input type="text" id="edit-name" name="name" value="Product Name">
+            <input type="hidden" id="seller-id" value=<?php echo $_SESSION["seller_id"] ?>>
+            <input type="hidden" id="edit-model-id" name="modelId">
+
+            <input type="text" id="edit-name" name="name">
 
             <label for="edit-description">Description</label>
-            <textarea id="edit-description" name="description">This is a detailed description of the product.</textarea>
+            <textarea id="edit-description" name="description"></textarea>
 
             <label for="edit-price">Price</label>
-            <input type="number" id="edit-price" name="price" value="29.99">
+            <input type="number" id="edit-price" name="price">
 
             <label for="edit-stock">In Stock</label>
             <select id="edit-stock" name="stock">
@@ -384,10 +481,12 @@ $_SESSION["seller_id"] = 12;
     </div>
     </div>
 
+      </div>
+      </div>
+    </div>
+   
     <!-- Add Product Section -->
     <div id="add-product-section" class="section">
-
-
       <h2>Add New Product</h2>
       <form action="#" method="POST" id="product-form">
 
@@ -430,15 +529,11 @@ $_SESSION["seller_id"] = 12;
             <div class="form-group">
               <label for="auction-product-brand">Model Brand</label>
               <select id="model-brand" name="model-brand" required onchange="toggleOtherBrandInput()">
-                <option value="auto-world">Auto World</option>
-                <option value="bburago">Bburago</option>
-                <option value="greenlight">Greenlight</option>
-                <option value="hotwheels">Hot Wheels</option>
-                <option value="jada-toys">Jada Toys</option>
-                <option value="m2-machines">M2 Machines</option>
-                <option value="matchbox">Matchbox</option>
-                <option value="tomica">Tomica</option>
-                <option value="other">Other</option>
+                <?php
+                  foreach ($brandData as $row) {
+                    echo '<option value="' . htmlspecialchars($row['brand_id']) . '">' . htmlspecialchars($row['brand_name']) . '</option>';
+                  }
+                ?>
               </select>
             </div>
 
@@ -452,8 +547,8 @@ $_SESSION["seller_id"] = 12;
             <div class="form-group">
               <label for="model-type">Model Type</label>
               <select id="model-type" name="model-type" required>
-                <option value="physical">Regular</option>
-                <option value="digital">Premium</option>
+                <option value="Regular">Regular</option>
+                <option value="Premium">Premium</option>
               </select>
             </div>
       </div>
@@ -470,12 +565,12 @@ $_SESSION["seller_id"] = 12;
 
             <div class="form-group">
               <label for="model-scale">Scale</label>
-              <select id="model-scale" name="model-scale" required>
-                <option value="1:18">1:18</option>
-                <option value="1:24">1:24</option>
-                <option value="1:32">1:32</option>
-                <option value="1:43">1:43</option>
-                <option value="1:64">1:64</option>
+              <select id="model-scale" name="model-scale" required>               
+               <?php
+                  foreach ($sizeData as $row) {
+                    echo '<option value="' . htmlspecialchars($row['size_id']) . '">' . htmlspecialchars($row['ratio']) . '</option>';
+                  }
+                ?>
               </select>
             </div>
           </div>
@@ -595,7 +690,44 @@ $_SESSION["seller_id"] = 12;
     <div id="customers-section" class="section">
       <h2>Customers</h2>
       <ul class="customer-list" id="customer-list">
-        <!-- Customer data will load here dynamically -->
+        <?php
+          $stmt = $conn->prepare("SELECT 
+              DISTINCT customer.customer_id,
+              CONCAT(customer.first_name, ' ', customer.last_name) AS customer_name,            
+              customer.address,
+              customer.contact_number
+          FROM 
+              order_info 
+          LEFT JOIN 
+              order_items ON order_info.order_id = order_items.order_id
+          LEFT JOIN 
+              diecast_model ON diecast_model.model_id = order_items.model_id
+          LEFT JOIN 
+              customer ON customer.customer_id = order_info.customer_id
+          WHERE 
+              diecast_model.seller_id = ?
+          ");
+          $stmt->bind_param("s", $_SESSION["seller_id"]);
+          $stmt->execute();
+
+          $result = $stmt->get_result();
+
+          if ($result->num_rows > 0) {          
+              while ($row = $result->fetch_assoc()) {
+                  echo "<li>";
+                  echo "Customer ID: " . htmlspecialchars($row['customer_id']) . "<br>";
+                  echo "Customer Name: " . htmlspecialchars($row['customer_name']) . "<br>";
+                  echo "Address: " . htmlspecialchars($row['address']) . "<br>";
+                  echo "Contact Number: " . htmlspecialchars($row['contact_number']) . "<br><br>";
+                  echo "</li>";
+              }
+          } else {
+              echo "No customers found.";
+          }
+
+          $stmt->close();
+        ?>
+
       </ul>
     </div>
 
@@ -614,44 +746,72 @@ $_SESSION["seller_id"] = 12;
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>#001</td>
-            <td>John Doe</td>
-            <td>Car Engine</td>
-            <td>
-              <select class="order-status" data-order-id="1">
-                <option value="Order placed">Order placed</option>
-                <option value="Waiting for courier">Waiting for courier</option>
-                <option value="In Transit">In Transit</option>
-                <option value="Order delivered">Delivered</option>
-              </select>
-            </td>
-            <td>
-              <input type="text" class="tracking-number" data-order-id="1" placeholder="Enter tracking number" />
-            </td>
-            <td>
-              <button class="update-btn" onclick="updateOrder(1)">Update</button>
-            </td>
-          </tr>
-          <tr>
-            <td>#002</td>
-            <td>Jane Smith</td>
-            <td>Tire Set</td>
-            <td>
-              <select class="order-status" data-order-id="2">
-                <option value="Order placed">Order placed</option>
-                <option value="Waiting for courier">Waiting for courier</option>
-                <option value="In Transit">In Transit</option>
-                <option value="Order delivered">Delivered</option>
-              </select>
-            </td>
-            <td>
-              <input type="text" class="tracking-number" data-order-id="2" placeholder="Enter tracking number" />
-            </td>
-            <td>
-              <button   class="update-btn" onclick="updateOrder(2)">Update</button>
-            </td>
-          </tr>
+        <?php
+          $stmt = $conn->prepare("
+              SELECT 
+                  order_info.order_id,
+                  order_info.order_ref_no,
+                  order_info.order_status,
+                  customer.customer_id,
+                  CONCAT(customer.first_name, ' ', customer.last_name) AS customer_name,
+                  GROUP_CONCAT(diecast_model.model_name SEPARATOR ', ') AS model_names  -- Concatenate model names
+              FROM 
+                  order_info 
+              LEFT JOIN 
+                  order_items ON order_info.order_id = order_items.order_id
+              LEFT JOIN 
+                  diecast_model ON diecast_model.model_id = order_items.model_id
+              LEFT JOIN 
+                  customer ON customer.customer_id = order_info.customer_id
+              WHERE 
+                  diecast_model.seller_id = ?
+              GROUP BY 
+                  order_info.order_id, order_info.order_ref_no, order_info.order_status, customer.customer_id
+          ");
+
+          $stmt->bind_param("s", $_SESSION["seller_id"]);
+          $stmt->execute();
+          $result = $stmt->get_result();
+
+          if ($result->num_rows > 0) {          
+              while ($row = $result->fetch_assoc()) {
+                  $refNo = htmlspecialchars($row['order_ref_no']);
+                  echo '<tr>
+                      <td>' . $refNo . '</td>
+                      <td>' . htmlspecialchars($row['customer_name']) . '</td>
+                      <td>' . htmlspecialchars($row['model_names']) . '</td>
+                      <td>
+                        <select class="order-status" id="order-status-' . htmlspecialchars($row['order_id']) . '">
+                            <option value="">Select a status</option>
+                            <option value="Order Placed"' . ($row['order_status'] === 'Order Placed' ? ' selected' : '') . '> Order Placed </option>
+                            <option value="Waiting for courier"' . ($row['order_status'] === 'Waiting for courier' ? ' selected' : '') . '> Waiting for courier </option>
+                            <option value="In Transit"' . ($row['order_status'] === 'In Transit' ? ' selected' : '') . '> In Transit </option>
+                            <option value="Delivered"' . ($row['order_status'] === 'Delivered' ? ' selected' : '') . '> Delivered </option>
+                        </select>
+                      </td>
+                      <td>
+                          <input type="text" class="tracking-number" data-order-id="' . htmlspecialchars($row['order_id']) . '" placeholder="Enter tracking number" />
+                      </td>
+                      <td>
+                          <button
+                            type="button" 
+                            class="update-btn" 
+                            onclick="updateOrder(' . htmlspecialchars($row['order_id']) . ', \'' . addslashes($refNo) . '\', \'' . addslashes($row['order_status']) . '\')"
+                          >
+                            Update
+                          </button>
+                      </td>
+                  </tr>';
+              }
+          } else {
+              echo "<tr><td colspan='6'>No orders found.</td></tr>";
+          }
+
+          $stmt->close();
+          ?>
+
+
+                    
         </tbody>
       </table>
     </div>
@@ -667,38 +827,81 @@ $_SESSION["seller_id"] = 12;
 
 
         <div class="auction-list" id="ongoing-bids-list">
+          <?php
+            $stmt = $conn->prepare("
+                SELECT 
+                    bid_room.bidding_id,
+                    bid_room.seller_id,
+                    bid_room.model_id,
+                    bid_room.details,
+                    bid_room.start_amount,
+                    bid_room.end_amount,
+                    bid_room.bid_status,
+                    bid_room.start_time,
+                    bid_room.end_time,
+                    diecast_size.ratio,
+                    diecast_brand.brand_name,
+                    diecast_model.model_name,
+                    diecast_model.model_description,
+                    diecast_model.model_tags,
+                    diecast_model.model_type,
+                    diecast_model.model_image_url                    
+                FROM 
+                    bid_room
+                LEFT JOIN 
+                    diecast_model ON diecast_model.model_id = bid_room.model_id
+                LEFT JOIN 
+                    diecast_size ON diecast_size.size_id = diecast_model.size_id
+                LEFT JOIN 
+                    diecast_brand ON diecast_brand.brand_id = diecast_model.brand_id
+                WHERE 
+                    bid_room.seller_id = ?
+            ");
+            
+           
+            $stmt->bind_param("s", $_SESSION["seller_id"]);
+            $stmt->execute();
+            $result = $stmt->get_result();
 
-          <div  class="bid-card">
-            <strong>Product:</strong> Car Engine
-            <br />
-            <strong>Highest Bid:</strong> $500
-            <br />
-            <strong>Status:</strong> Active
-            <br />
-            <strong>Start Time:</strong> 2024-10-28 10:00 AM
-            <br />
-            <strong>End Time:</strong> 2024-10-30 10:00 AM
+           
+            if ($result->num_rows > 0) {
+               
+                while ($row = $result->fetch_assoc()) {
+                   
+                    $highestBid = $row['end_amount'] ?? $row['start_amount'];
+                   
+                    $currentDateTime = new DateTime();
+                    $endDateTime = new DateTime($row['end_time']);
+                    $status = "Closed";
+                    if ($row["bid_status"] !== "Closed") {
+                      $status = ($currentDateTime < $endDateTime) ? "Active" : "Ended";
+                    }
+                    
 
-            <div class="auction-actions">
-              <button class="btn cancel-btn" onclick="cancelBid(1)">Cancel Bid</button>
-            </div>
-          </div>
+                   
+                    echo '<div class="bid-card">';
+                    echo '<strong>Product:</strong> ' . htmlspecialchars($row['model_name']) . '<br />';
+                    echo '<strong>Highest Bid:</strong> $' . htmlspecialchars($highestBid) . '<br />';
+                    echo '<strong>Status:</strong> ' . $status . '<br />';
+                    echo '<strong>Start Time:</strong> ' . date("Y-m-d h:i A", strtotime($row['start_time'])) . '<br />';
+                    echo '<strong>End Time:</strong> ' . date("Y-m-d h:i A", strtotime($row['end_time'])) . '<br />';
 
-          <div class="bid-card">
-            <strong>Product:</strong> Car Engine
-              <br />
-              <strong>Highest Bid:</strong> $500
-              <br />
-              <strong>Status:</strong> Active
-              <br />
-              <strong>Start Time:</strong> 2024-10-28 10:00 AM
-              <br />
-              <strong>End Time:</strong> 2024-10-30 10:00 AM
+                    if ($status !== "Closed") {
+                      echo '<div class="auction-actions">';
+                      echo '<button class="btn cancel-btn" onclick="cancelBid(' . htmlspecialchars($row['bidding_id']) . ')">Cancel Bid</button>';
+                      echo '</div>';
+                    }
+                    
 
-              <div class="auction-actions">
-                <button class="btn cancel-btn" onclick="cancelBid(1)">Cancel Bid</button>
-            </div>
-          </div>
+                    echo '</div>';
+                }
+            } else {
+                echo "You don't have posted a bid yet. You can post a bid by clicking the 'Add New Bid'.";
+            }
+
+           
+            $stmt->close();
+          ?>
 
         </div>
 
@@ -713,7 +916,7 @@ $_SESSION["seller_id"] = 12;
         <form action="#" method="POST" id="auction-form">
          
           <div class="form-group">
-            <input type="text" hidden id="seller-id" value=<?php echo $_SESSION["seller_id"] ?>>
+            <input type="hidden" id="seller-id" value=<?php echo $_SESSION["seller_id"] ?>>
 
             <label for="auction-product-name">Product Name</label>
             <input
@@ -729,8 +932,8 @@ $_SESSION["seller_id"] = 12;
             <label for="auction-details">Details</label>
             <input
               type="text"
-              id="auction-product-name"
-              name="auction-product-name"
+              id="auction-details"
+              name="auction-details"
               placeholder="Enter product details"
               required
             />
@@ -740,15 +943,11 @@ $_SESSION["seller_id"] = 12;
             <div class="form-group">
               <label for="auction-product-brand">Model Brand</label>
               <select id="model-brand" name="model-brand" required onchange="toggleOtherBrandInput()">
-                <option value="auto-world">Auto World</option>
-                <option value="bburago">Bburago</option>
-                <option value="greenlight">Greenlight</option>
-                <option value="hotwheels">Hot Wheels</option>
-                <option value="jada-toys">Jada Toys</option>
-                <option value="m2-machines">M2 Machines</option>
-                <option value="matchbox">Matchbox</option>
-                <option value="tomica">Tomica</option>
-                <option value="other">Other</option>
+                <?php
+                  foreach ($brandData as $row) {
+                    echo '<option value="' . htmlspecialchars($row['brand_id']) . '">' . htmlspecialchars($row['brand_name']) . '</option>';
+                  }
+                ?>
               </select>
             </div>
 
@@ -782,11 +981,11 @@ $_SESSION["seller_id"] = 12;
             <div class="form-group">
               <label for="model-scale">Scale</label>
               <select id="model-scale" name="model-scale" required>
-                <option value="1:18">1:18</option>
-                <option value="1:24">1:24</option>
-                <option value="1:32">1:32</option>
-                <option value="1:43">1:43</option>
-                <option value="1:64">1:64</option>
+                <?php
+                    foreach ($sizeData as $row) {
+                      echo '<option value="' . htmlspecialchars($row['size_id']) . '">' . htmlspecialchars($row['ratio']) . '</option>';
+                    }
+                  ?>
               </select>
             </div>
           </div>
@@ -879,8 +1078,8 @@ $_SESSION["seller_id"] = 12;
 
 
           <div class="form-group">
-            <label for="product-image">Product Image</label>
-            <input type="file" id="product-image" name="product-image" />
+            <label for="product-bid-image">Product Image</label>
+            <input type="file" id="product-bid-image" name="product-bid-image" />
           </div>
 
           <div class="form-group">
@@ -926,7 +1125,7 @@ $_SESSION["seller_id"] = 12;
       <!-- Messages Section -->
     <div id="message-section" class="section">
 
-      <div class="chat-container">
+        <div class="chat-container">
 
         <!-- Left Chat List -->
         <div class="chat-list" id="chat-list">
@@ -942,31 +1141,41 @@ $_SESSION["seller_id"] = 12;
             Baxter Sisgado - <small>Last message: Mine po..</small>
           </div>
         </div>
+          <!-- Left Chat List -->
+          <div class="chat-list" id="chat-list1">                      
+          </div>
 
-        <!-- Right Chat Box -->
-       <div class="chat-box" id="chat-box">
-      <div class="messages" id="messages">
-        <!-- Messages will load here -->
-        <div class="message sent">Hello!</div>
-        <div class="message received">Hi, how can I help you?</div>
-      </div>
-      
-      <div class="message-input">
-        <input type="text" id="message-input" placeholder="Type your message here..." />
-        
-        <!-- Hidden file input -->
-        <input type="file" id="image-input" accept="image/*" style="display: none;" />
-        
-        <!-- Icon to trigger file selection -->
-        <span class="material-symbols-outlined" id="file-icon" onclick="document.getElementById('image-input').click();">
-          attach_file
-        </span>
+          <!-- Right Chat Box -->
+        <div class="chat-box" id="chat-box">
+            <div class="messages" id="messages">             
+            </div>
+            
+            <form id="message-form">
+              <div class="message-input">
+                <input type="hidden" id="room-id" value="">
+                <input type="hidden" id="seller-id" value="<?php echo $_SESSION["seller_id"]?>">
+                <input type="hidden" id="user-type" value="<?php echo $_SESSION["user_type"]?>">
+
+                <input type="text" id="message-input" placeholder="Type your message here..." />
+                                  
+                <input type="file" id="image-input" accept="image/*" style="display: none;" />
+                                  
+                <span class="material-symbols-outlined" id="file-icon" onclick="document.getElementById('image-input').click();">
+                    attach_file
+                </span>
 
         <button onclick="sendMessage()">Send</button>
       </div>
     </div>
     </div>
     </div>
+                <button type="button" onclick="sendMessage()">Send</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+      </div>
 
     <script>
 
@@ -1012,6 +1221,11 @@ $_SESSION["seller_id"] = 12;
           }
       }
 
+      function showSection(sectionId) {
+          try {
+              // Hide all sections first
+              const sections = document.querySelectorAll('.section');
+              sections.forEach(section => section.classList.remove('active'));
 
     function showSection(sectionId) {
         try {
@@ -1032,37 +1246,37 @@ $_SESSION["seller_id"] = 12;
         }
     }
 
-    // Function to load the last active section on page load
-    window.addEventListener('DOMContentLoaded', () => {
-        try {
-            // Retrieve the last active section from localStorage, default to 'dashboard' if none found
-            const savedSection = localStorage.getItem('activeSection') || 'dashboard';
-            
-            // Verify the section exists before displaying
-            const sectionExists = document.getElementById(savedSection);
-            if (sectionExists) {
-                showSection(savedSection);
-                console.log(`Loaded section from storage: ${savedSection}`);
-            } else {
-                console.warn(`Saved section '${savedSection}' not found. Loading default section.`);
-                showSection('dashboard');
-            }
-        } catch (error) {
-            console.error('Error loading saved section:', error);
-            showSection('dashboard'); // Default to dashboard on error
-        }
-    });
+      // Function to load the last active section on page load
+      window.addEventListener('DOMContentLoaded', () => {
+          try {
+              // Retrieve the last active section from localStorage, default to 'dashboard' if none found
+              const savedSection = localStorage.getItem('activeSection') || 'dashboard';
+              
+              // Verify the section exists before displaying
+              const sectionExists = document.getElementById(savedSection);
+              if (sectionExists) {
+                  showSection(savedSection);
+                  console.log(`Loaded section from storage: ${savedSection}`);
+              } else {
+                  console.warn(`Saved section '${savedSection}' not found. Loading default section.`);
+                  showSection('dashboard');
+              }
+          } catch (error) {
+              console.error('Error loading saved section:', error);
+              showSection('dashboard'); // Default to dashboard on error
+          }
+      });
 
-    function hideDash(){
-      const dash = document.querySelectorAll(".dash");
-      
+      function hideDash(){
+        const dash = document.querySelectorAll(".dash");
+        
 
-      dash.classList.remove("visible");
-      dash.forEach((dashElement) => dashElement.classList.remove("visible"));
+        dash.classList.remove("visible");
+        dash.forEach((dashElement) => dashElement.classList.remove("visible"));
 
-      
+        
 
-    }
+      }
 
 
       const sidebar = document.querySelector(".sidebar");
@@ -1093,10 +1307,55 @@ $_SESSION["seller_id"] = 12;
         showSidebar();
       });
 
+      async function submitEditForm(event) {
+        event.preventDefault();
 
-      function openEditForm() {
+        const sellerId = document.getElementById('seller-id').value;
+        const modelId = document.getElementById('edit-model-id').value;
+        const name = document.getElementById('edit-name').value;
+        const description = document.getElementById('edit-description').value;
+        const price = document.getElementById('edit-price').value;
+        const stock = document.getElementById('edit-stock').value;
+        
+        const formData = new URLSearchParams({
+          seller_id: sellerId,
+          model_id: modelId,
+          model_name: name,
+          model_description: description,
+          model_price: price,
+          model_availability: stock === "Yes" ? "Available" : "Out of stock"
+        });
+        
+        try {
+        const response = await fetch('/backend/src/seller/route.php?route=seller/edit/product', {
+              method: 'POST', 
+              body: formData 
+          });          
+          if (!response.ok) {
+              throw new Error(`HTTP error! Status: ${response.status}`);
+          }          
+          const responseData = await response.json();
+                                      
+          alert('product edited')
+          closeEditForm();
+          window.location.reload()
+        } catch (error) {
+            console.error('Error during fetch:', error);
+        }
+      }
+
+
+      function openEditForm(modelId, name, description, price, stock) {
+        
+        document.getElementById('edit-name').value = name;
+        document.getElementById('edit-description').value = description;
+        document.getElementById('edit-price').value = price;
+        document.getElementById('edit-stock').value = stock;                
+        document.getElementById('edit-model-id').value = modelId
+        
         document.getElementById('editForm').style.display = 'block';
       }
+
 
       function closeEditForm() {
         document.getElementById('editForm').style.display = 'none';
@@ -1125,7 +1384,6 @@ $_SESSION["seller_id"] = 12;
       
     </script>
 
-
     <script>
 
       document.getElementById('product-form').addEventListener('submit', function (event) {
@@ -1133,11 +1391,15 @@ $_SESSION["seller_id"] = 12;
 
         const sellerId = document.getElementById("seller-id").value
         const productName = document.getElementById('product-name').value;
+        const productBrand = document.getElementById('model-brand').value;
+        const productSize = document.getElementById('model-scale').value;
+        const productType = document.getElementById('model-type').value;
         const productPrice = document.getElementById('product-price').value;
         const modelStock = document.getElementById('model_stock').value;
         const modelType = document.getElementById('model-type').value;
         const description = document.getElementById('product-description').value;
         const fileInput = document.querySelector('input[type="file"]'); 
+
 
         const tags = Array.from(document.querySelectorAll('input[name="model-tags"]:checked'))
         .map(checkbox => checkbox.value.replace(/_/g, ' '))
@@ -1149,15 +1411,15 @@ $_SESSION["seller_id"] = 12;
         const formData = new FormData();
                         
         formData.append('seller_id', sellerId);
-        formData.append('size_id', '4');
-        formData.append('brand_id', '2');
+        formData.append('size_id', productSize);
+        formData.append('brand_id', productBrand);
         formData.append('model_name', productName);
         formData.append('model_description', description);
         formData.append('model_price', productPrice);
         formData.append('model_stock', modelStock);
         formData.append('model_availability', 'Available');
         formData.append('model_tags', tags.length ? tags.join(', ') : '');
-        formData.append('model_type', 'Regular');
+        formData.append('model_type', productType);
                              
         if (fileInput.files.length > 0) {
             formData.append('model_image', fileInput.files[0]); 
@@ -1177,10 +1439,7 @@ $_SESSION["seller_id"] = 12;
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }          
             const responseData = await response.json();
-            
-            console.log("Product listed");
-            
-            console.log('Response:', responseData);
+                                  
             alert('product added')
           } catch (error) {
               console.error('Error during fetch:', error);
@@ -1188,40 +1447,304 @@ $_SESSION["seller_id"] = 12;
         }
       });
 
+      document.getElementById('auction-form').addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent form submission for testing display
+
+        const sellerId = document.getElementById('seller-id').value
+        const productName = document.getElementById('auction-product-name').value;
+        const productDetails = document.getElementById('auction-details').value;
+        const productBrand = document.getElementById('model-brand').value;
+        const productSize = document.getElementById('model-scale').value;
+        const productType = document.getElementById('model-type').value;
+        const productPrice = document.getElementById('product-price').value;        
+        const bidStartAmount = document.getElementById('starting-bid').value;
+        const bidStartDate = document.getElementById('auction-start-date').value;
+        const bidEndDate = document.getElementById('auction-end-date').value;
+        const fileInput = document.getElementById('product-bid-image').files[0];; 
+        
+        const tags = Array.from(document.querySelectorAll('input[name="model-tags"]:checked'))
+        .map(checkbox => checkbox.value.replace(/_/g, ' '))
+        .map(tag => tag.split(' ')
+          .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+          .join(' ')
+        );
+      
+        const formData = new FormData();
+                        
+        formData.append('seller_id', sellerId);
+        formData.append('size_id', productSize);
+        formData.append('brand_id', productBrand);
+        formData.append('model_name', productName);
+        formData.append('model_description', "Empty Description");
+        formData.append('model_price', 0);
+        formData.append('model_stock', 1);
+        formData.append('model_availability', 'Available');
+        formData.append('model_tags', tags.length ? tags.join(', ') : '');
+        formData.append('model_type', productType);
+        formData.append('details', productDetails);
+        formData.append('start_amount', bidStartAmount);
+        formData.append('start_time', bidStartDate);
+        formData.append('end_time', bidEndDate);
+                             
+        if (fileInput) {
+            formData.append('model_image', fileInput); 
+        } else {
+            console.error('No file selected for upload');
+            return; 
+        }
+        
+        postBitItem()
+
+        async function postBitItem() {
+          try {
+            const response = await fetch('/backend/src/seller/route.php?route=seller/post/bid', {
+                method: 'POST', 
+                body: formData 
+            });          
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }          
+            const responseData = await response.json();
+                                  
+            alert('bid posted')
+          } catch (error) {
+              console.error('Error during fetch:', error);
+          }
+        }
+        
+      });
+
+    </script>
+
+    <script>
+      const messagesData = {};
+      const sellerId = document.getElementById("seller-id").value;
+      fetch(`/backend/src/chat/route.php?route=last/chat/get&seller_id=${sellerId}`, {
+        method: 'GET',                
+        headers: {
+            'Content-Type': 'application/json'
+        }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(chat => {            
+            const chatListDiv = document.getElementById("chat-list");
+            const chatListDiv1 = document.getElementById("chat-list1");
+            chatListDiv.innerHTML = ""; 
+            chatListDiv1.innerHTML = ""; 
+
+            const title = document.createElement("h2");
+            title.innerHTML = `Chat List`
+            chatListDiv1.appendChild(title); 
+            
+                        
+            chat.data.forEach(chat => {                            
+                const chatItem = document.createElement("div");
+                chatItem.className = "chat-list-item";
+                chatItem.onclick = () => openChat(chat.room_id);                 
+                chatItem.innerHTML = `
+                    ${chat.seller_name} - <small>Last message: ${chat.message}</small>
+                `;
+
+                const chatItem1 = document.createElement("div");
+                chatItem1.className = "chat-list-item";
+                chatItem1.onclick = () => openChat(chat.room_id);                 
+                chatItem1.innerHTML = `
+                    ${chat.seller_name} - <small>Last message: ${chat.message}</small>
+                `;
+                
+                chatListDiv.appendChild(chatItem);                 
+                chatListDiv1.appendChild(chatItem1);                
+            });
+                        
+        })
+        .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+        });
+
     </script>
    
     <script>
-       // Sample data for demo purposesReplace this with actual data retrieval in real implementation 
-    const messagesData = {
-      1: [
-        { sender: 'John Doe', text: 'Hi, I have a question about the product.' },
-        { sender: 'Seller', text: 'Sure, I’d be happy to help. What’s your question?' },
-      ],
-      2: [
-        { sender: 'Jane Smith', text: 'Thanks for the delivery! Everything is perfect.' },
-        { sender: 'Seller', text: 'Glad to hear it! Let me know if you need anything else.' },
-      ],
-     3: [
-        { sender: 'Baxter Sisgado', text: 'Mine po.  NISSAN SKYLINE 2000 GT-X' },
-        { sender: 'Seller', text: 'Glad to hear it!' },
-      ],
-    };
 
-    // Function to open a chat and display messages in the chat box
-    function openChat(chatId) {
-      const chatBox = document.getElementById('messages');
-      chatBox.innerHTML = ''; // Clear previous messages
+      async function sendMessage() {
+        event.preventDefault()
+        
+        const roomId = document.getElementById("room-id").value
+        const senderId = document.getElementById("seller-id").value
+        const userType = document.getElementById("user-type").value
+        const message = document.getElementById('message-input').value;
+                
+        const file = document.getElementById('image-input').files[0];        
+        
+        const data = new URLSearchParams({          
+          room_id: roomId,
+          sender_id: senderId,
+          user_type: userType,
+          message: message,
+          attachment: file ? file : null,
+        });
 
-      const chatMessages = messagesData[chatId];
-      
-      // Populate the chat box with messages
-      chatMessages.forEach((message) => {
-        const messageElement = document.createElement('div');
-        messageElement.classList.add('message');
-        messageElement.innerHTML = `<strong>${message.sender}:</strong> ${message.text}`;
-        chatBox.appendChild(messageElement);
-      });
-    }
+        const formData = new FormData();
+                        
+        formData.append('room_id', roomId);
+        formData.append('sender_id', senderId);
+        formData.append('user_type', userType);
+        formData.append('message', message);
+        formData.append('attachment', file);
+       
+        fetch('/backend/src/chat/route.php?route=chat/send', {
+          method: 'POST',
+          body: formData,          
+          })
+          .then(response => {
+              if (!response.ok) {
+                  throw new Error('Network response was not ok');
+              }
+              return response.json();
+          })
+          .then(data => {
+              console.log(data);              
+              alert("message sent")
+              document.getElementById('message-form').reset();
+          })
+          .catch(error => {
+              console.error('There was a problem with the fetch operation:', error);
+          });
+
+        
+
+      }
+
+      async function cancelBid(biddingId) {
+        
+        const data = new URLSearchParams({
+          bidding_id: biddingId
+        });
+        try {
+          const response = await fetch('/backend/src/seller/route.php?route=seller/cancel/bid', {
+              method: 'POST', 
+              body: data 
+          });          
+          if (!response.ok) {
+              throw new Error(`HTTP error! Status: ${response.status}`);
+          }          
+          const responseData = await response.json();
+                                              
+          alert('bid item cancelled')
+          window.location.reload();
+        } catch (error) {
+            console.error('Error during fetch:', error);
+        }
+      }
+
+      async function updateOrder(orderId, refNo, status) {
+                
+        const newStatus = document.getElementById(`order-status-${orderId}`).value
+                
+        if (status === newStatus || newStatus === "")  {         
+          return
+        }
+
+        const data = new URLSearchParams({                
+          order_id: orderId,
+          order_ref_no: refNo,
+          order_status: newStatus
+        });
+        try {
+          const response = await fetch('/backend/src/seller/route.php?route=seller/update/status/order', {
+              method: 'POST', 
+              body: data 
+          });          
+          if (!response.ok) {
+              throw new Error(`HTTP error! Status: ${response.status}`);
+          }          
+          const responseData = await response.json();
+                                              
+          alert('order updated')
+          window.location.reload();
+        } catch (error) {
+            console.error('Error during fetch:', error);
+        }
+      }
+
+      async function deleteProduct(modelId, sellerid) {        
+          const data = new URLSearchParams({                
+            model_id: modelId,
+            seller_id: sellerId
+          });
+          try {
+            const response = await fetch('/backend/src/seller/route.php?route=seller/delete/product', {
+                method: 'POST', 
+                body: data 
+            });          
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }          
+            const responseData = await response.json();
+                                                
+            alert('product deleted')
+            window.location.reload();
+          } catch (error) {
+              console.error('Error during fetch:', error);
+          }
+        
+      }
+            
+      function openChat(chatId) {
+        const chatBox = document.getElementById('messages');
+        chatBox.innerHTML = ''; // Clear previous messages      
+        
+        fetch(`/backend/src/chat/route.php?route=chat/get&room_id=${chatId}&limit=10&offset=0`, {
+          method: 'GET',                
+          headers: {
+              'Content-Type': 'application/json'
+          }
+          })
+          .then(response => {
+              if (!response.ok) {
+                  throw new Error('Network response was not ok');
+              }
+              return response.json();
+          })
+          .then(chat => {
+            
+            chat.data.forEach(chat => {    
+                        
+              if (!messagesData[chatId]) {
+                  messagesData[chatId] = [];
+              }                                
+              const messageExists = messagesData[chatId].some(message => message.id === chat.message_id);
+              if (!messageExists) {
+                messagesData[chatId].push({ id: chat.message_id, type: chat.sender_type, sender: chat.name, text: chat.message });
+              }
+            })
+            const chatMessages = messagesData[chatId];      
+              
+            
+            const roomId = document.getElementById("room-id");
+            roomId.value = chatId;
+
+            chatMessages.forEach((message) => {
+              const messageElement = document.createElement('div');
+                                          
+              messageElement.classList.add('message');
+              
+              if (message.type === "seller") {
+                messageElement.innerHTML = ` <div class="message sent"> <strong>${message.sender}:</strong> ${message.text} </div>`;               
+              } else {                               
+                messageElement.innerHTML = ` <div class="message received"> <strong>${message.sender}:</strong> ${message.text} </div>`;
+              }            
+              chatBox.appendChild(messageElement);
+            });
+          })
+          .catch(error => {
+              console.error('There was a problem with the fetch operation:', error);
+          });                  
+      }
 
  
 

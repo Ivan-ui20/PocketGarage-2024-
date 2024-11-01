@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 10, 2024 at 06:00 PM
+-- Generation Time: Oct 31, 2024 at 07:13 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -72,11 +72,21 @@ CREATE TABLE `bid_room` (
   `bidding_id` int(11) NOT NULL,
   `seller_id` int(11) NOT NULL,
   `model_id` int(11) NOT NULL,
+  `details` text NOT NULL,
   `start_amount` double NOT NULL,
-  `bid_increment` double NOT NULL,
-  `bid_status` enum('Open','Closed','','') NOT NULL DEFAULT 'Open',
+  `end_amount` int(11) NOT NULL DEFAULT 0,
+  `bid_status` enum('Active','Closed','','') NOT NULL DEFAULT 'Active',
+  `start_time` timestamp NOT NULL DEFAULT current_timestamp(),
+  `end_time` timestamp NOT NULL DEFAULT current_timestamp(),
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `bid_room`
+--
+
+INSERT INTO `bid_room` (`bidding_id`, `seller_id`, `model_id`, `details`, `start_amount`, `end_amount`, `bid_status`, `start_time`, `end_time`, `created_at`) VALUES
+(16, 12, 26, 'this is the details of bid item test 1', 1000, 0, 'Closed', '2024-11-07 16:00:00', '2024-11-09 16:00:00', '2024-10-31 05:24:28');
 
 -- --------------------------------------------------------
 
@@ -94,7 +104,7 @@ CREATE TABLE `cart` (
 --
 
 INSERT INTO `cart` (`cart_id`, `customer_Id`) VALUES
-(3, 3);
+(6, 3);
 
 -- --------------------------------------------------------
 
@@ -108,14 +118,6 @@ CREATE TABLE `cart_items` (
   `quantity` int(11) NOT NULL,
   `total` double NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `cart_items`
---
-
-INSERT INTO `cart_items` (`cart_id`, `model_id`, `quantity`, `total`) VALUES
-(3, 1, 4, 3596),
-(3, 2, 1, 799);
 
 -- --------------------------------------------------------
 
@@ -155,7 +157,13 @@ INSERT INTO `chat_message` (`message_id`, `room_id`, `sender_id`, `user_type`, `
 (15, 1, 12, 'seller', 'ZEpFNmJSYlh4QmdHbVdvMVR4bGY3aFdvY0ozQytTZTdxMVU0am1TUFErWT06Oo7Hf0kwg5fUVo3cThLFLEM=', NULL, '2024-10-07 11:15:08'),
 (16, 1, 3, 'customer', 'ZEpFNmJSYlh4QmdHbVdvMVR4bGY3aFdvY0ozQytTZTdxMVU0am1TUFErWT06Oo7Hf0kwg5fUVo3cThLFLEM=', NULL, '2024-10-07 20:33:05'),
 (17, 1, 3, 'customer', 'YnNvUHUwOGVabDFyNy9oU3RyQzRCRVRBdXFKQXdCcXk3WjNIczAxaWl4dz06OjYqoQvPVJFOQfRRjFybP7Q=', NULL, '2024-10-07 20:33:41'),
-(18, 1, 3, 'customer', 'aFE5NTlnL3QzR3RGVHNHZDRRN2h1Zmp2Qzlla045eDkwTFR3cUwwUjJ5cz06OgY8vnsUkcsqNRJ2eLkHGSU=', NULL, '2024-10-07 20:34:33');
+(18, 1, 3, 'customer', 'aFE5NTlnL3QzR3RGVHNHZDRRN2h1Zmp2Qzlla045eDkwTFR3cUwwUjJ5cz06OgY8vnsUkcsqNRJ2eLkHGSU=', NULL, '2024-10-07 20:34:33'),
+(19, 1, 12, 'seller', 'cW9UVFdJWU5sSWJCMU4zWlJ5SXJOSkV2LzcxSk9YNUE3bzlmNzVULzdQU2tiU09OUEIwd1YybDdEWmJrS0hEazo6XdlwvXuPv2nqSBgOfFzXOg==', NULL, '2024-10-31 06:04:14'),
+(20, 1, 12, 'seller', 'TXMzK3pwc3Z1emtiQVRBdDJqL1BBZldTYjFBbzJaRkhUQndteFlsTHhlQTFWdTBKY3dJclFZYmMrRnVSRWtYRjo6K158TGzOuywVkewx55YyZw==', NULL, '2024-10-31 06:05:03'),
+(21, 1, 12, 'seller', 'VjdqTHZlN1NObnArNG5hWVlxckU2b2tKUWZac094MDdTUGxkWVhNTi9VZHlGSjcrMUQ3cFBxOXNFbmpOWUJTWDo6dhlKjxKWksq55icW4YhCEg==', NULL, '2024-10-31 06:05:05'),
+(22, 1, 12, 'seller', 'NlRYQnlicGhtMnpuVHc0cFNtbTAxSzhwekZhbG04OG1pb0VaWmpiNy9PYURoVElicmxhcXlXR0RPeXVWRGJ2STo6BEC7oBG2E0S9kGMojiT6sg==', NULL, '2024-10-31 06:05:29'),
+(23, 1, 12, 'seller', 'SVhiblF5SGU0SkV2dEFXRlU5NlBOMVBGMVRxOFJTV09JVG5ZcTgyeGFSM3ZuZ0VoWXcvVVBPeUlsTGRKVDJ1YXJhZ09rMkp4WU1SN0ZFOVJZdWhnNGc9PTo6QamNpP5NTqjyPtxvS6wReA==', NULL, '2024-10-31 06:06:09'),
+(24, 1, 12, 'seller', 'WnNYNXNsQmZ1aW9DTVZENDZzNitzRTFyTGpYTW5VbHFhazBRbTZ4WkNBY3ArdnNjMWxDOFdDb005UjQvb2pzYXRwS2drQzhVSWcrZU1laG5lWGsyaGc9PTo6S/+6C05p5x8DWq81J/XdLA==', 'upload/67231eef9d0fa-P1.png', '2024-10-31 06:08:47');
 
 -- --------------------------------------------------------
 
@@ -259,11 +267,11 @@ CREATE TABLE `diecast_model` (
 --
 
 INSERT INTO `diecast_model` (`model_id`, `seller_id`, `size_id`, `brand_id`, `model_name`, `model_description`, `model_price`, `model_stock`, `model_availability`, `model_tags`, `model_type`, `model_image_url`, `created_at`) VALUES
-(1, 12, 2, 2, 'Honda Civic EK9 Type R', 'A detailed diecast model of Honda Civic EK9 Type R.', 899, 100, 'Available', 'limited edition, featured', 'Premium', 'upload/P1.png', '2024-10-07 23:26:15'),
-(2, 12, 5, 8, 'Honda Civic EK9 Type R 1/64', 'A detailed diecast model of Honda Civic EK9 Type R 1/64.', 799, 100, 'Not Available', 'new arrivals', 'Regular', 'upload/P2.png', '2024-10-04 22:54:47'),
+(1, 12, 2, 2, 'Honda Civic EK9 Type R', 'A detailed diecast model of Honda Civic EK9 Type R.', 899, 94, 'Available', 'limited edition, featured', 'Premium', 'upload/P1.png', '2024-10-31 00:07:22'),
+(2, 12, 5, 8, 'Honda Civic EK9 Type R 1/64', 'A detailed diecast model of Honda Civic EK9 Type R 1/64.', 799, 98, 'Not Available', 'new arrivals', 'Regular', 'upload/P2.png', '2024-10-31 00:07:22'),
 (3, 12, 1, 7, 'Honda Civic EK9 Type R', 'A detailed diecast model of Honda Civic EK9 Type R.', 699, 0, 'Out of stock', 'featured', 'Premium', 'upload/P3.png', '2024-10-04 22:54:49'),
 (4, 12, 4, 9, 'Honda Civic EK9 Type R', 'A detailed diecast model of Honda Civic EK9 Type R.', 599, 100, 'Available', 'Limited edition, new arrivals', 'Regular', 'upload/P4.png', '2024-10-04 22:54:51'),
-(5, 12, 5, 1, 'Honda Civic EK9 Type R', 'A detailed diecast model of Honda Civic EK9 Type R.', 899, 100, 'Available', 'featured', 'Premium', 'upload/P1.png', '2024-10-04 22:54:39'),
+(5, 12, 5, 1, 'Honda Civic EK9 Type R', 'A detailed diecast model of Honda Civic EK9 Type R.', 899, 99, 'Available', 'featured', 'Premium', 'upload/P1.png', '2024-10-31 00:07:22'),
 (6, 12, 2, 6, 'Honda Civic EK9 Type R', 'A detailed diecast model of Honda Civic EK9 Type R.', 899, 100, 'Not Available', 'Limited edition', 'Regular', 'upload/P2.png', '2024-10-04 22:54:54'),
 (7, 12, 4, 4, 'Honda Civic EK9 Type R 1/18', 'A detailed diecast model of Honda Civic EK9 Type R 1/18.', 899, 100, 'Available', 'new arrivals', 'Premium', 'upload/P3.png', '2024-10-04 22:54:56'),
 (8, 12, 2, 4, 'Honda Civic EK9 Type R 1/64', 'A detailed diecast model of Honda Civic EK9 Type R 1/64.', 699, 0, 'Out of stock', 'featured', 'Regular', 'upload/P4.png', '2024-10-04 22:54:58'),
@@ -277,7 +285,8 @@ INSERT INTO `diecast_model` (`model_id`, `seller_id`, `size_id`, `brand_id`, `mo
 (16, 12, 4, 2, 'Model X', 'This is a detailed model of Model X.', 1999, 50, 'Available', 'Limited Edition, New Arrival', 'Premium', 'upload/P1.png', '2024-10-04 22:55:12'),
 (17, 12, 4, 2, 'Model X', 'This is a detailed model of Model X.', 1999, 50, 'Available', 'Limited Edition, New Arrival', 'Premium', 'upload/P2.png', '2024-10-04 22:55:32'),
 (18, 12, 4, 2, 'Model X', 'This is a detailed model of Model X.', 1999, 50, 'Available', 'Limited Edition, New Arrival', 'Premium', 'upload/P1.png', '2024-10-04 22:55:15'),
-(19, 12, 4, 2, 'Model X', 'This is a detailed model of Model X.', 1999, 50, 'Available', 'Limited Edition, New Arrival', 'Premium', 'upload/P3.png', '2024-10-04 22:55:34');
+(19, 12, 4, 2, 'Model Z', 'This is a detailed model of Model X.', 1999, 50, 'Available', 'Limited Edition, New Arrival', 'Premium', 'upload/P3.png', '2024-10-30 22:38:22'),
+(26, 12, 1, 8, 'bid item test 1', '', 0, 1, 'Available', '', 'Regular', 'upload/6723148c753e1-P1.png', '2024-10-31 05:24:28');
 
 -- --------------------------------------------------------
 
@@ -314,7 +323,7 @@ CREATE TABLE `order_info` (
   `order_ref_no` varchar(200) NOT NULL,
   `order_total` double NOT NULL,
   `order_payment_option` enum('Cash on Delivery','','','') NOT NULL,
-  `order_status` enum('Order Received','Processing','Packed','Ready to Ship','Shipped','Delivered') NOT NULL DEFAULT 'Processing',
+  `order_status` enum('Order Received','Processing','Packed','Ready to Ship','Shipped','Delivered','Order Placed','In Transit','Delivered','Waiting for courier') NOT NULL DEFAULT 'Processing',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -323,9 +332,9 @@ CREATE TABLE `order_info` (
 --
 
 INSERT INTO `order_info` (`order_id`, `customer_id`, `shipping_addr`, `order_ref_no`, `order_total`, `order_payment_option`, `order_status`, `created_at`) VALUES
-(1, 3, 'Sa tabi ng kanto ng dagat', 'REF-3-1728002104-AF140B', 200, 'Cash on Delivery', '', '2024-10-04 00:35:04'),
-(4, 3, 'Sa tabi ng kanto ng dagat', 'REF-3-1728003594-571BD2', 1798, 'Cash on Delivery', '', '2024-10-04 01:10:30'),
-(5, 3, 'Sa tabi ng kanto ng dagat', 'REF-3-1728067262-65B694', 2597, 'Cash on Delivery', '', '2024-10-04 18:41:02');
+(4, 3, 'Sa tabi ng kanto ng dagat', 'REF-3-1728003594-571BD2', 1798, 'Cash on Delivery', 'Delivered', '2024-10-30 07:36:31'),
+(5, 3, 'Sa tabi ng kanto ng dagat', 'REF-3-1728067262-65B694', 2597, 'Cash on Delivery', 'Waiting for courier', '2024-10-30 07:37:44'),
+(17, 3, 'shipping address', 'REF-3-1728945073-5F047D', 7891, 'Cash on Delivery', 'Delivered', '2024-10-31 00:12:12');
 
 -- --------------------------------------------------------
 
@@ -347,7 +356,10 @@ CREATE TABLE `order_items` (
 INSERT INTO `order_items` (`order_id`, `model_id`, `quantity`, `total`) VALUES
 (4, 1, 0, 0),
 (5, 1, 2, 1798),
-(5, 2, 1, 799);
+(5, 2, 1, 799),
+(17, 1, 6, 5394),
+(17, 2, 2, 1598),
+(17, 5, 1, 899);
 
 -- --------------------------------------------------------
 
@@ -357,7 +369,7 @@ INSERT INTO `order_items` (`order_id`, `model_id`, `quantity`, `total`) VALUES
 
 CREATE TABLE `order_tracker` (
   `order_id` int(11) NOT NULL,
-  `current_track` enum('Delivered','Shipped','Ready to Ship','Packed','Processing','Order Received') NOT NULL DEFAULT 'Processing',
+  `current_track` text NOT NULL,
   `status` enum('Done','Not Done') NOT NULL DEFAULT 'Not Done',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -368,7 +380,12 @@ CREATE TABLE `order_tracker` (
 
 INSERT INTO `order_tracker` (`order_id`, `current_track`, `status`, `created_at`) VALUES
 (4, '', 'Not Done', '2024-10-04 00:59:54'),
-(5, '', 'Not Done', '2024-10-04 18:41:02');
+(5, '', 'Not Done', '2024-10-04 18:41:02'),
+(17, 'Processing', 'Not Done', '2024-10-14 22:31:13'),
+(17, '', 'Not Done', '2024-10-31 00:07:22'),
+(17, '', 'Not Done', '2024-10-31 00:08:48'),
+(17, '', 'Not Done', '2024-10-31 00:09:10'),
+(17, 'Delivered', 'Not Done', '2024-10-31 00:12:12');
 
 -- --------------------------------------------------------
 
@@ -491,15 +508,15 @@ ALTER TABLE `diecast_size`
 -- Indexes for table `order_info`
 --
 ALTER TABLE `order_info`
-  ADD PRIMARY KEY (`order_id`),
+  ADD PRIMARY KEY (`order_id`) USING BTREE,
   ADD KEY `customer-r` (`customer_id`);
 
 --
 -- Indexes for table `order_items`
 --
 ALTER TABLE `order_items`
-  ADD KEY `order-re` (`order_id`),
-  ADD KEY `model-re` (`model_id`);
+  ADD KEY `model-re` (`model_id`),
+  ADD KEY `order-re` (`order_id`);
 
 --
 -- Indexes for table `order_tracker`
@@ -534,19 +551,19 @@ ALTER TABLE `appraisal`
 -- AUTO_INCREMENT for table `bid_room`
 --
 ALTER TABLE `bid_room`
-  MODIFY `bidding_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `bidding_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `cart`
 --
 ALTER TABLE `cart`
-  MODIFY `cart_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `cart_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `chat_message`
 --
 ALTER TABLE `chat_message`
-  MODIFY `message_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `message_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT for table `chat_room`
@@ -570,7 +587,7 @@ ALTER TABLE `diecast_brand`
 -- AUTO_INCREMENT for table `diecast_model`
 --
 ALTER TABLE `diecast_model`
-  MODIFY `model_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `model_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- AUTO_INCREMENT for table `diecast_size`
@@ -582,7 +599,7 @@ ALTER TABLE `diecast_size`
 -- AUTO_INCREMENT for table `order_info`
 --
 ALTER TABLE `order_info`
-  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `seller`

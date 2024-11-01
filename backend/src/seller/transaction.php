@@ -1,41 +1,46 @@
 <?php
 
-    function reduceStock($connect, $order_id) {
-             
+    function reduceStock($connect, $order_id) {             
         try {
-            
+           
             $getOrderQuantityPerModel = $connect->prepare("SELECT quantity, model_id 
-                FROM order_items WHERE order_id = ?");
+                FROM order_items WHERE order_id = ?");            
             $getOrderQuantityPerModel->bind_param("s", $order_id);
             
             $getOrderQuantityPerModel->execute();
         
             $order = $getOrderQuantityPerModel->get_result();
             $orders = $order->fetch_all(MYSQLI_ASSOC);
-
-            if (count($orders) <= 0) {
+            $getOrderQuantityPerModel->close();
+            
+            if (count($orders) <= 0) {             
                 return false;
             }
 
             foreach ($orders as $orderItem) {
+                
                 $quantity = $orderItem['quantity'];
                 $model_id = $orderItem['model_id'];
                 $currentStock = 0;
 
                 $getCurrentStock = $connect->prepare("SELECT model_stock FROM diecast_model WHERE model_id = ?");
+                
                 $getCurrentStock->bind_param("s", $model_id);
                 $getCurrentStock->execute();
                 $getCurrentStock->bind_result($currentStock);
                 $getCurrentStock->fetch();
-                    
+                $getCurrentStock->close();
+
                 if ($currentStock >= $quantity) {
                     
-                    $newStock = $currentStock - $quantity;
-                        
-                    $updateStock = $connect->prepare("UPDATE diecast_model SET model_stock = ? WHERE model_id = ?");
+                    $newStock = $currentStock - $quantity;                    
+                    $updateStock = $connect->prepare("UPDATE diecast_model SET model_stock = ? WHERE model_id = ?");                    
                     $updateStock->bind_param("is", $newStock, $model_id);
-                                        
+                            
                     $updateStock->execute();
+                    if ($updateStock->affected_rows <= 0) {
+                        throw new Exception("Something went wrong");  
+                    }
                 } else {                    
                     return false; 
                 }
@@ -44,17 +49,18 @@
             return true;
 
         } catch (\Throwable $th) {
+            
             return false;
         }
     }
 
     function changeOrderStatus($connect, $payload) {
 
-        $connection = $connect->begin_transaction();
-
+        $connect->begin_transaction();
+                
         try  {
 
-            if ($payload["order_status"] === "Packed" && !reduceStock($connect, $payload['order_id'])) {
+            if ($payload["order_status"] === "Order Placed" && !reduceStock($connect, $payload['order_id'])) {                
                 throw new Exception("There is item that is out of stock!");  
             }
 
@@ -74,6 +80,7 @@
                 throw new Exception("Order Reference Number " . $payload['order_ref_no'] . " was not found.");  
             }
 
+            $connect->commit(); 
             return array(
                 "title" => "Success", 
                 "message" => "Order successfully changed to '" . $payload['order_status'] ."'", 
@@ -82,7 +89,7 @@
 
 
         } catch (\Throwable $th) {
-            $connection->rollback();
+            $connect->rollback();
             return array(
                 "title" => "Failed", 
                 "message" => "Something went wrong! " . $th->getMessage() . " Please try again later",

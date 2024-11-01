@@ -43,27 +43,19 @@
         }
     }
 
-    function editDiecastProduct($connect, $payload, $imageUrl) {
+    function editDiecastProduct($connect, $payload) {
         try {
             
             $updateDiecastProduct = $connect->prepare("UPDATE diecast_model 
-            SET size_id = ?, brand_id = ?, model_name = ?, 
-                model_description = ?, model_price = ?, model_stock = ?, 
-                model_availability = ?, model_tags = ?, model_type = ?, 
-                model_image_url = ? 
+            SET model_name = ?, model_description = ?, 
+            model_price = ?, model_availability = ?
             WHERE seller_id = ? AND model_id = ?");
             
-            $updateDiecastProduct->bind_param("ssssssssssss",                 
-                $payload["size_id"], 
-                $payload["brand_id"], 
-                $payload["model_name"], 
+            $updateDiecastProduct->bind_param("ssssss",
+                $payload["model_name"],
                 $payload["model_description"], 
-                $payload["model_price"], 
-                $payload["model_stock"], 
-                $payload["model_availability"], 
-                $payload["model_tags"], 
-                $payload["model_type"], 
-                $imageUrl,
+                $payload["model_price"],                 
+                $payload["model_availability"],                 
                 $payload["seller_id"],
                 $payload["model_id"], 
             );
