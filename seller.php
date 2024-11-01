@@ -1221,11 +1221,7 @@ if ($sizeResult) {
           }
       }
 
-      function showSection(sectionId) {
-          try {
-              // Hide all sections first
-              const sections = document.querySelectorAll('.section');
-              sections.forEach(section => section.classList.remove('active'));
+    
 
     function showSection(sectionId) {
         try {
