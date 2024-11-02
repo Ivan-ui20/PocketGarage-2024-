@@ -198,16 +198,13 @@ if ($sizeResult) {
 
     <!-- For Dashboard Section -->
     <div class="content">
-      <div id="dashboard-section" class="section">
-          <h1>Overview</h1>
-     <div class="content">
         <input id="seller-id" type="text" hidden value="<?php echo $_SESSION["seller_id"]?>">
         <!-- Dashboard Section -->
         <div id="dashboard-section" class="section">
             <h1>Overview</h1>
 
-         <!--start orecentupdate-->
-        
+          <!--start orecentupdate-->
+          
           <div class="recent_update">
             <h2>Recent Update</h2>
 
@@ -218,60 +215,73 @@ if ($sizeResult) {
                 </div>
               </div>
             </div>
-          </div>
+                        
+        </div>
 
-          <div class="all_products">
-              <h2>All Products</h2>
-              <div class="form">
-                <a href="#" class="logo" onclick="showSection('dashboard-section')"></a>
-                <h1> 2 </h1>
-                <a href="#" onclick="showSection('view-product-section')">
-                          <h3>View Products</h3>
-                </a>
-              </div>
-          </div>
+        <div class="all_products">
+            <h2>All Products</h2>
 
-          <div class="all_bidding">
-              <h2>All bidding</h2>
-              <div class="form">
-                <a href="#" class="logo" onclick="showSection('dashboard-section')"></a>
-              <h1> 2 </h1>
-                <a href="#" onclick="showSection('auction-section')">
-                  <h3>View Bidding</h3>
-                </a>
-              </div>
-          </div>
+            <div class="form">
+            <a href="#" class="logo" onclick="showSection('dashboard-section')"></a>
+            
+              <?php                 
+                $stmt = $conn->prepare("SELECT COUNT(*) FROM diecast_model WHERE seller_id = ?");
+                $stmt->bind_param("s", $_SESSION["seller_id"]);
+                $stmt->execute();
+                
+                $result = $stmt->get_result();
+                $count = $result->fetch_row()[0]; 
+                
+                $stmt->close();
+              ?> 
+              <h1><?php echo $count; ?></h1>
 
-          <div class="all_messages">
-              <h2>Recent Messages</h2>
-                <div>
-                  <div class="chat-list" id="chat-list">
-                    <div class="chat-list-item" onclick="openChat(1)">
-                      John Doe - <small>Last message: Hi, I have a question...</small>
-                    </div>
-                    <div class="chat-list-item" onclick="openChat(2)">
-                      Jane Smith - <small>Last message: Thanks for the delivery!</small>
-                    </div>
+            <a href="#" onclick="showSection('view-product-section')">
+                      <h3>View Products</h3>
+            </a>
+            </div>
+
+        </div>
+
+        <div class="all_bidding">
+
+            <h2>All bidding</h2>
+            <div class="form">
+            <a href="#" class="logo" onclick="showSection('dashboard-section')"></a>
+              <?php                 
+                $stmt = $conn->prepare("SELECT COUNT(*) FROM bid_room WHERE seller_id = ?");
+                $stmt->bind_param("s", $_SESSION["seller_id"]);
+                $stmt->execute();
+                
+                $result = $stmt->get_result();
+                $count = $result->fetch_row()[0]; 
+                
+                $stmt->close();
+              ?> 
+              <h1><?php echo $count; ?></h1>
+             <a href="#" onclick="showSection('auction-section')">
+                <h3>View Bidding</h3>
+              </a>
+            </div>
+        </div>
+
         <div class="all_messages">
             <h2>Recent Messages</h2>
               <div>
                 <div class="chat-list" id="chat-list">
                 </div>
 
-                    <div class="chat-list-item" onclick="openChat(3)">
-                      Baxter Sisgado - <small>Last message: Mine po..</small>
-                    </div>
-                  </div>
-                </div>
-          </div>
+              </div>
+        </div>
+
+
+      </div>
+
     </div>
 
 
-      
-    <!-- For User Profile Section -->
-
-  <div id="user-profile-section" class="section">
-    <div id="settings-container" class="settings-container">
+    <div id="user-profile-section" class="section">
+      <div id="settings-container" class="settings-container">
 
       <div id="user-settings-section">
         <h2>User Settings</h2>
@@ -285,7 +295,8 @@ if ($sizeResult) {
         
     
       <div id="user-info">
-    <div class="container">
+       <div class="container">
+        
       <h1>User Profile</h1>
       <form id="profileForm" method="post" action="">
         <div class="form-group">
@@ -330,68 +341,19 @@ if ($sizeResult) {
     </div>
     </div>
     </div>
-  </div>
-              </div>
-        </div>
-
-
-      </div>
-
+    </div>
+    </div>
+    </div>
+    </div>
     </div>
 
-
     <!--view  productSection -->
+   
     <div id="view-product-section" class="section">
       <h2>Product Details</h2>
     
 
      <div class="all-products">
-      <div class="product-card">
-          <!-- Product Image -->
-          <div class="product-image">
-              <img src="assets/P1.png" alt="Product Image">
-          </div>
-
-        <!-- Product Information -->
-          <div class="product-info">
-              <h3>Product Name</h3>
-              <p class="product-description">This is a detailed description of the product. It provides key features and insights about the product for potential buyers.</p>
-              <p class="product-price"><b>Price:</b> $29.99</p>
-              <p class="product-stock"><b>In Stock:</b> Yes</p>
-            
-            <!-- Product Actions -->
-          <div class="product-actions">
-            <button onclick="openEditForm()">Edit</button>
-            <button onclick="deleteProduct()">Delete</button>
-          </div>
-      </div>
-      </div>
-      
-
-       <div class="product-card">
-        <!-- Product Image -->
-        <div class="product-image">
-            <img src="assets/P1.png" alt="Product Image">
-        </div>
-
-        
-
-        <!-- Product Information -->
-        <div class="product-info">
-          <h3>Product Name</h3>
-          <p class="product-description">
-            This is a detailed description of the product. It provides key features and insights about the product for potential buyers.
-          </p>
-          <p class="product-price"><b>Price:</b> $29.99</p>
-          <p class="product-stock"><b>In Stock:</b> Yes</p>
-
-          <!-- Product Actions -->
-          <div class="product-actions">
-            <button onclick="openEditForm()">Edit</button>
-            <button onclick="deleteProduct()">Delete</button>
-          </div>
-        </div>
-
 
      <?php
         $stmt = $conn->prepare("SELECT diecast_brand.*, diecast_size.*, diecast_model.* 
@@ -476,10 +438,6 @@ if ($sizeResult) {
             </div>
           </form>
         </div>
-
-    </div>
-    </div>
-    </div>
 
       </div>
       </div>
@@ -1123,24 +1081,10 @@ if ($sizeResult) {
     </div>
 
       <!-- Messages Section -->
-    <div id="message-section" class="section">
+      <div id="message-section" class="section">
 
         <div class="chat-container">
 
-        <!-- Left Chat List -->
-        <div class="chat-list" id="chat-list">
-        <h2>Chat</h2>
-          <div class="chat-list-item" onclick="openChat(1)">
-            John Doe - <small>Last message: Hi, I have a question...</small>
-          </div>
-          <div class="chat-list-item" onclick="openChat(2)">
-            Jane Smith - <small>Last message: Thanks for the delivery!</small>
-          </div>
-
-          <div class="chat-list-item" onclick="openChat(3)">
-            Baxter Sisgado - <small>Last message: Mine po..</small>
-          </div>
-        </div>
           <!-- Left Chat List -->
           <div class="chat-list" id="chat-list1">                      
           </div>
@@ -1164,11 +1108,6 @@ if ($sizeResult) {
                     attach_file
                 </span>
 
-        <button onclick="sendMessage()">Send</button>
-      </div>
-    </div>
-    </div>
-    </div>
                 <button type="button" onclick="sendMessage()">Send</button>
               </div>
             </form>
