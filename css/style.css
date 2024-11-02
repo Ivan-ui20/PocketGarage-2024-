@@ -690,6 +690,9 @@ section.ProductsL {
 .view-more {
   text-align: center;
   margin-top: 50px;
+  pointer-events: auto;
+  z-index: 10;
+  margin: 50px 0 100px;
 }
 
 .view-more-btn {
@@ -922,6 +925,9 @@ section.ProductsL {
   /* Content styles here */
 }
 
+.spacer {
+  height: 50px; /* Adjust the height as needed */
+}
 /* Style for the top navigation */
 .top-nav {
   display: flex;

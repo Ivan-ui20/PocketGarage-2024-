@@ -56,7 +56,12 @@
         <a href="Products.php" class="view-more-btn">View More</a>
     </div>
 
+    <div class="footer">
+
     <?php include './shared/footer.php';?>
+    </div>
+
+    
 
     <?php include './shared/userAgreementModal.php';?>
    

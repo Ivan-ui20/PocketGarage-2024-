@@ -81,15 +81,17 @@ be treated as a Contribution.</p>
     }
 
     .close-button {
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        font-size: 24px;
-        color: #FF4545;
-        cursor: pointer;
-        font-weight: bold;
-        background-color: #003161;
-    }
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 24px;
+    color: #FF4545; /* Flat red color for the button text */
+    cursor: pointer;
+    font-weight: bold;
+    background: none; /* No background for a flat look */
+    border: none; /* Remove any border for flat appearance */
+    padding: 0; /* Remove padding for a clean, flat look */
+}
 
     .terms-text{
         padding: 0 20px;
@@ -113,8 +115,4 @@ be treated as a Contribution.</p>
         text-transform: uppercase;
     }
     
-    .terms-box h4{
-
-    }
-
     </style>
