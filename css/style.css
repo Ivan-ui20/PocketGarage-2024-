@@ -690,6 +690,9 @@ section.ProductsL {
 .view-more {
   text-align: center;
   margin-top: 50px;
+  pointer-events: auto;
+  z-index: 10;
+  margin: 50px 0 100px;
 }
 
 .view-more-btn {
@@ -884,13 +887,47 @@ section.ProductsL {
 }
 
 .footer {
+  display: flex;
+  justify-content: space-between; /* Aligns items to the left and right */
+  padding: 15px 20px;
   background: #0b0b45;
   color: #fff;
-  text-align: center;
-  padding: 10px 0;
   margin-top: 40px;
+  font-size: 14px;
+  width: 100%;
+  position: fixed;
+  bottom: 0;
+  left: 0;
 }
 
+.footer p {
+  margin: 0;
+}
+
+.footer p:last-child {
+  display: flex;
+  gap: 15px; /* Adds spacing between links */
+}
+
+.footer a {
+  text-decoration: none;
+  color: #333; /* Adjust the color as needed */
+}
+
+.footer a:hover {
+  color: #007bff; /* Hover color for links */
+}
+
+#termsModal {
+  /* Center the modal */
+}
+.modal-content {
+  /* Content styles here */
+}
+
+.spacer {
+  height: 50px; /* Adjust the height as needed */
+}
 /* Style for the top navigation */
 .top-nav {
   display: flex;
@@ -974,4 +1011,105 @@ section.ProductsL {
   display: flex;
   gap: 4px;
   align-items: center;
+}
+
+.modalfooter {
+  position: fixed; /* Keeps the pop-up in a fixed position */
+  bottom: 0; /* Aligns it to the bottom */
+  left: 50%; /* Centers it horizontally */
+  width: 100%;
+  transform: translateX(-50%); /* Centers it on the x-axis */
+  background-color: white; /* Background color for the pop-up */
+  z-index: 1000;
+  font-size: 14px;
+  display: flex; /* Enables flexbox for alignment */
+  justify-content: center; /* Centers items horizontally */
+  align-items: center; /* Centers items vertically */
+}
+
+#useragreementModal {
+  z-index: 10000;
+}
+
+/* Modal content box */
+#useragreementModal .modal-content {
+  background-color: #fff;
+  color: #333;
+  padding: 20px;
+  width: 100%;
+  max-width: 100%;
+  display: flex; /* Enables flexbox for alignment */
+  flex-direction: column; /* Stack items vertically */
+  align-items: center; /* Center items in the modal */
+}
+
+/* Button styles */
+#useragreementModal .modal-buttons .action-button {
+  margin-top: 20px;
+  padding: 8px 15px;
+  cursor: pointer;
+  border: none;
+  border-radius: 5px;
+  color: #fff;
+  margin: 5px;
+}
+
+#agreeBtn {
+  background-color: #0b0b45;
+}
+
+#disagreeBtn {
+  background-color: #de8f5f;
+  margin-left: 10px;
+}
+
+body .terms-conditions {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: Arial, sans-serif;
+  background: transparent;
+}
+
+.terms-box {
+  max-width: 460px;
+  background-color: #003161;
+  color: aliceblue;
+  padding: 60px 30px;
+  position: relative;
+}
+
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 24px;
+  color: #ff4545;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.terms-text {
+  padding: 0 20px;
+  height: 400px;
+  overflow-y: auto;
+  font-size: 14px;
+  font-weight: 500;
+  color: whitesmoke;
+}
+
+.terms-text::-webkit-scrollbar {
+  width: 2px;
+  background-color: #003161;
+}
+
+.terms-text::-webkit-scrollbar-thumb {
+  background-color: #ff4545;
+}
+
+.terms-text h2 {
+  text-transform: uppercase;
 }

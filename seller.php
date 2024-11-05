@@ -164,41 +164,40 @@ if ($sizeResult) {
       </div>
 
       <div id="nav-bar">
-          <ul>
-            <li>
-              <a href="#" class="logo" onclick="showSection('dashboard-section')">
-                <img src="./assets/BG.PNG" alt="Logo" />
-              </a>
-            </li>
-          
-            <li class="profile"  >
-              <div class="Info">
-                <p><b><?php echo $_SESSION["seller_name"] ?></b></p>
-                <p>Verified Seller</p>
-              </div>
+        <ul>
+          <li>
+            <a href="#" class="logo" onclick="showSection('dashboard-section')">
+              <img src="./assets/BG.PNG" alt="Logo" />
+            </a>
+          </li>
+        
+          <li class="profile"  >
+            <div class="Info">
+              <p><b>Ivan Garcia</b></p>
+              <p>Verified Seller</p>
+            </div>
 
-              <div class="profile-photo" href="#" >
-                <img src="assets/profile.jpeg" alt="" />
-                
-              </div>
-               
-            </li>
-            
-            <li class="menubtn" onclick="showSidebar()">  
-              <a href="#">
-                <span class="material-symbols-outlined">menu</span>
-              </a>
-
-
+            <div class="profile-photo"  onclick="showSection('user-profile-section')">
+              <img src="assets/profile.jpeg" alt="" />
               
-            </li>
-          </ul>
-      </div>
+            </div>
+              
+          </li>
+            
+          <li class="menubtn" onclick="showSidebar()">  
+            <a href="#">
+              <span class="material-symbols-outlined">menu</span>
+            </a>
 
-      
+
+            
+          </li>
+        </ul>
+      </div>
     </nav>
 
-     <div class="content">
+    <!-- For Dashboard Section -->
+    <div class="content">
         <input id="seller-id" type="text" hidden value="<?php echo $_SESSION["seller_id"]?>">
         <!-- Dashboard Section -->
         <div id="dashboard-section" class="section">
@@ -280,7 +279,75 @@ if ($sizeResult) {
 
     </div>
 
-     <!--view  productSection -->
+
+    <div id="user-profile-section" class="section">
+      <div id="settings-container" class="settings-container">
+
+      <div id="user-settings-section">
+        <h2>User Settings</h2>
+        <ul>
+          <li><a href="#" onclick="showUserInfo()">User Info</a></li>
+          <li><a href="#">Account Settings</a></li>
+          <li><a href="#">Privacy</a></li>
+          <li><a href="#">Logout</a></li>
+        </ul>
+      </div>
+        
+    
+      <div id="user-info">
+       <div class="container">
+        
+      <h1>User Profile</h1>
+      <form id="profileForm" method="post" action="">
+        <div class="form-group">
+          <label for="fullname">Full Name:</label>
+          <input type="text" id="fullname" name="fullname" value="<?php echo $fullname; ?>" required>
+        </div>
+        <div class="form-group">
+          <label for="email">Email:</label>
+          <input type="email" id="email" name="email" value="<?php echo $email; ?>" required>
+        </div>
+        <div class="form-group">
+          <label for="phone">Phone Number:</label>
+          <input type="tel" id="phone" name="phone" value="<?php echo $phone; ?>" required>
+        </div>
+        <div class="form-group">
+          <label for="address">Address:</label>
+          <input type="text" id="address" name="address" value="<?php echo $address; ?>" required>
+        </div>
+        <div class="form-group">
+          <label for="gender">Gender:</label>
+          <select id="gender" name="gender" required>
+            <option value="" <?php echo ($gender == "") ? "selected" : ""; ?>>Select...</option>
+            <option value="male" <?php echo ($gender == "male") ? "selected" : ""; ?>>Male</option>
+            <option value="female" <?php echo ($gender == "female") ? "selected" : ""; ?>>Female</option>
+            <option value="other" <?php echo ($gender == "other") ? "selected" : ""; ?>>Other</option>
+          </select>
+        </div>
+        <button type="submit">Save Changes</button>
+      </form>
+
+      <?php if ($_SERVER["REQUEST_METHOD"] == "POST"): ?>
+        <div class="profile-data">
+          <h2>Your Profile Data</h2>
+          <p><strong>Full Name:</strong> <?php echo $fullname; ?></p>
+          <p><strong>Email:</strong> <?php echo $email; ?></p>
+          <p><strong>Phone Number:</strong> <?php echo $phone; ?></p>
+          <p><strong>Address:</strong> <?php echo $address; ?></p>
+          <p><strong>Gender:</strong> <?php echo $gender; ?></p>
+        </div>
+      <?php endif; ?>
+      
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
+
+    <!--view  productSection -->
    
     <div id="view-product-section" class="section">
       <h2>Product Details</h2>
@@ -1058,15 +1125,31 @@ if ($sizeResult) {
       </div>
 
     <script>
-            function toggleOtherBrandInput() {
-              const select = document.getElementById('model-brand');
-              const otherBrandInput = document.getElementById('other-brand');
-              if (select.value === 'other') {
-                otherBrandInput.style.display = 'block';
-              } else {
-                otherBrandInput.style.display = 'none';
-              }
-            }
+
+/*
+    function showUserInfo() {
+      document.getElementById('user-info-section').style.display = 'block';
+    }
+
+    function editUserInfo() {
+      document.getElementById('username').readOnly = false;
+      document.getElementById('email').readOnly = false;
+      document.getElementById('phone').readOnly = false;
+      document.getElementById('address').readOnly = false;
+    }
+
+    function saveUserInfo() {
+      document.getElementById('username').readOnly = true;
+      document.getElementById('email').readOnly = true;
+      document.getElementById('phone').readOnly = true;
+      document.getElementById('address').readOnly = true;
+      alert("User information saved successfully!");
+    }
+
+    function goBackToSettings() {
+      document.getElementById('user-info-section').style.display = 'none';
+    }
+    */
     </script>
 
     <script>
@@ -1085,24 +1168,26 @@ if ($sizeResult) {
           }
       }
 
-      function showSection(sectionId) {
-          try {
-              // Hide all sections first
-              const sections = document.querySelectorAll('.section');
-              sections.forEach(section => section.classList.remove('active'));
+    
 
-              // Show the selected section based on the ID
-              const selectedSection = document.getElementById(sectionId);
-              if (selectedSection) {
-                  selectedSection.classList.add('active');
-                  localStorage.setItem('activeSection', sectionId); // Save the active section in localStorage
-              } else {
-                  console.error(`Section with ID '${sectionId}' not found.`);
-              }
-          } catch (error) {
-              console.error('Error showing section:', error);
-          }
-      }
+    function showSection(sectionId) {
+        try {
+            // Hide all sections first
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(section => section.classList.remove('active'));
+
+            // Show the selected section based on the ID
+            const selectedSection = document.getElementById(sectionId);
+            if (selectedSection) {
+                selectedSection.classList.add('active');
+                localStorage.setItem('activeSection', sectionId); // Save the active section in localStorage
+            } else {
+                console.error(`Section with ID '${sectionId}' not found.`);
+            }
+        } catch (error) {
+            console.error('Error showing section:', error);
+        }
+    }
 
       // Function to load the last active section on page load
       window.addEventListener('DOMContentLoaded', () => {
