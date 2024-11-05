@@ -49,7 +49,7 @@
             }
 
             if ($route === 'seller/update/status/order') {
-                $requiredFields = ['order_id', 'order_ref_no', 'order_status'];
+                $requiredFields = ['order_id', 'order_ref_no', 'order_status', "order_trackingnum"];
                 if (!array_diff_key(array_flip($requiredFields), $_POST)) {
                     
                     $payload = array_intersect_key($_POST, array_flip($requiredFields));
@@ -62,11 +62,11 @@
                     jsonResponse("Invalid request", "All fields are required.");
                 }
             }
-
+                        
             if ($route === 'seller/add/product') {
                 $requiredFields = ['seller_id', 'size_id', 'brand_id', 'model_name', 
                 'model_description', 'model_price', 'model_stock', 'model_availability', 
-                'model_tags', 'model_type'];
+                'model_tags', 'model_type', "model_packaging", "model_condition"];
 
                 if (!array_diff_key(array_flip($requiredFields), $_POST)) {
                     
@@ -134,7 +134,9 @@
             if ($route === 'seller/post/bid') {
                 $requiredFields = ['seller_id', 'size_id', 'brand_id', 'model_name', 
                 'model_description', 'model_price', 'model_stock', 'model_availability', 
-                'model_tags', 'model_type', 'details', 'start_amount', 'start_time', 'end_time'];
+                'model_tags', 'model_type', "model_packaging", "model_condition",
+                'details', 'start_amount', 'start_time', 'end_time'];
+      
 
                 if (!array_diff_key(array_flip($requiredFields), $_POST)) {
                     

@@ -64,8 +64,13 @@
                 throw new Exception("There is item that is out of stock!");  
             }
 
-            $orderStatus = $connect->prepare("UPDATE order_info SET order_status = ? WHERE order_id = ?");
-            $orderStatus->bind_param("ss", $payload['order_status'], $payload['order_id']);
+            $orderStatus = $connect->prepare("UPDATE order_info 
+                SET order_status = ?, order_trackingnum = ? WHERE order_id = ?");
+            $orderStatus->bind_param("sss", 
+                $payload['order_status'], 
+                $payload['order_trackingnum'], 
+                $payload['order_id']);
+
             $orderStatus->execute();
             
             if ($orderStatus->affected_rows <= 0) {
@@ -96,7 +101,7 @@
                 "data" => []);
         }   
     }
-
+    
     function getOrders($connect, $sellerId) {
         try {
 
