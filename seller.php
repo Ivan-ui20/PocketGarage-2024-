@@ -448,193 +448,193 @@ if ($sizeResult) {
       <h2>Add New Product</h2>
       <form action="#" method="POST" id="product-form">
 
-      <div class="form-group-row">
-        <div class="form-group">
-          <input type="text" hidden id="seller-id" value=<?php echo $_SESSION["seller_id"] ?>>
-          <label for="product-name">Product Name</label>
-          <input
-            type="text"
-            id="product-name"
-            name="product-name"
-            placeholder="Enter product name"
-            required
-          />
-        </div>
+        <div class="form-group-row">
+          <div class="form-group">
+            <input type="text" hidden id="seller-id" value=<?php echo $_SESSION["seller_id"] ?>>
+            <label for="product-name">Product Name</label>
+            <input
+              type="text"
+              id="product-name"
+              name="product-name"
+              placeholder="Enter product name"
+              required
+            />
+          </div>
 
-        <div class="form-group">
-          <label for="product-price">Price</label>
-          <input
-            type="number"
-            id="product-price"
-            name="product-price"
-            placeholder="Enter product price"
-            required
-          />
+          <div class="form-group">
+            <label for="product-price">Price</label>
+            <input
+              type="number"
+              id="product-price"
+              name="product-price"
+              placeholder="Enter product price"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="model_stock">Stock available:</label>
+            <input
+              type="number"
+              id="model_stock"
+              name="model_stock"
+              placeholder="Enter number of available stock "
+              required
+            />
+          </div>
         </div>
-        <div class="form-group">
-          <label for="model_stock">Stock available:</label>
-          <input
-            type="number"
-            id="model_stock"
-            name="model_stock"
-            placeholder="Enter number of available stock "
-            required
-          />
-        </div>
-      </div>
-      
-      <div class="form-group-row">
-            <div class="form-group">
-              <label for="auction-product-brand">Model Brand</label>
-              <select id="model-brand" name="model-brand" required onchange="toggleOtherBrandInput()">
-                <?php
-                  foreach ($brandData as $row) {
-                    echo '<option value="' . htmlspecialchars($row['brand_id']) . '">' . htmlspecialchars($row['brand_name']) . '</option>';
-                  }
-                ?>
-              </select>
-            </div>
-
-              <!-- Input field for custom brand -->
-              <div id="other-brand" style="display: none; margin-top: 10px;">
-                <label for="custom-brand">Enter Other Brand</label>
-                <input type="text" id="custom-brand" name="custom-brand">
+        
+        <div class="form-group-row">
+              <div class="form-group">
+                <label for="auction-product-brand">Model Brand</label>
+                <select id="model-brand" name="model-brand" required onchange="toggleOtherBrandInput()">
+                  <?php
+                    foreach ($brandData as $row) {
+                      echo '<option value="' . htmlspecialchars($row['brand_id']) . '">' . htmlspecialchars($row['brand_name']) . '</option>';
+                    }
+                  ?>
+                </select>
               </div>
-           
 
-            <div class="form-group">
-              <label for="model-type">Model Type</label>
-              <select id="model-type" name="model-type" required>
-                <option value="Regular">Regular</option>
-                <option value="Premium">Premium</option>
-              </select>
-            </div>
-      </div>
+                <!-- Input field for custom brand -->
+                <div id="other-brand" style="display: none; margin-top: 10px;">
+                  <label for="custom-brand">Enter Other Brand</label>
+                  <input type="text" id="custom-brand" name="custom-brand">
+                </div>
+            
 
-      <div class="form-group-row">
-            <div class="form-group">
-              <label for="model-packaging">Packaging</label>
-              <select id="model-packaging" name="model-packaging" required>
-                <option value="unopened">Unopened</option>
-                <option value="original-packaging">Original Packaging</option>
-                <option value="none">None</option>
-              </select>
-            </div>
-
-            <div class="form-group">
-              <label for="model-scale">Scale</label>
-              <select id="model-scale" name="model-scale" required>               
-               <?php
-                  foreach ($sizeData as $row) {
-                    echo '<option value="' . htmlspecialchars($row['size_id']) . '">' . htmlspecialchars($row['ratio']) . '</option>';
-                  }
-                ?>
-              </select>
-            </div>
-          </div>
-          
-
-
-       <div class="form-group-row">
-          <div class="form-group">
-            <label>Condition</label>
-            <div>
-              <input
-                type="checkbox"
-                id="mint"
-                name="model-condition"
-                value="mint"
-              />
-              <label for="mint">Mint</label>
-
-              <input
-                type="checkbox"
-                id="good-condition"
-                name="model-condition"
-                value="good-condition"
-              />
-              <label for="good-condition">Good Condition</label>
-
-
-              <input
-                type="checkbox"
-                id="near_mint"
-                name="model-condition"
-                value="near_mint"
-              />
-              <label for="near_mint">Near Mint</label>
-
-              <input
-                type="checkbox"
-                id="non-mint"
-                name="model-condition"
-                value="non-mint"
-              />
-              <label for="non-mint">Non Mint</label>
-
-              <input
-                type="checkbox"
-                id="played"
-                name="model-condition"
-                value="played"
-              />
-              <label for="played">Played</label>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label>Model Tags</label>
-            <div>
-              <input
-                type="checkbox"
-                id="limited_edition"
-                name="model-tags"
-                value="limited_edition"
-              />
-              <label for="limited_edition">Limited Edition</label>
-
-              <input
-                type="checkbox"
-                id="new_arrivals"
-                name="model-tags"
-                value="new_arrivals"
-              />
-              <label for="new_arrivals">New Arrivals</label>
-
-              <input
-                type="checkbox"
-                id="featured"
-                name="model-tags"
-                value="featured"
-              />
-              <label for="featured">Featured</label>
-
-              <input
-                type="checkbox"
-                id="best_seller"
-                name="model-tags"
-                value="best_seller"
-              />
-              <label for="best_seller">Best Seller</label>
-            </div>
-          </div>
+              <div class="form-group">
+                <label for="model-type">Model Type</label>
+                <select id="model-type" name="model-type" required>
+                  <option value="Regular">Regular</option>
+                  <option value="Premium">Premium</option>
+                </select>
+              </div>
         </div>
 
+        <div class="form-group-row">
+              <div class="form-group">
+                <label for="model-packaging">Packaging</label>
+                <select id="model-packaging" name="model-packaging" required>
+                  <option value="unopened">Unopened</option>
+                  <option value="original-packaging">Original Packaging</option>
+                  <option value="none">None</option>
+                </select>
+              </div>
 
-      <div class="form-group">
-          <label for="product-description">Description</label>
-          <textarea
-            id="product-description"
-            name="product-description"
-            rows="4"
-            placeholder="Enter product description"
-            required
-          ></textarea>
-      </div>
-      <div class="form-group">
-          <label for="product-image">Product Image</label>
-          <input type="file" id="product-image" name="product-image" />
-      </div>
+              <div class="form-group">
+                <label for="model-scale">Scale</label>
+                <select id="model-scale" name="model-scale" required>               
+                <?php
+                    foreach ($sizeData as $row) {
+                      echo '<option value="' . htmlspecialchars($row['size_id']) . '">' . htmlspecialchars($row['ratio']) . '</option>';
+                    }
+                  ?>
+                </select>
+              </div>
+            </div>
+            
+
+
+        <div class="form-group-row">
+            <div class="form-group">
+              <label>Condition</label>
+              <div>
+                <input
+                  type="checkbox"
+                  id="mint"
+                  name="model-condition"
+                  value="mint"
+                />
+                <label for="mint">Mint</label>
+
+                <input
+                  type="checkbox"
+                  id="good-condition"
+                  name="model-condition"
+                  value="good condition"
+                />
+                <label for="good-condition">Good Condition</label>
+
+
+                <input
+                  type="checkbox"
+                  id="near_mint"
+                  name="model-condition"
+                  value="near mint"
+                />
+                <label for="near_mint">Near Mint</label>
+
+                <input
+                  type="checkbox"
+                  id="non-mint"
+                  name="model-condition"
+                  value="non mint"
+                />
+                <label for="non-mint">Non Mint</label>
+
+                <input
+                  type="checkbox"
+                  id="played"
+                  name="model-condition"
+                  value="played"
+                />
+                <label for="played">Played</label>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Model Tags</label>
+              <div>
+                <input
+                  type="checkbox"
+                  id="limited_edition"
+                  name="model-tags"
+                  value="limited_edition"
+                />
+                <label for="limited_edition">Limited Edition</label>
+
+                <input
+                  type="checkbox"
+                  id="new_arrivals"
+                  name="model-tags"
+                  value="new_arrivals"
+                />
+                <label for="new_arrivals">New Arrivals</label>
+
+                <input
+                  type="checkbox"
+                  id="featured"
+                  name="model-tags"
+                  value="featured"
+                />
+                <label for="featured">Featured</label>
+
+                <input
+                  type="checkbox"
+                  id="best_seller"
+                  name="model-tags"
+                  value="best_seller"
+                />
+                <label for="best_seller">Best Seller</label>
+              </div>
+            </div>
+          </div>
+
+
+        <div class="form-group">
+            <label for="product-description">Description</label>
+            <textarea
+              id="product-description"
+              name="product-description"
+              rows="4"
+              placeholder="Enter product description"
+              required
+            ></textarea>
+        </div>
+        <div class="form-group">
+            <label for="product-image">Product Image</label>
+            <input type="file" id="product-image" name="product-image" />
+        </div>
 
           <div class="button-group">
             <button type="submit" class="btn sell-btn">Sell Product</button>
@@ -710,6 +710,7 @@ if ($sizeResult) {
                   order_info.order_id,
                   order_info.order_ref_no,
                   order_info.order_status,
+                  order_info.order_trackingnum,
                   customer.customer_id,
                   CONCAT(customer.first_name, ' ', customer.last_name) AS customer_name,
                   GROUP_CONCAT(diecast_model.model_name SEPARATOR ', ') AS model_names  -- Concatenate model names
@@ -735,31 +736,38 @@ if ($sizeResult) {
               while ($row = $result->fetch_assoc()) {
                   $refNo = htmlspecialchars($row['order_ref_no']);
                   echo '<tr>
-                      <td>' . $refNo . '</td>
-                      <td>' . htmlspecialchars($row['customer_name']) . '</td>
-                      <td>' . htmlspecialchars($row['model_names']) . '</td>
-                      <td>
+                    <td>' . $refNo . '</td>
+                    <td>' . htmlspecialchars($row['customer_name']) . '</td>
+                    <td>' . htmlspecialchars($row['model_names']) . '</td>
+                    <td>
                         <select class="order-status" id="order-status-' . htmlspecialchars($row['order_id']) . '">
                             <option value="">Select a status</option>
-                            <option value="Order Placed"' . ($row['order_status'] === 'Order Placed' ? ' selected' : '') . '> Order Placed </option>
-                            <option value="Waiting for courier"' . ($row['order_status'] === 'Waiting for courier' ? ' selected' : '') . '> Waiting for courier </option>
-                            <option value="In Transit"' . ($row['order_status'] === 'In Transit' ? ' selected' : '') . '> In Transit </option>
-                            <option value="Delivered"' . ($row['order_status'] === 'Delivered' ? ' selected' : '') . '> Delivered </option>
+                            <option value="Order Placed"' . ($row['order_status'] === 'Order Placed' ? ' selected' : '') . '>Order Placed</option>
+                            <option value="Waiting for courier"' . ($row['order_status'] === 'Waiting for courier' ? ' selected' : '') . '>Waiting for courier</option>
+                            <option value="In Transit"' . ($row['order_status'] === 'In Transit' ? ' selected' : '') . '>In Transit</option>
+                            <option value="Delivered"' . ($row['order_status'] === 'Delivered' ? ' selected' : '') . '>Delivered</option>
                         </select>
-                      </td>
-                      <td>
-                          <input type="text" class="tracking-number" data-order-id="' . htmlspecialchars($row['order_id']) . '" placeholder="Enter tracking number" />
-                      </td>
-                      <td>
-                          <button
+                    </td>
+                    <td>
+                        <input 
+                            type="text" 
+                            class="tracking-number" 
+                            id="order-tracking-num-' . htmlspecialchars($row['order_id']) . '" 
+                            placeholder="Enter tracking number" 
+                            value="' . (!empty($row['order_trackingnum']) ? htmlspecialchars($row['order_trackingnum']) : '') . '" 
+                        />
+                    </td>
+                    <td>
+                        <button
                             type="button" 
                             class="update-btn" 
                             onclick="updateOrder(' . htmlspecialchars($row['order_id']) . ', \'' . addslashes($refNo) . '\', \'' . addslashes($row['order_status']) . '\')"
-                          >
+                        >
                             Update
-                          </button>
-                      </td>
+                        </button>
+                    </td>
                   </tr>';
+
               }
           } else {
               echo "<tr><td colspan='6'>No orders found.</td></tr>";
@@ -965,7 +973,7 @@ if ($sizeResult) {
                 type="checkbox"
                 id="good-condition"
                 name="model-condition"
-                value="good-condition"
+                value="good condition"
               />
               <label for="good-condition">Good Condition</label>
 
@@ -974,7 +982,7 @@ if ($sizeResult) {
                 type="checkbox"
                 id="near_mint"
                 name="model-condition"
-                value="near_mint"
+                value="near mint"
               />
               <label for="near_mint">Near Mint</label>
 
@@ -982,7 +990,7 @@ if ($sizeResult) {
                 type="checkbox"
                 id="non-mint"
                 name="model-condition"
-                value="non-mint"
+                value="non mint"
               />
               <label for="non-mint">Non Mint</label>
 
@@ -1335,6 +1343,14 @@ if ($sizeResult) {
         const description = document.getElementById('product-description').value;
         const fileInput = document.querySelector('input[type="file"]'); 
 
+        const productPackaging = document.getElementById('model-packaging').value;
+
+        const packageConditions = Array.from(document.querySelectorAll('input[name="model-condition"]:checked'))
+            .map(checkbox => checkbox.value.replace(/_/g, ' '))
+            .map(condition => condition.split(' ')
+              .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+              .join(' ')
+            );
 
         const tags = Array.from(document.querySelectorAll('input[name="model-tags"]:checked'))
         .map(checkbox => checkbox.value.replace(/_/g, ' '))
@@ -1355,6 +1371,8 @@ if ($sizeResult) {
         formData.append('model_availability', 'Available');
         formData.append('model_tags', tags.length ? tags.join(', ') : '');
         formData.append('model_type', productType);
+        formData.append('model_packaging', productPackaging);
+        formData.append('model_condition', packageConditions);
                              
         if (fileInput.files.length > 0) {
             formData.append('model_image', fileInput.files[0]); 
@@ -1374,8 +1392,8 @@ if ($sizeResult) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }          
             const responseData = await response.json();
-                                  
-            alert('product added')
+                        
+            alert(responseData.message)
           } catch (error) {
               console.error('Error during fetch:', error);
           }
@@ -1395,7 +1413,18 @@ if ($sizeResult) {
         const bidStartAmount = document.getElementById('starting-bid').value;
         const bidStartDate = document.getElementById('auction-start-date').value;
         const bidEndDate = document.getElementById('auction-end-date').value;
-        const fileInput = document.getElementById('product-bid-image').files[0];; 
+        const fileInput = document.getElementById('product-bid-image').files[0];
+        
+        const productPackaging = document.getElementById('model-packaging').value;
+        
+        const packageConditions = Array.from(document.querySelectorAll('input[name="model-condition"]:checked'))
+            .map(checkbox => checkbox.value.replace(/_/g, ' '))
+            .map(condition => condition.split(' ')
+              .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+              .join(' ')
+            );
+        console.log(packageConditions);
+        
         
         const tags = Array.from(document.querySelectorAll('input[name="model-tags"]:checked'))
         .map(checkbox => checkbox.value.replace(/_/g, ' '))
@@ -1416,6 +1445,8 @@ if ($sizeResult) {
         formData.append('model_availability', 'Available');
         formData.append('model_tags', tags.length ? tags.join(', ') : '');
         formData.append('model_type', productType);
+        formData.append('model_packaging', productPackaging);
+        formData.append('model_condition', packageConditions);
         formData.append('details', productDetails);
         formData.append('start_amount', bidStartAmount);
         formData.append('start_time', bidStartDate);
@@ -1441,7 +1472,7 @@ if ($sizeResult) {
             }          
             const responseData = await response.json();
                                   
-            alert('bid posted')
+            alert(responseData.message)
           } catch (error) {
               console.error('Error during fetch:', error);
           }
@@ -1579,15 +1610,16 @@ if ($sizeResult) {
       async function updateOrder(orderId, refNo, status) {
                 
         const newStatus = document.getElementById(`order-status-${orderId}`).value
-                
+        const trackingNumber = document.getElementById(`order-tracking-num-${orderId}`).value
         if (status === newStatus || newStatus === "")  {         
           return
         }
-
+            
         const data = new URLSearchParams({                
           order_id: orderId,
           order_ref_no: refNo,
-          order_status: newStatus
+          order_status: newStatus,
+          order_trackingnum: trackingNumber
         });
         try {
           const response = await fetch('/backend/src/seller/route.php?route=seller/update/status/order', {
@@ -1599,7 +1631,7 @@ if ($sizeResult) {
           }          
           const responseData = await response.json();
                                               
-          alert('order updated')
+          alert(responseData.message)
           window.location.reload();
         } catch (error) {
             console.error('Error during fetch:', error);

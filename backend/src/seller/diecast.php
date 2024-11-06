@@ -5,10 +5,10 @@
             $addDiecastProduct = $connect->prepare("INSERT INTO diecast_model
                 (seller_id, size_id, brand_id, model_name, model_description, 
                 model_price, model_stock, model_availability, model_tags, 
-                model_type, model_image_url) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-
-            // Bind parameters including the image URL
-            $addDiecastProduct->bind_param("sssssssssss", 
+                model_type, model_packaging, model_condition, model_image_url) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )");
+            
+            $addDiecastProduct->bind_param("sssssssssssss", 
                 $payload["seller_id"], 
                 $payload["size_id"], 
                 $payload["brand_id"], 
@@ -18,7 +18,9 @@
                 $payload["model_stock"], 
                 $payload["model_availability"], 
                 $payload["model_tags"], 
-                $payload["model_type"], 
+                $payload["model_type"],
+                $payload["model_packaging"], 
+                $payload["model_condition"],
                 $imageUrl
             );
 
