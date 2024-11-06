@@ -49,6 +49,7 @@
 
         <!-- Cart Modal -->
         <?php include './shared/cartModal.php';?>
+        
         <!-- Checkout Modal -->
         <?php include './shared/checkoutModal.php';?>
 

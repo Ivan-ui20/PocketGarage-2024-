@@ -121,3 +121,20 @@ modalAddToCartBtn.onclick = function () {
   // Perform the add to cart action here (logic can be added if needed)
   alert("Product has been added to the cart.");
 };
+
+
+//Save button message
+function confirmSave() {
+    // Display a confirmation dialog
+    const userConfirmed = confirm("Do you want to save the change?");
+    
+    if (userConfirmed) {
+        // If the user clicked "Yes," proceed with the save action
+        // You can add the code here to submit the form or perform the save action
+        alert("Changes saved successfully!");
+    } else {
+        // If the user clicked "No," cancel the action
+        alert("Save canceled.");
+    }
+}
+
