@@ -377,20 +377,20 @@ if ($sizeResult) {
    
     <div id="seller-management-section" class="section">
     
-      <?php include './Admin Panel/sellermanagement.php';?>
+      <?php include './Admin_Panel/sellermanagement.php';?>
 
     </div>
 
 
     <div id="buyer-management-section" class="section">
     
-    <?php include './Admin Panel/buyermanagement.php';?>
+    <?php include './Admin_Panel/buyermanagement.php';?>
 
   </div>
 
   <div id="bidding-management-section" class="section">
     
-    <?php include './Admin Panel/biddingmanagement.php';?>
+    <?php include './Admin_Panel/biddingmanagement.php';?>
 
   </div>
 
