@@ -689,7 +689,7 @@ section.ProductsL {
   margin-top: 50px;
   pointer-events: auto;
   z-index: 10;
-  margin: 50px 0 100px;
+  margin: 30px 0 100px;
 }
 
 .view-more-btn {
@@ -1121,13 +1121,6 @@ body .terms-conditions {
    font-family: Arial, sans-serif;
 }
 
-body {
-   display: flex;
-   justify-content: center;
-   align-items: center;
-   min-height: 100vh;
-   background-color: #f8f8f8;
-}
 
 .product-card {
   width: 320px;
@@ -1244,15 +1237,6 @@ body {
   border: none;
   transition: background-color 0.3s;
   /* Removed margin-top and margin-left to eliminate extra space */
-}
-
-.add-to-cart-btn {
-   background-color: #007bff;
-   color: #fff;
-}
-
-.add-to-cart-btn:hover {
-   background-color: #0056b3;
 }
 
 .checkout-btn {
