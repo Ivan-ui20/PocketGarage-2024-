@@ -58,13 +58,7 @@
 
                 </li>
 
-                <li class="dropdown">
-                  <a href="#" class="nonclickable">Order</a>
-                    <ul class="dropdown-menu">
-                      <li><a href="">History</a></li>
-                      <li><a href="">Status</a></li>
-                    </ul>
-                </li>
+                <li><a href=".php">Order</a></li>
 
             </ul>
         </div>
@@ -94,6 +88,7 @@
                     <!-- Dropdown Menu -->
                     <div class="profile-dropdown" id="profile-dropdown">
                         <a href="MyProfile.php">My Profile</a>
+                        <a href="">Message</a>
                         <a href="SellerLogin.php">Switch to Seller</a>
                         <a href="shared/logout.php">Logout</a>
                   

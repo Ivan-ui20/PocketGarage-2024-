@@ -8,12 +8,12 @@
 /* Adjust body or main content padding to avoid overlap with the fixed navbar */
 body {
   font-family: Arial, sans-serif;
-  background: #fff;
+  background: #afacac;
   display: flex;
   flex-direction: column;
   min-height: 100vh;
   margin: 0;
-  padding-top: 70px; /* Add padding equal to the height of the navbar */
+  padding-top: 0px; /* Add padding equal to the height of the navbar */
 }
 
 /* Define the hidden class */
@@ -21,18 +21,14 @@ body {
   display: none; /* This hides the product box */
 }
 
+/* Style for the top navigation */
 .top-nav {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 5px 5px;
-  background-color: #070707;
-  position: fixed; /* Make the navbar fixed at the top */
-  top: 0; /* Align it to the top of the page */
-  left: 0;
-  width: 100%; /* Stretch across the entire viewport width */
-  z-index: 1000; /* Ensure it stays above other elements */
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Optional: add a shadow for visibility */
+  padding: 10px 20px;
+  background-color: #0b0b45;
+  margin-top: 0;
 }
 
 .left-section {
@@ -306,12 +302,11 @@ header .logo {
 }
 
 .slider {
-  width: 85%;
+  width: 98%;
   height: 100%;
   overflow: hidden;
   position: relative;
   border-radius: 6px;
-  margin-top: 13px;
 }
 
 .slides {
@@ -392,6 +387,7 @@ header .logo {
 
 .ProductsL {
   margin-top: 40px; /* Adjust the top margin as needed */
+  background-color: #afacac;
 }
 
 .product-container {
@@ -928,14 +924,6 @@ section.ProductsL {
 .spacer {
   height: 50px; /* Adjust the height as needed */
 }
-/* Style for the top navigation */
-.top-nav {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10px 20px;
-  background-color: #0b0b45;
-}
 
 .cart-modal {
   display: none;
@@ -1114,20 +1102,7 @@ body .terms-conditions {
   text-transform: uppercase;
 }
 
-* {
-   margin: 0;
-   padding: 0;
-   box-sizing: border-box;
-   font-family: Arial, sans-serif;
-}
 
-body {
-   display: flex;
-   justify-content: center;
-   align-items: center;
-   min-height: 100vh;
-   background-color: #f8f8f8;
-}
 
 .product-card {
    width: 320px;
@@ -1241,15 +1216,6 @@ body {
    border: none;
    transition: background-color 0.3s;
    /* Removed margin-top and margin-left to eliminate extra space */
-}
-
-.add-to-cart-btn {
-   background-color: #007bff;
-   color: #fff;
-}
-
-.add-to-cart-btn:hover {
-   background-color: #0056b3;
 }
 
 .checkout-btn {
