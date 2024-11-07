@@ -28,8 +28,8 @@
                 <label for="email">Email</label>
                 <input type="email" id="email" name="email" placeholder="Enter your email" required>
 
-                <label for="phone">Phone Number</label>
-                <input type="tel" id="phone" name="phone" placeholder="Enter your phone number" pattern="[0-9]*" maxlength="11" required oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+                <label for="phone">Mobile Number</label>
+                <input type="tel" id="phone" name="phone" placeholder="Enter your Mobile number" pattern="[0-9]*" maxlength="11" required oninput="this.value = this.value.replace(/[^0-9]/g, '');">
 
                 <label for="address">Address</label>
                 <input id="address" name="address" placeholder="Enter your address" required>

@@ -141,23 +141,22 @@ body {
     color: #2ecc71;
 }
 
-#signup-step-1 {
+#signup-step {
     display: flex;
     flex-direction: column;
     align-items: center; /* Center the form content */
 }
 
-#signup-step-1 .name-fields {
+#signup-step .name-fields {
     display: flex;
     gap: 10px;                   /* Space between first name and last name */
     width: 100%;                 /* Full width for the name fields container */
     max-width: 350px;           /* Adjust max-width as necessary */
     box-sizing: border-box;      /* Include padding and border in width calculation */
-    margin-left: 5px;
     margin-bottom: 5px;
 }
 
-#signup-step-1 .name-fields input {
+#signup-step .name-fields input {
     flex: 1;                     /* Equal space for both inputs */
     margin: 10px 0;              /* Vertical margin */
     padding: 15px;               /* Padding */
@@ -168,9 +167,9 @@ body {
     box-sizing: border-box;      /* Box model */
 }
 
-#signup-step-1 input {
+#signup-step input {
     width: 100%;                 /* Full width for other inputs */
-    max-width: 340px;           /* Maximum width for inputs */
+    max-width: 350px;           /* Maximum width for inputs */
     margin: 10px 0;             /* Vertical spacing */
     padding: 15px;              /* Padding for inputs */
     background: rgba(0, 0, 0, 0.8); /* Background color */
@@ -180,28 +179,6 @@ body {
     box-sizing: border-box;     /* Box model */
     margin-bottom: 5px;
 }
-
-#next-btn {
-    background-color: transparent;  /* Make the background transparent */
-    border: none;                   /* Remove the border */
-    color: #fff;                    /* Set the initial text color to white */
-    font-size: 14px;                /* Set the font size */
-    cursor: pointer;                /* Set the cursor to pointer */
-    text-decoration: underline;     /* Add underline to the text */
-    padding: 2px 4px;              /* Smaller padding for a compact button */
-    text-align: right;
-    display: inline-block;          /* Allows the button to take only the necessary space */
-    margin-top: 10px;              /* Add some margin on top */
-    border-radius: 20px;            /* Rounded corners to match text fields */
-    width: 40px;
-    margin-right: 53px;
-}
-
-#next-btn:hover {
-    color: #27ae60;                 /* Change text color to green on hover */
-}
-
-
 
 #forgot-password-btn {
     background-color: transparent;  /* Make the background transparent */
@@ -312,8 +289,9 @@ body {
     padding: 10px 20px;           /* Medium padding for the button */
     cursor: pointer;              /* Pointer cursor on hover */
     border-radius: 5px;           /* Slightly rounded corners */
-    width: auto;                  /* Automatically adjust width */
+    width: 100px;                  /* Automatically adjust width */
     display: inline-block;        /* Only take necessary space */
+    margin-left: 275px;
 }
 
 #reset-password-btn {

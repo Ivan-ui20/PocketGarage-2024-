@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SellerLogin&Signup</title>
     <link rel="stylesheet" href="SellerLogin.css">
+    <link rel="stylesheet" href="./css/Login.css">
 </head>
 
 <body>
@@ -55,26 +56,37 @@
                 <form id="signup-step-1">
                     <div class="name-fields">
                         <input type="text" id="first-name" name="first-name" placeholder="First Name" required />
-                        <span class="error-message" id="first-name-error"></span>
+                        
                     
                         <input type="text" id="last-name" name="last-name" placeholder="Last Name" required />
-                        <span class="error-message" id="last-name-error"></span>
+                       
                     </div>
 
                     <input type="text" id="email" name="email" placeholder="Email" required />
                     <span class="error-message" id="email-error"></span>
             
-                    <input type="text" id="signup-phone-number" name="phone-number" placeholder="Phone Number" required maxlength="11" pattern="\d{11}" />
+                    <input type="text" id="signup-phone-number" name="phone-number" placeholder="Mobile Number" required maxlength="11" pattern="\d{11}" />
                     <span class="error-message" id="signup-phone-number-error"></span>
                     
                     <input type="password" id="signup-password" name="password" placeholder="Password" required />
                     <span class="error-message" id="signup-password-error"></span>
+                    
+                    <div class="signup-button-container">
+                        <button type="button" id="next-btn">Continue</button>
+                    </div>
+                </form>
 
-                    <label id="proof" for="Proof">Proof of past Trasnsaction (Seller):</label>
+                <form id="signup-step-2" style="display:none;">
+                    <button type="button" id="back-btn" class="back-btn">Back</button>
+                    <label id="valid" for="id-front">Valid ID (Front):</label>
+                    <input type="file" id="id-front" name="id-front" accept="image/*" required />
+                    <label id="valid" for="id-back">Valid ID (Back):</label>
+                    <input type="file" id="id-back" name="id-back" accept="image/*" required />
+                    <label id="proofs" for="Proof">Proof of past Trasnsaction (Seller):</label>
                     <input type="file" id="Proof" name="Proof" accept="image/*" required />
                     
                     <div class="signup-button-container">
-                        <button type="submit" id="signup-btn">Sign Up</button>
+                        <button type="submit" id="signup-btn-seller">Sign Up</button>
                     </div>
                 </form>
 

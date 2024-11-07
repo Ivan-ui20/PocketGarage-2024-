@@ -52,13 +52,13 @@
 
             <div class="box signup-form" id="signup-form">
                 <h1>Sign Up as a Buyer</h1>
-                <form id="signup-step-1">
+                <form id="signup-step">
                     <div class="name-fields">
                         <input type="text" id="first-name" name="first-name" placeholder="First Name" required />
-                        <span class="error-message" id="first-name-error"></span>
+                        
                     
                         <input type="text" id="last-name" name="last-name" placeholder="Last Name" required />
-                        <span class="error-message" id="last-name-error"></span>
+                        
                     </div>
                     
                     <input type="text" id="email" name="email" placeholder="Email" required />
@@ -67,25 +67,13 @@
                     <input type="text" id="address" name="address" placeholder="Address" required />
                     <span class="error-message" id="address-error"></span>
             
-                    <input type="text" id="signup-phone-number" name="phone-number" placeholder="Phone Number" required maxlength="11" pattern="\d{11}" />
+                    <input type="text" id="signup-phone-number" name="phone-number" placeholder="Mobile Number" required maxlength="11" pattern="\d{11}" />
                     <span class="error-message" id="signup-phone-number-error"></span>
             
                     <input type="password" id="signup-password" name="password" placeholder="Password" required />
                     <span class="error-message" id="signup-password-error"></span>
             
-                    <button type="button" id="next-btn">Continue</button>
-                </form>
-
-                <form id="signup-step-2" style="display:none;">
-                    <button type="button" id="back-btn" class="back-btn">Back</button>
-                    <label id="valid" for="id-front">Valid ID (Front):</label>
-                    <input type="file" id="id-front" name="id-front" accept="image/*" required />
-                    <label id="valid" for="id-back">Valid ID (Back):</label>
-                    <input type="file" id="id-back" name="id-back" accept="image/*" required />
-                    
-                    <div class="signup-button-container">
-                        <button type="submit" id="signup-btn">Sign Up</button>
-                    </div>
+                    <button type="submit" id="signup-btn">Sign Up</button>
                 </form>
 
                 <p>Already a member? <span id="login-link">Login</span></p>

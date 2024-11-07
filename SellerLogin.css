@@ -153,7 +153,6 @@ body {
     width: 100%;                 /* Full width for the name fields container */
     max-width: 350px;           /* Adjust max-width as necessary */
     box-sizing: border-box;      /* Include padding and border in width calculation */
-    margin-left: 5px;
     margin-bottom: 5px;
 }
 
@@ -170,7 +169,7 @@ body {
 
 #signup-step-1 input {
     width: 100%;                 /* Full width for other inputs */
-    max-width: 340px;           /* Maximum width for inputs */
+    max-width: 350px;           /* Maximum width for inputs */
     margin: 10px 0;             /* Vertical spacing */
     padding: 15px;              /* Padding for inputs */
     background: rgba(0, 0, 0, 0.8); /* Background color */
@@ -250,6 +249,28 @@ body {
     color: #2ecc71;
 }
 
+#next-btn {
+    background-color: transparent;  /* Make the background transparent */
+    border: none;                   /* Remove the border */
+    color: #fff;                    /* Set the initial text color to white */
+    font-size: 14px;                /* Set the font size */
+    cursor: pointer;                /* Set the cursor to pointer */
+    text-decoration: underline;     /* Add underline to the text */
+    padding: 2px 4px;              /* Smaller padding for a compact button */
+    text-align: right;
+    display: inline-block;          /* Allows the button to take only the necessary space */
+    margin-top: 10px;              /* Add some margin on top */
+    border-radius: 20px;            /* Rounded corners to match text fields */
+    width: 40px;
+    margin-left: 40px;
+}
+
+#next-btn:hover {
+    color: #27ae60;                 /* Change text color to green on hover */
+}
+
+
+
 #proof{
     margin-right: 95px;
 }
@@ -265,7 +286,7 @@ body {
     margin-left: 245px;
 }
 
-#signup-btn {
+#signup-btn-seller {
     background-color: #27ae60;    /* Green background color */
     border: none;                 /* Remove borders */
     color: #fff;                  /* White text color */
@@ -275,6 +296,14 @@ body {
     border-radius: 5px;           /* Slightly rounded corners */
     width: auto;                  /* Automatically adjust width */
     display: inline-block;        /* Only take necessary space */
+}
+
+#signup-btn-seller:hover {
+background-color: #2ecc71;
+}
+
+#proofs{
+    margin-left: 45px;
 }
 
 #reset-password-btn {
