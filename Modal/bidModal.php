@@ -1,7 +1,7 @@
 <!-- Modal -->
 <div class="modal" id="productModal">
     <div class="modal-content">
-        <span class="close-btn" onclick="closeProductModal()">&times;</span>
+        <span class="close-btn" onclick="closeModal()">&times;</span>
         <div class="modal-body">
             <div class="modal-image">
                 <img src="https://via.placeholder.com/400" alt="Product Image">
@@ -28,6 +28,12 @@
     </div>
 </div>
 
+<!-- Success Message -->
+<div id="successMessage" class="success-message">
+    Your bid has been successfully placed!
+</div>
+
+
 <script>
     // Function to open the modal
 function openBidModal() {
@@ -53,4 +59,23 @@ function preventNegative(input) {
       input.value = 0;
   }
 }
+
+function placeBid() {
+  const bidPrice = document.getElementById("bidPrice").value;
+  if (bidPrice > 0) {
+      // Show success message
+      const successMessage = document.getElementById("successMessage");
+      successMessage.style.display = "block";
+      
+      // Hide the message after a short delay
+      setTimeout(() => {
+          successMessage.style.display = "none";
+      }, 3000); // Hide after 3 seconds
+  } else {
+      alert("Please enter a valid bid price.");
+  }
+}
+
+// Attach the placeBid function to the Bid button
+document.querySelector(".bid-btn").addEventListener("click", placeBid);
 </script>
