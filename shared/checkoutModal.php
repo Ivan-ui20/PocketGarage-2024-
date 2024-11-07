@@ -1,41 +1,30 @@
-<div class="checkout-modal-container">
+<div class="checkout-modal-container" id="checkout-modal-container">
         <div class="checkout-modal">
             <!-- Left side: Checkout form -->
             <div class="checkout-form-section">
                 <h2>Checkout</h2>
-                
-                <form class="checkout-form">
-                    <label for="fullname">Full Name</label>
-                    <input type="text" id="fullname" name="fullname" placeholder="Enter your full name" required>
-    
-                    <label for="phonenumber">Phone Number</label>
-                    <input type="tel" id="phonenumber" name="phonenumber" placeholder="Enter your phone number" required>
-    
-                    <label for="address">Address</label>
-                    <input type="text" id="address" name="address" placeholder="Enter your address" required>
-    
+                <span class="close" onclick="closeCheckoutModal()">&times;</span>                                
+                <form class="checkout-form" id="checkout-form">
+                    <label for="fullname">Shipping Address</label>
+                    <input type="text" id="shipping-addr" name="shipping-addr" placeholder="Enter your shipping address" required>
+                                
                     <div class="shipping-method">
                         <h3>Shipping Method</h3>
                         <label for="cod">
-                            <input type="radio" id="cod" name="shipping" value="cod" checked> Cash on Delivery (CoD)
+                            <input type="radio" id="cod" name="shipping" value="Cash on Delivery (CoD)" checked> Cash on Delivery (CoD)
                         </label>
                     </div>
                     <button type="submit">Place Order</button>
                 </form>
             </div>
-    
+
             <!-- Right side: Product details -->
-            <div class="product-details">
-                <div class="product-info">
-                    <img src="product-image.jpg" alt="Product Image" class="product-image">
-                    <div class="product-description">
-                        <h3>Product Name</h3>
-                        <p>A short description of the product goes here.</p>
-                    </div>
-                </div>
-                <div class="product-total">
-                    <p>Total:</p>
-                    <p class="price">₱99.99</p>
+            <div>                           
+                <ul id="cart-items">
+                </ul>
+
+                <div class="cart-total">
+                    <strong>Total: </strong> <span id="cart-total-price"></span>
                 </div>
             </div>
         </div>
@@ -51,14 +40,68 @@ function showConfirmation() {
 function confirmOrder() {
     alert("Order placed successfully!");
     document.getElementById('confirmationModal').style.display = 'none';
+
     // Optionally, submit the form or take any other action here
     // document.getElementById('checkoutForm').submit();
 }
+
+document.getElementById('checkout-form').addEventListener('submit', function(event) {
+    event.preventDefault(); 
+    alert('Order has been placed! Thank you for shopping.');
+
+    const totalPriceStr = document.getElementById("cart-total-price").textContent.replace(/[^\d.]/g, ''); 
+    const totalPrice = parseFloat(totalPriceStr);
+    const shippingAddress = document.getElementById("shipping-addr").value;    
+    const shippingMethod = document.querySelector('input[name="shipping"]:checked').value;
+
+    const data = new URLSearchParams({
+        customer_id: sessionStorage.getItem("userId"),                
+        shipping_addr: shippingAddress,                
+        order_total: totalPrice,
+        order_payment_option: shippingMethod,
+        items : JSON.stringify(cartItems),
+        cart_id: sessionStorage.getItem("cartId")
+    });
+    
+    
+    fetch('/backend/src/customer/route.php?route=customer/send/order', {
+        method: 'POST',
+        body: data.toString(),
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log(data);
+        cartItems = []
+        updateCartModal()
+        cartCountElement.textContent = 0
+        checkoutModal.style.display = 'none'; // Close the checkout modal after submission
+        document.getElementById('checkout-form').reset()
+    })
+    .catch(error => {
+        console.error('There was a problem with the fetch operation:', error);
+    });
+    
+    // Clear the cart and reset form (if applicable)
+   
+});
 
 // Close the confirmation modal without placing the order
 function closeConfirmation() {
     document.getElementById('confirmationModal').style.display = 'none';
 }  
+
+function closeCheckoutModal() {
+    const checkout = document.getElementById("checkout-modal-container")
+    checkout.style.display = 'none';
+}
 </script>
 
 
@@ -70,7 +113,7 @@ function closeConfirmation() {
     left: 0;
     width: 100%;
     height: 100%;
-    display: flex;
+    display: none;
     align-items: center;
     justify-content: center;
     background-color: rgba(0, 0, 0, 0.5);

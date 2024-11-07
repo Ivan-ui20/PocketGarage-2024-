@@ -33,7 +33,7 @@
         }        
     }
 
-    function signup($connect, $payload, $frontIdUrl, $backIdUrl) {        
+    function signup($connect, $payload) {        
 
         try {
             $password = password_hash($payload['password'], PASSWORD_DEFAULT);
@@ -52,11 +52,11 @@
             }
 
             $stmt = $connect->prepare("INSERT INTO customer 
-                (first_name, last_name, contact_number, address, email_address, password, front_id_url, back_id_url) 
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-            $stmt->bind_param("ssssssss", $payload['first_name'], $payload['last_name'], 
+                (first_name, last_name, contact_number, address, email_address, password) 
+                VALUES (?, ?, ?, ?, ?, ?)");
+            $stmt->bind_param("ssssss", $payload['first_name'], $payload['last_name'], 
                 $payload['contact_number'], $payload['address'], 
-                $payload['email_address'], $password, $frontIdUrl, $backIdUrl);
+                $payload['email_address'], $password);
             
                 $stmt->execute();            
             if ($stmt->affected_rows <= 0) {
@@ -67,7 +67,7 @@
             
         } catch (\Throwable $th) {
             
-            return array("title" => "Success", "message" => "Something went wrong!", "data" => []);
+            return array("title" => "Failed", "message" => "Something went wrong!" . $th->getMessage() , "data" => []);
         }        
     }
 
@@ -79,14 +79,23 @@
             $first_name = $names[0]; 
             $last_name = $names[1]; 
 
-            $stmt = $connect->prepare("UPDATE customer SET
-                first_name = ?, last_name = ?, contact_number = ?, address = ?, 
-                email_address = ?, avatar = ? WHERE customer_id = ?");
-            $stmt->bind_param("sssssss", $first_name, $last_name, 
-                $payload['phone'], $payload['address'], 
-                $payload['email'], $avatarUrl, $payload["user_id"]);
-            
-                $stmt->execute();            
+            if ($avatarUrl != null) {
+                $stmt = $connect->prepare("UPDATE customer SET
+                    first_name = ?, last_name = ?, contact_number = ?, address = ?, 
+                    email_address = ?, avatar = ? WHERE customer_id = ?");
+                $stmt->bind_param("sssssss", $first_name, $last_name, 
+                    $payload['phone'], $payload['address'], 
+                    $payload['email'], $avatarUrl, $payload["user_id"]);
+            } else {
+                $stmt = $connect->prepare("UPDATE customer SET
+                    first_name = ?, last_name = ?, contact_number = ?, address = ?, 
+                    email_address = ? WHERE customer_id = ?");
+                $stmt->bind_param("ssssss", $first_name, $last_name, 
+                    $payload['phone'], $payload['address'], 
+                    $payload['email'], $payload["user_id"]);
+            }
+                        
+            $stmt->execute();           
             if ($stmt->affected_rows <= 0) {
                 return array("title" => "Failed", "message" => "Something went wrong!", "data" => []);
             }

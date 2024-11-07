@@ -12,8 +12,14 @@
             if ($userExist->num_rows <= 0 ) {
                 return array("title" => "Failed", "message" => "Incorrect contact number and password", "data" => []);
             }
-
+            
             $row = $userExist->fetch_assoc();
+            
+            if ($row['status'] === "Pending")  {                
+                return array("title" => "Failed", "message" => "Your account is not yet verified. Please come back later.", "data" => []);
+            } else if($row['status'] === "Not Verified"){
+                return array("title" => "Failed", "message" => "Unfortunately, your account was not accepted", "data" => []);
+            }
 
             if (!password_verify($password, $row['password'])) {                
                 return array("title" => "Failed", "message" => "Incorrect Password. Please try again", "data" => []);
@@ -37,7 +43,7 @@
 
     }
 
-    function signup($connect, $payload, $proofUrl) {
+    function signup($connect, $payload, $frontIdUrl, $backIdUrl, $proofUrl) {
                 
         try {
             $password = password_hash($payload['password'], PASSWORD_DEFAULT);
@@ -56,11 +62,12 @@
             }
             
             $stmt = $connect->prepare("INSERT INTO seller 
-            (first_name, last_name, contact_number, address, email_address, password, proof_seller_url) 
-            VALUES (?, ?, ?, ?, ?, ?, ?)");
+            (first_name, last_name, contact_number, address, email_address, password, front_id_url,
+            back_id_url, proof_seller_url) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
                         
-            $stmt->bind_param("sssssss", $payload['first_name'], $payload['last_name'], $payload['contact_number'], 
-                $payload['address'], $payload['email_address'], $password, $proofUrl);                    
+            $stmt->bind_param("sssssssss", $payload['first_name'], $payload['last_name'], $payload['contact_number'], 
+                $payload['address'], $payload['email_address'], $password, $frontIdUrl, $backIdUrl, $proofUrl);                    
             $stmt->execute();            
             if ($stmt->affected_rows <= 0) {
                 return array("title" => "Failed", "message" => "Something went wrong!", "data" => []);

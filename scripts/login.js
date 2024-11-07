@@ -83,8 +83,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     .then(data => {
                     
                         if (data.success === "Failed") {
-                            phoneError.textContent = 'Invalid phone number or password.';
-                            passwordError.textContent = 'Invalid phone number or password.';
+                            alert(data.message)
                         } else {
                                                                       
                             if (rememberMeCheckbox.checked) {
@@ -250,7 +249,7 @@ document.getElementById("signup-btn").addEventListener("click", async function(e
     formData.append("first_name", document.getElementById("first-name").value);
     formData.append("last_name", document.getElementById("last-name").value);
     formData.append("contact_number", document.getElementById("signup-phone-number").value);
-    formData.append("address", "");
+    formData.append("address", document.getElementById("address") ? document.getElementById("address").value : "");
     formData.append("email_address", document.getElementById("email").value);
     formData.append("password", document.getElementById("signup-password").value);
     
@@ -293,8 +292,11 @@ document.getElementById("signup-btn").addEventListener("click", async function(e
         
         if (responseData.success === "Failed") {
             alert(responseData.message)
+        } else {
+            alert("Success")
         }
-        
+
+        window.location.reload();
         
     } catch (error) {
         console.error('Error during fetch:', error);

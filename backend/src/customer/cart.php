@@ -53,7 +53,7 @@ function insertCartItem($connect, $payload, $items) {
                 $updateItem->execute();
 
                 if ($updateItem->affected_rows <= 0) {
-                    throw new Exception("We cannot update your items in the cart.");
+                    throw new Exception("Item is already added.");
                 }
             } else {
                 // Item does not exist, insert a new record
@@ -80,7 +80,7 @@ function insertCartItem($connect, $payload, $items) {
 
         return array(
             "title" => "Failed", 
-            "message" => "Something went wrong! " . $th->getMessage() ." Please try again later",
+            "message" => $th->getMessage(),
             "data" => []
         );
     }

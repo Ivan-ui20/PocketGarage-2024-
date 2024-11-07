@@ -3,15 +3,13 @@
     <div class="cart-modal-content">
         <h4 class="">Cart</h4>
         <span class="close">&times;</span>
-        <ul id="cart-items">           
-        </ul>
-       
-        <div class="cart-total">
+
+        <!-- <div class="cart-total">
             <strong>Total:</strong> <span id="cart-total-price">                
             </span>
-        </div>
+        </div> -->
        
-        <button id="checkout-btn" class="checkout-btn">CHECKOUT</button>
+        <!-- <button id="checkout-btn" class="checkout-btn">CHECKOUT</button> -->
     </div>
 </div>
 
@@ -19,13 +17,17 @@
         
     document.getElementById('cart-icon').addEventListener('click', function (e) {        
         // const cartModal = document.getElementById('cart-modal');
+        const checkout = document.getElementById("checkout-modal-container")
+        
         e.preventDefault();
         updateCartModal();
-        cartModal.style.display = 'block';
+
+        checkout.style.display = 'flex';
     });
 
     document.querySelector('.cart-modal .close').addEventListener('click', function () {           
         // const cartModal = document.getElementById('cart-modal');
+        
         cartModal.style.display = 'none';
     });
 

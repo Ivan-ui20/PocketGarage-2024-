@@ -41,8 +41,9 @@
                 if (!array_diff_key(array_flip($requiredFields), $_POST)) {
                     
                     $payload = array_intersect_key($_POST, array_flip($requiredFields));
-                                                            
-                    if ($isImageEdited) {
+                    
+                    $imageUrl = null;
+                    if ($isImageEdited !== "false") {                        
                         $imageUrl = handleFileUpload($_FILES['avatar']);
                         if ($imageUrl === false) {
                             jsonResponse("File Upload Failed", "There was an error uploading the image. Please try again.");
@@ -67,21 +68,21 @@
                     $payload = array_intersect_key($_POST, array_flip($requiredFields));
                     
 
-                    $frontIdUrl = handleFileUpload($_FILES['id_front']);                              
-                    if ($frontIdUrl === false) {
-                        jsonResponse("File Upload Failed", "There was an error uploading the image. Please try again.");
-                        return;
-                    }
+                    // $frontIdUrl = handleFileUpload($_FILES['id_front']);                              
+                    // if ($frontIdUrl === false) {
+                    //     jsonResponse("File Upload Failed", "There was an error uploading the image. Please try again.");
+                    //     return;
+                    // }
                     
 
-                    $backIdUrl = handleFileUpload($_FILES['id_back']);                    
-                    if ($backIdUrl === false) {
-                        jsonResponse("File Upload Failed", "There was an error uploading the image. Please try again.");
-                        return;
-                    }
+                    // $backIdUrl = handleFileUpload($_FILES['id_back']);                    
+                    // if ($backIdUrl === false) {
+                    //     jsonResponse("File Upload Failed", "There was an error uploading the image. Please try again.");
+                    //     return;
+                    // }
                     
                     
-                    $response = signup($conn, $payload, $frontIdUrl, $backIdUrl);
+                    $response = signup($conn, $payload);
 
                     jsonResponse($response["title"], $response["message"]);
 
