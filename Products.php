@@ -17,6 +17,7 @@
 </head>
 <body>
 
+    <?php include './Modal/bidModal.php';?>
     <?php include './Modal/productModal.php';?>
     <?php include './shared/header.php';?>
     

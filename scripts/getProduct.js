@@ -119,42 +119,60 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
     
                 const latestProducts = data.data.slice(0, limit);
-                            
-                latestProducts.forEach(product => {                                        
+                
+                        
+                latestProducts.forEach(product => {      
+                    
+                                                      
                     const productBox = document.createElement('div');
                     productBox.classList.add('product-box');
-                    productBox.onclick = () => openProductModal(
-                        product.model_id, 
-                        product.model_image_url, 
-                        product.model_name,
-                        product.model_description,
-                        product.model_stock,
-                        product.model_price
-                    );
-                    productBox.innerHTML = `
-                            <img src="http://localhost:3000/backend/${product.model_image_url}" alt="${product.model_name}">
-                            <div class="product-text">
-                                <h4>${product.model_name}</h4>
-                            </div>
-                            <div class="price">
-                                <p>₱${product.model_price}</p>
-                            </div>
-                    `;
-                    if (userId) {
-                        
-                        productBox.innerHTML += `                           
-                            <button 
-                                class="add-to-cart-btn"
-                                data-product-id="${product.model_id}" 
-                                data-product-name="${product.model_name}"
-                                data-product-image="${product.model_image_url}"
-                                data-product-price="${product.model_price}">Add to Cart</button>
-                        `;
+                    
+                    if (product.model_type === "Bidding") {
+                        productBox.onclick = () => openBidModal(
+                            product.bidding_id,
+                            product.model_id, 
+                            product.model_image_url, 
+                            product.model_name,
+                            product.details,                            
+                            product.model_price
+                        );
                     } else {
-                        productBox.innerHTML += `                            
-                            <p class="login-prompt">Please log in to add items to your cart.</p>
-                        `;
+                        productBox.onclick = () => openProductModal(
+                            product.model_id, 
+                            product.model_image_url, 
+                            product.model_name,
+                            product.model_description,
+                            product.model_stock,
+                            product.model_price
+                        );
                     }
+                                       
+                    productBox.innerHTML = `
+                        <img src="http://localhost:3000/backend/${product.model_image_url}" alt="${product.model_name}">
+                        <div class="product-text">
+                            <h4>${product.model_name}</h4>
+                        </div>
+                        <div class="price">
+                            <p>₱${product.model_price}</p>
+                        </div>
+                    `;
+                    if (product.model_type !== "Bidding") {
+                        if (userId ) {                        
+                            productBox.innerHTML += `                           
+                                <button 
+                                    class="add-to-cart-btn"
+                                    data-product-id="${product.model_id}" 
+                                    data-product-name="${product.model_name}"
+                                    data-product-image="${product.model_image_url}"
+                                    data-product-price="${product.model_price}">Add to Cart</button>
+                            `;
+                        } else {
+                            productBox.innerHTML += `                            
+                                <p class="login-prompt">Please log in to add items to your cart.</p>
+                            `;
+                        }
+                    }
+                    
     
                     productList.appendChild(productBox);
                 });

@@ -1419,9 +1419,7 @@ if ($sizeResult) {
               .map(word => word.charAt(0).toUpperCase() + word.slice(1))
               .join(' ')
             );
-        console.log(packageConditions);
-        
-        
+
         const tags = Array.from(document.querySelectorAll('input[name="model-tags"]:checked'))
         .map(checkbox => checkbox.value.replace(/_/g, ' '))
         .map(tag => tag.split(' ')

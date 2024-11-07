@@ -58,7 +58,7 @@
                 <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($userData['email_address']); ?>" placeholder="Enter your email" required>
 
                 <label for="phone">Mobile Number</label>
-                <input type="tel" id="phone" name="phone" placeholder="Enter your phone number" pattern="[0-9]*" maxlength="11" required oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+                <input type="tel" id="phone" name="phone" value="<?php echo htmlspecialchars($userData['contact_number']); ?>" placeholder="Enter your phone number" pattern="[0-9]*" maxlength="11" required oninput="this.value = this.value.replace(/[^0-9]/g, '');">
 
                 <label for="address">Address</label>
                 <input id="address" name="address" value="<?php echo htmlspecialchars($userData['address']); ?>" placeholder="Enter your address" required>

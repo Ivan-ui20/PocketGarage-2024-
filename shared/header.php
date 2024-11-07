@@ -80,6 +80,7 @@
                         <span id="cart-count">0</span>
                     </a>
                 </div>
+                
               <!-- Profile Icon with Dropdown Menu -->
                 <div class="nav-icon-p">
                     <a href="#" id="profile-icon">
@@ -89,9 +90,7 @@
                         </div>
                     </div>
                     </a>
-
                     
-
                     <!-- Dropdown Menu -->
                     <div class="profile-dropdown" id="profile-dropdown">
                         <a href="MyProfile.php">My Profile</a>

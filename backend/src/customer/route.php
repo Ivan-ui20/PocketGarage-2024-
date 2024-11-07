@@ -9,6 +9,7 @@
     require_once './transaction.php';
     require_once './cart.php';
     require_once './diecast.php';
+    require_once './bidding.php';
     
         
     if ($_SERVER['REQUEST_METHOD'] === 'POST' ) {
@@ -152,6 +153,24 @@
                     jsonResponse("Invalid cart item", "All fields are required.");
                 }
             }
+
+            if ($route === 'customer/place/bid') {
+                $requiredFields = ['bidding_id', 'model_id', 'customer_id', 'amount'];
+                                
+                if (!array_diff_key(array_flip($requiredFields), $_POST)) {
+                                
+                    $payload = $_POST;
+                        
+                    $response = placeBid($conn, $payload);
+            
+                    jsonResponse($response["title"], $response["message"]);
+            
+                } else {
+                    jsonResponse("Invalid order", "All fields are required.");
+                }
+            }
+
+
         
         } catch (\Throwable $th) {            
             return array("title" => "Error", "message" => "Something went wrong!", "data" => []);

@@ -1,18 +1,19 @@
 <!-- Modal -->
-<div class="modal" id="productModal">
+<div class="modal" id="bidModal">
     <div class="modal-content">
-        <span class="close-btn" onclick="closeModal()">&times;</span>
+        <span class="close-btn" onclick="closeBidModal()">&times;</span>
         <div class="modal-body">
-            <div class="modal-image">
-                <img src="https://via.placeholder.com/400" alt="Product Image">
+            <div class="modal-bid-image">
+                <img id="modal-bid-image" src="https://via.placeholder.com/400" alt="Product Image">
             </div>
             <div class="modal-info">
-                <h2 class="modal-title">Product Name</h2>
-                <p class="modal-description">
+                <h2 class="modal-bid-title" id="modal-bid-title"></h2>
+                <!-- <p class="modal-bid-description" id="modal-bid-description">
                     This is a detailed description of the product, including its features, specifications, and other relevant information.
-                </p>
-                <div class="modal-price">
-                    <span>₱49.99</span>
+                </p> -->
+                <div class="modal-bid-price" >
+                    <span>Highest Bid: ₱</span>
+                    <span id="modal-bid-price"></span>
                 </div>
 
                 <!-- New Bid Input Field with Peso Symbol -->
@@ -20,34 +21,55 @@
                     <span class="peso-sign">₱</span>
                     <input type="number" id="bidPrice" class="bid-input" placeholder="0" min="0" oninput="preventNegative(this)">
                 </div>
-
+                
                 <!-- New Bid Button -->
-                <button class="bid-btn">Bid</button>
+                <?php if (isset($_SESSION['user_id'])): ?>
+                    <input type="hidden" id="bidding_id">
+                    <input type="hidden" id="model_id">
+                    <button class="bid-btn" id="modal-cart">Bid</button>
+                <?php else: ?>
+                    <p class="login-prompt">Please log in first to start 
+                        bid this item.</p>
+                <?php endif; ?>                
             </div>
         </div>
     </div>
 </div>
 
 <!-- Success Message -->
-<div id="successMessage" class="success-message">
+<div id="successMessage" class="success-message" style="display: none;">
     Your bid has been successfully placed!
 </div>
 
 
 <script>
     // Function to open the modal
-function openBidModal() {
-  document.getElementById("productModal").style.display = "flex";
+function openBidModal(bidID, modId, image, name, description, price) {
+
+    document.getElementById("bidModal").style.display = "flex";
+
+    const biddingId = document.getElementById("bidding_id");
+    const modelId = document.getElementById("model_id");
+    const modalImage = document.getElementById("modal-bid-image");
+    const modalTitle = document.getElementById("modal-bid-title");    
+    const modalPrice = document.getElementById("modal-bid-price");
+    
+    modalImage.src = `http://localhost:3000/backend/${image}`;
+    modalImage.alt = name;
+    modalTitle.textContent = name;        
+    modalPrice.textContent = price
+    biddingId.value = bidID
+    modelId.value = modId
 }
 
 // Function to close the modal
 function closeBidModal() {
-  document.getElementById("productModal").style.display = "none";
+  document.getElementById("bidModal").style.display = "none";
 }
 
 // Close the modal when clicking outside of it
 window.onclick = function(event) {
-  const modal = document.getElementById("productModal");
+  const modal = document.getElementById("bidModal");
   if (event.target == modal) {
       modal.style.display = "none";
   }
@@ -62,15 +84,47 @@ function preventNegative(input) {
 
 function placeBid() {
   const bidPrice = document.getElementById("bidPrice").value;
-  if (bidPrice > 0) {
-      // Show success message
-      const successMessage = document.getElementById("successMessage");
-      successMessage.style.display = "block";
-      
-      // Hide the message after a short delay
-      setTimeout(() => {
-          successMessage.style.display = "none";
-      }, 3000); // Hide after 3 seconds
+  const biddingId = document.getElementById("bidding_id").value;
+  const modelId = document.getElementById("model_id").value;
+  const modalPrice = document.getElementById("modal-bid-price").textContent;
+  if (bidPrice > parseFloat(modalPrice)) {
+        // Show success message
+        const successMessage = document.getElementById("successMessage");
+        successMessage.style.display = "block";
+        
+        const data = new URLSearchParams({                    
+            bidding_id: biddingId,
+            model_id: modelId,
+            customer_id: sessionStorage.getItem("userId"),
+            amount: bidPrice
+        });
+
+        fetch('/backend/src/customer/route.php?route=customer/place/bid', {
+            method: 'POST',
+            body: data.toString(),
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log(data);
+            alert(data.message)
+            window.location.reload();
+        })
+        .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+        }); 
+
+        // Hide the message after a short delay
+        setTimeout(() => {
+            successMessage.style.display = "none";
+        }, 3000); // Hide after 3 seconds
   } else {
       alert("Please enter a valid bid price.");
   }
