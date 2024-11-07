@@ -358,3 +358,25 @@ if(backBtn){
         document.getElementById('signup-step-1').style.display = 'flex';
     });
 }
+
+document.getElementById("signup-form").addEventListener("submit", function(event) {
+    event.preventDefault(); // Prevent form submission to allow custom behavior
+
+    // Assuming validation is successful, simulate a successful signup
+    const isSignupSuccessful = true; // Replace with actual validation logic if necessary
+
+    if (isSignupSuccessful) {
+        // Show success message
+        alert("Signup successful! Redirecting to login...");
+
+        // Redirect to the login form after 2 seconds
+        setTimeout(() => {
+            // Hide signup form and show login form
+            document.querySelector(".signup-form").style.display = "none";
+            document.querySelector(".login-form").style.display = "block";
+        }, 2000);
+    } else {
+        // Display an error message if signup failed (optional)
+        alert("Signup failed. Please check your inputs and try again.");
+    }
+});

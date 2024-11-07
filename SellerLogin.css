@@ -328,3 +328,19 @@ background-color: #2ecc71;
 #valid {
     margin-left: 45px;
 }
+
+#close-btn-sellerL {
+    position: absolute;
+    top: 20px;              /* Adjust vertical position */
+    left: 20px;             /* Align to the left side */
+    font-size: 24px;        /* Makes the "X" large */
+    color: #ffffff;         /* White color for the "X" */
+    text-decoration: none;  /* Removes underline from the link */
+    background: transparent;/* Transparent background */
+    border: none;           /* No border */
+    cursor: pointer;        /* Pointer cursor on hover */
+}
+
+#close-btn-sellerL:hover {
+    color: #27ae60;         /* Change color on hover */
+}

@@ -11,6 +11,7 @@
 <body>
     <div class="bg-container">
         <div class="inner-container">
+        <a href="index.php" id="close-btn-sellerL">x</a>
             <div class="box login-form">
                 <h1>Login as a Seller</h1>
                 <form id="login-form">
