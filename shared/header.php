@@ -56,13 +56,7 @@
 
                 </li>
                 <?php if (isset($_SESSION['user_id'])): ?>
-                    <li class="dropdown">
-                    <a href="#" class="nonclickable">Order</a>
-                        <ul class="dropdown-menu">
-                        <li><a href="">History</a></li>
-                        <li><a href="">Status</a></li>
-                        </ul>
-                    </li>
+                    <li><a href="#">Order</a></li>
                 <?php endif; ?>
 
             </ul>
