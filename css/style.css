@@ -532,69 +532,6 @@ header .logo {
   background-color: #27ae60;
 }
 
-/* Modal Styles */
-.modal {
-  display: none; /* Initially hidden */
-  position: fixed;
-  z-index: 1000; /* Make sure it is on top of everything */
-  left: 0;
-  top: 0;
-  width: 100%; /* Full width */
-  height: 100%; /* Full height */
-  background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent background */
-  justify-content: center;
-  align-items: center;
-}
-
-.modal-content {
-  background-color: white; /* White background for modal content */
-  border-radius: 8px; /* Rounded corners */
-  width: 80%; /* Adjusted width to be smaller */
-  max-width: 850px; /* Set maximum width to a smaller value */
-  max-height: 90vh; /* Maximum height */
-  overflow: auto; /* Allow scrolling if needed */
-  position: relative; /* Position relative for absolute children */
-}
-
-.product-modal {
-  max-width: 400px; /* Further reduced max width */
-  width: 90%; /* Responsive width */
-  max-height: 60vh; /* Further reduced maximum height */
-  overflow: hidden; /* Prevent scrolling */
-  margin: auto; /* Center the modal */
-  background-color: white; /* Background color */
-  border-radius: 8px; /* Rounded corners */
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Shadow effect */
-  display: flex; /* Use flexbox */
-  flex-direction: column; /* Stack content vertically */
-}
-
-.modal-content {
-  display: flex; /* Align image and details side by side */
-  width: 100%;
-}
-
-.modal-image {
-  flex: 0 0 35%; /* Image takes 35% of the modal width */
-  padding: 10px; /* Reduced padding for spacing */
-}
-
-.modal-image img {
-  width: 100%; /* Full width of the image container */
-  height: auto; /* Maintain aspect ratio */
-  border-radius: 8px; /* Rounded corners for the image */
-}
-
-.modal-details {
-  flex: 1; /* Details take remaining space */
-  padding: 5px; /* Reduced padding for spacing */
-  background-color: black; /* Background for product details */
-  color: white; /* Text color */
-  display: flex;
-  flex-direction: column; /* Stack items vertically */
-  justify-content: space-between; /* Space items out */
-}
-
 /* ---Section Content--- */
 section.ProductsL {
   flex: 1;
@@ -1159,6 +1096,7 @@ body .terms-conditions {
 .modal-title {
   font-size: 1.5em;
   color: #333;
+  margin-top: 10px;
 }
 
 .product-description,
@@ -1273,4 +1211,124 @@ body .terms-conditions {
 .header-profile-pic-container {
   display: flex;
   align-items: center;
+}
+
+.header-user-img {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: #fff;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+/* Profile picture styling */
+.header-profile-pic-container {
+  display: flex;
+  align-items: center;
+}
+
+/* Modal styles */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 10;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background-color: #fff;
+  height: 360px;
+  width: 900px; /* Adjusted width */
+  max-width: 900px; /* Smaller max width */
+  display: flex;
+  border-radius: 12px;
+  position: relative;
+}
+
+.modal-body {
+  display: flex;
+}
+
+.modal-image img {
+  width: 710px;
+  height: 380px;
+  max-width: 100%; /* Ensures it adapts if the screen is smaller */
+  max-height: 100%; /* Prevents overflow */
+  margin-top: 15px;
+  border-radius: 12px 0 0 12px;
+  margin-left: 10px;
+}
+.modal-info {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+  max-height: 92%;
+}
+
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  font-size: 1.5em;
+  color: #333;
+  cursor: pointer;
+}
+
+.modal-buttons {
+  display: flex;
+  gap: 5px; /* Adjusts space between buttons */
+  margin-top: 140px;
+  justify-content: right;
+}
+
+.add-to-cart-btn-modal,
+.checkout-btn-pmodal {
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-size: 1em;
+  cursor: pointer;
+  border: none;
+  transition: background-color 0.3s;
+  /* Removed margin-top and margin-left to eliminate extra space */
+}
+
+.add-to-cart-btn-modal {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.add-to-cart-btn-modal:hover {
+  background-color: #0056b3;
+}
+
+.checkout-btn-pmodal {
+  background-color: #28a745;
+  color: #fff;
+}
+
+.checkout-btn-pmodal:hover {
+  background-color: #218838;
+}
+
+#chat-icon {
+  color: black;
+  font-size: 40px;
+  margin-right: 166px;
+}
+
+#modal-product-image {
+  width: 790px;
+  height: 330px;
 }

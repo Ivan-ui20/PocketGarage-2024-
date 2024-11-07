@@ -1,3 +1,5 @@
+
+
 <div class="modal" id="productModal">
     <div class="modal-content">
         <span class="close-btn" onclick="closeProductModal()">&times;</span>
@@ -22,8 +24,8 @@
                             data-product-name=""
                             data-product-image=""
                             data-product-price=""
-                            class="add-to-cart-btn" id="modal-cart">Add to Cart</button>
-                        <button id="checkout-btn" class="checkout-btn">Checkout</button>
+                            class="add-to-cart-btn-modal" id="modal-cart">Add to Cart</button>
+                        <button id="checkout-btn-pmodal" class="checkout-btn-pmodal">Checkout</button>
                     <?php else: ?>
                         <p class="login-prompt">Please log in to add items to your cart.</p>
                     <?php endif; ?>

@@ -213,7 +213,7 @@ body {
     margin-right: 2px; /* Space between checkbox and label */
     width: fit-content;
     margin-left: 35px;
-    margin-top: 1px;
+    margin-top: auto;
 }
 
 .remember-me-container label {
