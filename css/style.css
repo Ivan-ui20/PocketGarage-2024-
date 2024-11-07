@@ -259,7 +259,8 @@ header .logo {
   color: #fff;
   margin-left: 20px;
   font-size: 30px;
-  margin-top: 5px;
+  width: 30px;
+  height: 30px;
 }
 
 .nav-icon-c a {
@@ -963,28 +964,36 @@ section.ProductsL {
 
 /*profile*/
 
+/* Profile dropdown styling */
 .profile-dropdown {
-  display: none;
+  display: none; /* Hidden by default */
   position: absolute;
   right: 0;
-  background-color: black;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: #0b0b45;
+  box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.1);
   border-radius: 5px;
   overflow: hidden;
   z-index: 1000;
-  margin-top: 35px;
+  margin-top: 50px;
+  min-width: 250px; /* Consistent width */
+  padding: 10px 0; /* Add padding to the dropdown container */
 }
 
+/* Style each item in the dropdown */
 .profile-dropdown a {
   display: block;
-  padding: 10px 20px;
+  padding: 10px 5px; /* Adds space inside each link item */
   text-decoration: none;
-  color: white;
-  font-size: 16px;
+  font-size: 18px;
+  white-space: nowrap; /* Prevents text wrapping */
+  border: none; /* Remove any default borders */
+  outline: none;
 }
 
 .profile-dropdown a:hover {
-  background-color: #000000;
+  color: #ffde59; /* Maintain text color */
+  outline: none; /* Remove any focus outline */
+  border: none; /* Remove any border */
 }
 
 .checkout-product-list {
@@ -1116,12 +1125,11 @@ body .terms-conditions {
 }
 
 * {
-   margin: 0;
-   padding: 0;
-   box-sizing: border-box;
-   font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
 }
-
 
 .product-card {
   width: 320px;
@@ -1247,4 +1255,22 @@ body .terms-conditions {
 
 .checkout-btn:hover {
   background-color: #218838;
+}
+
+.header-user-img {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: #fff;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+/* Profile picture styling */
+.header-profile-pic-container {
+  display: flex;
+  align-items: center;
 }
