@@ -6,18 +6,24 @@
         <div class="modal-body">
             <div class="modal-image">
                 <img src="https://via.placeholder.com/400" alt="Product Image" id="modal-product-image"> 
+           
+
+
             </div>
             <div class="modal-info">
                 <h2 class="modal-title" id="modal-product-title"></h2>
+                <p class="modal-seller" id="modal-product-seller">Posted by <span id="modal-seller-name"></span></p>
                 <p class="modal-description" id="modal-product-description"></p>
                 <p class="modal-description" id="modal-product-stock"></p>
                 <div class="modal-price" id="modal-product-price">
                     <span></span>
                 </div>
                 <div class="modal-buttons">
-                    <a href="#" id="chat-icon">
-                        <i class='bx bx-chat' ></i>
+                    <a href="chatModal.php" id="chat-icon" >
+                        <i class='bx bx-chat' ></i> 
                     </a>
+
+               
                     <?php if (isset($_SESSION['user_id'])): ?>
                         <button 
                             data-product-id=""
