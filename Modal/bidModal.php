@@ -1,18 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BidModal with Side-by-Side Layout</title>
-    <link rel="stylesheet" href="productModal.css">
-    <link rel="stylesheet" href="https://unpkg.com/boxicons@latest/css/boxicons.min.css">
-</head>
-<body></body>
-
 <!-- Modal -->
 <div class="modal" id="productModal">
     <div class="modal-content">
-        <span class="close-btn" onclick="closeModal()">&times;</span>
+        <span class="close-btn" onclick="closeProductModal()">&times;</span>
         <div class="modal-body">
             <div class="modal-image">
                 <img src="https://via.placeholder.com/400" alt="Product Image">
@@ -41,12 +30,12 @@
 
 <script>
     // Function to open the modal
-function openModal() {
+function openBidModal() {
   document.getElementById("productModal").style.display = "flex";
 }
 
 // Function to close the modal
-function closeModal() {
+function closeBidModal() {
   document.getElementById("productModal").style.display = "none";
 }
 

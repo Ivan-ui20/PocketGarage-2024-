@@ -4,10 +4,9 @@
 require_once './backend/database/db.php';
 session_start();
 
-
-$_SESSION["seller_id"] = 12;
-$_SESSION["seller_name"] = "Ivan Garcia";
-$_SESSION["user_type"] = "seller";
+if($_SESSION['seller_id']) {
+  header("index.php");
+}
 
 $brand = "SELECT * FROM diecast_brand";
 $brandResult = $conn->query($brand);
@@ -173,7 +172,7 @@ if ($sizeResult) {
         
           <li class="profile"  >
             <div class="Info">
-              <p><b>Ivan Garcia</b></p>
+              <p><b><?php echo $_SESSION["seller_name"]?></b></p>
               <p>Verified Seller</p>
             </div>
 
@@ -187,10 +186,7 @@ if ($sizeResult) {
           <li class="menubtn" onclick="showSidebar()">  
             <a href="#">
               <span class="material-symbols-outlined">menu</span>
-            </a>
-
-
-            
+            </a>            
           </li>
         </ul>
       </div>
@@ -1440,7 +1436,7 @@ if ($sizeResult) {
         formData.append('brand_id', productBrand);
         formData.append('model_name', productName);
         formData.append('model_description', "Empty Description");
-        formData.append('model_price', 0);
+        formData.append('model_price', bidStartAmount);
         formData.append('model_stock', 1);
         formData.append('model_availability', 'Available');
         formData.append('model_tags', tags.length ? tags.join(', ') : '');

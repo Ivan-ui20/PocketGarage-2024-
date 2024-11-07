@@ -31,6 +31,34 @@
                 }
             }
 
+            if ($route === 'customer/profile') {
+
+                $requiredFields = ['user_id', 'fullname', 'email', 'phone', 
+                'address'];
+            
+                $isImageEdited = $_POST["image_edited"];
+                if (!array_diff_key(array_flip($requiredFields), $_POST)) {
+                    
+                    $payload = array_intersect_key($_POST, array_flip($requiredFields));
+                                                            
+                    if ($isImageEdited) {
+                        $imageUrl = handleFileUpload($_FILES['avatar']);
+                        if ($imageUrl === false) {
+                            jsonResponse("File Upload Failed", "There was an error uploading the image. Please try again.");
+                            return;
+                        }
+                    }
+
+                    $response = updateProfile($conn, $payload, $imageUrl);
+
+                    jsonResponse($response["title"], $response["message"]);
+
+                } else {
+                    jsonResponse("Invalid request", "All fields are required.");
+                }
+            } 
+            
+
             if ($route === 'customer/signup') {
                 $requiredFields = ['first_name', 'last_name', 'contact_number', 'address', 'email_address', 'password'];
                 if (!array_diff_key(array_flip($requiredFields), $_POST)) {
@@ -156,7 +184,7 @@
             }
 
             if ($route === 'products') {
-                                                           
+                $bidding = isset($_GET['bidding']) ? $_GET['bidding'] : false;
                 $brand = isset($_GET['brand']) ? $_GET['brand'] : null;
                 $scale = isset($_GET['size']) ? $_GET['size'] : null;
                 $minPrice = isset($_GET['min_price']) ? $_GET['min_price'] : null;
@@ -171,7 +199,7 @@
                 $modelName = isset($_GET['model_name']) ? $_GET['model_name'] : null;
 
                 $response = getDiecastProduct($conn, $brand, $scale, $minPrice, $maxPrice, $modelStock, 
-                $modelAvailability, $modelTags, $modelType, $limit, $offset, $modelName);
+                $modelAvailability, $modelTags, $modelType, $limit, $offset, $modelName, $bidding);
                                             
                 jsonResponseWithData(
                     $response["title"], 

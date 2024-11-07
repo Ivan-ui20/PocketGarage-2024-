@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 31, 2024 at 07:13 AM
+-- Generation Time: Nov 07, 2024 at 04:57 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -86,7 +86,9 @@ CREATE TABLE `bid_room` (
 --
 
 INSERT INTO `bid_room` (`bidding_id`, `seller_id`, `model_id`, `details`, `start_amount`, `end_amount`, `bid_status`, `start_time`, `end_time`, `created_at`) VALUES
-(16, 12, 26, 'this is the details of bid item test 1', 1000, 0, 'Closed', '2024-11-07 16:00:00', '2024-11-09 16:00:00', '2024-10-31 05:24:28');
+(16, 12, 26, 'this is the details of bid item test 1', 1000, 0, 'Closed', '2024-11-07 16:00:00', '2024-11-09 16:00:00', '2024-10-31 05:24:28'),
+(22, 12, 33, 'this is the details of bid item test 2', 1000, 0, 'Active', '2024-11-05 16:00:00', '2024-11-06 16:00:00', '2024-11-05 04:17:17'),
+(23, 12, 34, 'this is the details of bid item test 2', 1000, 0, 'Active', '2024-11-05 16:00:00', '2024-11-06 16:00:00', '2024-11-05 04:17:30');
 
 -- --------------------------------------------------------
 
@@ -202,6 +204,7 @@ CREATE TABLE `customer` (
   `role` enum('customer','seller') NOT NULL DEFAULT 'customer',
   `front_id_url` text DEFAULT NULL,
   `back_id_url` text DEFAULT NULL,
+  `avatar` text NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -209,9 +212,9 @@ CREATE TABLE `customer` (
 -- Dumping data for table `customer`
 --
 
-INSERT INTO `customer` (`customer_id`, `first_name`, `last_name`, `contact_number`, `address`, `email_address`, `password`, `role`, `front_id_url`, `back_id_url`, `created_at`) VALUES
-(3, 'John 1', 'Doe', '12345678901', '123 Main St, Anytown, USA', 'johndoe@example.com', '$2y$10$4LJMnTd2rfj7ZIqCt5IRP.PDjhnvCYEquY0P.tt5Ic3LaTSXkCR.6', 'customer', NULL, NULL, '2024-10-08 18:54:24'),
-(4, 'Manuel', 'Marin', '12345678901', '123 taguig city', 'admin@gmail.com', '$2y$10$vrS5fGfJDw6TmtrZJWLmWecq05PBjqewEssMM0dr4IOixbCvdX2Im', 'customer', 'uploads/6705f82de8a9b-P1.png', 'uploads/6705f82de8cbf-P2.png', '2024-10-09 03:55:00');
+INSERT INTO `customer` (`customer_id`, `first_name`, `last_name`, `contact_number`, `address`, `email_address`, `password`, `role`, `front_id_url`, `back_id_url`, `avatar`, `created_at`) VALUES
+(3, 'John', ' Does', '12345678910', '123 Main St, Anytown, USA', 'admin1@gmail.com', '$2y$10$4LJMnTd2rfj7ZIqCt5IRP.PDjhnvCYEquY0P.tt5Ic3LaTSXkCR.6', 'customer', NULL, NULL, 'upload/672c29d183ff5-P3.png', '2024-11-07 03:25:49'),
+(4, 'Manuel', 'Marin', '123456789101', '123 taguig city', 'admin@gmail.com', '$2y$10$vrS5fGfJDw6TmtrZJWLmWecq05PBjqewEssMM0dr4IOixbCvdX2Im', 'customer', 'uploads/6705f82de8a9b-P1.png', 'uploads/6705f82de8cbf-P2.png', '', '2024-11-06 16:04:12');
 
 -- --------------------------------------------------------
 
@@ -257,7 +260,9 @@ CREATE TABLE `diecast_model` (
   `model_stock` int(11) NOT NULL,
   `model_availability` enum('Available','Not Available','Out of stock','') NOT NULL,
   `model_tags` varchar(200) NOT NULL,
-  `model_type` enum('Premium','Regular') NOT NULL,
+  `model_type` enum('Premium','Regular','Bidding') NOT NULL,
+  `model_packaging` enum('None','Unopened','Opened') NOT NULL DEFAULT 'None',
+  `model_condition` enum('Mint','Good Condition','Near Mint','Non Mint','Played') NOT NULL DEFAULT 'Mint',
   `model_image_url` varchar(200) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -266,27 +271,30 @@ CREATE TABLE `diecast_model` (
 -- Dumping data for table `diecast_model`
 --
 
-INSERT INTO `diecast_model` (`model_id`, `seller_id`, `size_id`, `brand_id`, `model_name`, `model_description`, `model_price`, `model_stock`, `model_availability`, `model_tags`, `model_type`, `model_image_url`, `created_at`) VALUES
-(1, 12, 2, 2, 'Honda Civic EK9 Type R', 'A detailed diecast model of Honda Civic EK9 Type R.', 899, 94, 'Available', 'limited edition, featured', 'Premium', 'upload/P1.png', '2024-10-31 00:07:22'),
-(2, 12, 5, 8, 'Honda Civic EK9 Type R 1/64', 'A detailed diecast model of Honda Civic EK9 Type R 1/64.', 799, 98, 'Not Available', 'new arrivals', 'Regular', 'upload/P2.png', '2024-10-31 00:07:22'),
-(3, 12, 1, 7, 'Honda Civic EK9 Type R', 'A detailed diecast model of Honda Civic EK9 Type R.', 699, 0, 'Out of stock', 'featured', 'Premium', 'upload/P3.png', '2024-10-04 22:54:49'),
-(4, 12, 4, 9, 'Honda Civic EK9 Type R', 'A detailed diecast model of Honda Civic EK9 Type R.', 599, 100, 'Available', 'Limited edition, new arrivals', 'Regular', 'upload/P4.png', '2024-10-04 22:54:51'),
-(5, 12, 5, 1, 'Honda Civic EK9 Type R', 'A detailed diecast model of Honda Civic EK9 Type R.', 899, 99, 'Available', 'featured', 'Premium', 'upload/P1.png', '2024-10-31 00:07:22'),
-(6, 12, 2, 6, 'Honda Civic EK9 Type R', 'A detailed diecast model of Honda Civic EK9 Type R.', 899, 100, 'Not Available', 'Limited edition', 'Regular', 'upload/P2.png', '2024-10-04 22:54:54'),
-(7, 12, 4, 4, 'Honda Civic EK9 Type R 1/18', 'A detailed diecast model of Honda Civic EK9 Type R 1/18.', 899, 100, 'Available', 'new arrivals', 'Premium', 'upload/P3.png', '2024-10-04 22:54:56'),
-(8, 12, 2, 4, 'Honda Civic EK9 Type R 1/64', 'A detailed diecast model of Honda Civic EK9 Type R 1/64.', 699, 0, 'Out of stock', 'featured', 'Regular', 'upload/P4.png', '2024-10-04 22:54:58'),
-(9, 12, 1, 6, 'Honda Civic EK9 Type R', 'A detailed diecast model of Honda Civic EK9 Type R.', 899, 100, 'Available', 'Limited edition', 'Premium', 'upload/P1.png', '2024-10-04 22:55:00'),
-(10, 12, 1, 1, 'Honda Civic EK9 Type R', 'A detailed diecast model of Honda Civic EK9 Type R.', 1899, 100, 'Available', 'featured, new arrivals', 'Premium', 'upload/P2.png', '2024-10-04 22:55:02'),
-(11, 12, 4, 2, 'Model X', 'This is a detailed model of Model X.', 1999, 50, 'Available', 'Limited Edition, New Arrival', 'Premium', 'upload/P1.png', '2024-10-04 22:55:05'),
-(12, 12, 4, 2, 'Model X', 'This is a detailed model of Model X.', 1999, 50, 'Available', 'Limited Edition, New Arrival', 'Premium', 'upload/P2.png', '2024-10-04 22:55:22'),
-(13, 12, 4, 2, 'Model Z', 'This is a detailed model of Model X.', 1999, 50, 'Available', 'Limited Edition, New Arrival', 'Premium', 'upload/P3.png', '2024-10-08 18:11:58'),
-(14, 12, 4, 2, 'Model X', 'This is a detailed model of Model X.', 1999, 50, 'Available', 'Limited Edition, New Arrival', 'Premium', 'upload/P1.png', '2024-10-04 22:55:10'),
-(15, 12, 4, 2, 'Model X', 'This is a detailed model of Model X.', 1999, 50, 'Available', 'Limited Edition, New Arrival', 'Premium', 'upload/P4.png', '2024-10-04 22:55:30'),
-(16, 12, 4, 2, 'Model X', 'This is a detailed model of Model X.', 1999, 50, 'Available', 'Limited Edition, New Arrival', 'Premium', 'upload/P1.png', '2024-10-04 22:55:12'),
-(17, 12, 4, 2, 'Model X', 'This is a detailed model of Model X.', 1999, 50, 'Available', 'Limited Edition, New Arrival', 'Premium', 'upload/P2.png', '2024-10-04 22:55:32'),
-(18, 12, 4, 2, 'Model X', 'This is a detailed model of Model X.', 1999, 50, 'Available', 'Limited Edition, New Arrival', 'Premium', 'upload/P1.png', '2024-10-04 22:55:15'),
-(19, 12, 4, 2, 'Model Z', 'This is a detailed model of Model X.', 1999, 50, 'Available', 'Limited Edition, New Arrival', 'Premium', 'upload/P3.png', '2024-10-30 22:38:22'),
-(26, 12, 1, 8, 'bid item test 1', '', 0, 1, 'Available', '', 'Regular', 'upload/6723148c753e1-P1.png', '2024-10-31 05:24:28');
+INSERT INTO `diecast_model` (`model_id`, `seller_id`, `size_id`, `brand_id`, `model_name`, `model_description`, `model_price`, `model_stock`, `model_availability`, `model_tags`, `model_type`, `model_packaging`, `model_condition`, `model_image_url`, `created_at`) VALUES
+(1, 12, 2, 2, 'Honda Civic EK9 Type R', 'A detailed diecast model of Honda Civic EK9 Type R.', 899, 90, 'Available', 'limited edition, featured', 'Premium', 'None', 'Mint', 'upload/P1.png', '2024-11-05 04:34:50'),
+(2, 12, 5, 8, 'Honda Civic EK9 Type R 1/64', 'A detailed diecast model of Honda Civic EK9 Type R 1/64.', 799, 97, 'Not Available', 'new arrivals', 'Regular', 'None', 'Mint', 'upload/P2.png', '2024-11-05 04:32:08'),
+(3, 12, 1, 7, 'Honda Civic EK9 Type R', 'A detailed diecast model of Honda Civic EK9 Type R.', 699, 0, 'Out of stock', 'featured', 'Premium', 'None', 'Mint', 'upload/P3.png', '2024-10-04 22:54:49'),
+(4, 12, 4, 9, 'Honda Civic EK9 Type R', 'A detailed diecast model of Honda Civic EK9 Type R.', 599, 100, 'Available', 'Limited edition, new arrivals', 'Regular', 'None', 'Mint', 'upload/P4.png', '2024-10-04 22:54:51'),
+(5, 12, 5, 1, 'Honda Civic EK9 Type R', 'A detailed diecast model of Honda Civic EK9 Type R.', 899, 99, 'Available', 'featured', 'Premium', 'None', 'Mint', 'upload/P1.png', '2024-10-31 00:07:22'),
+(6, 12, 2, 6, 'Honda Civic EK9 Type R', 'A detailed diecast model of Honda Civic EK9 Type R.', 899, 100, 'Not Available', 'Limited edition', 'Regular', 'None', 'Mint', 'upload/P2.png', '2024-10-04 22:54:54'),
+(7, 12, 4, 4, 'Honda Civic EK9 Type R 1/18', 'A detailed diecast model of Honda Civic EK9 Type R 1/18.', 899, 100, 'Available', 'new arrivals', 'Premium', 'None', 'Mint', 'upload/P3.png', '2024-10-04 22:54:56'),
+(8, 12, 2, 4, 'Honda Civic EK9 Type R 1/64', 'A detailed diecast model of Honda Civic EK9 Type R 1/64.', 699, 0, 'Out of stock', 'featured', 'Regular', 'None', 'Mint', 'upload/P4.png', '2024-10-04 22:54:58'),
+(9, 12, 1, 6, 'Honda Civic EK9 Type R', 'A detailed diecast model of Honda Civic EK9 Type R.', 899, 100, 'Available', 'Limited edition', 'Premium', 'None', 'Mint', 'upload/P1.png', '2024-10-04 22:55:00'),
+(10, 12, 1, 1, 'Honda Civic EK9 Type R', 'A detailed diecast model of Honda Civic EK9 Type R.', 1899, 100, 'Available', 'featured, new arrivals', 'Premium', 'None', 'Mint', 'upload/P2.png', '2024-10-04 22:55:02'),
+(11, 12, 4, 2, 'Model X', 'This is a detailed model of Model X.', 1999, 50, 'Available', 'Limited Edition, New Arrival', 'Premium', 'None', 'Mint', 'upload/P1.png', '2024-10-04 22:55:05'),
+(12, 12, 4, 2, 'Model X', 'This is a detailed model of Model X.', 1999, 50, 'Available', 'Limited Edition, New Arrival', 'Premium', 'None', 'Mint', 'upload/P2.png', '2024-10-04 22:55:22'),
+(13, 12, 4, 2, 'Model Z', 'This is a detailed model of Model X.', 1999, 50, 'Available', 'Limited Edition, New Arrival', 'Premium', 'None', 'Mint', 'upload/P3.png', '2024-10-08 18:11:58'),
+(14, 12, 4, 2, 'Model X', 'This is a detailed model of Model X.', 1999, 50, 'Available', 'Limited Edition, New Arrival', 'Premium', 'None', 'Mint', 'upload/P1.png', '2024-10-04 22:55:10'),
+(15, 12, 4, 2, 'Model X', 'This is a detailed model of Model X.', 1999, 50, 'Available', 'Limited Edition, New Arrival', 'Premium', 'None', 'Mint', 'upload/P4.png', '2024-10-04 22:55:30'),
+(16, 12, 4, 2, 'Model X', 'This is a detailed model of Model X.', 1999, 50, 'Available', 'Limited Edition, New Arrival', 'Premium', 'None', 'Mint', 'upload/P1.png', '2024-10-04 22:55:12'),
+(17, 12, 4, 2, 'Model X', 'This is a detailed model of Model X.', 1999, 50, 'Available', 'Limited Edition, New Arrival', 'Premium', 'None', 'Mint', 'upload/P2.png', '2024-10-04 22:55:32'),
+(18, 12, 4, 2, 'Model X', 'This is a detailed model of Model X.', 1999, 50, 'Available', 'Limited Edition, New Arrival', 'Premium', 'None', 'Mint', 'upload/P1.png', '2024-10-04 22:55:15'),
+(19, 12, 4, 2, 'Model Z', 'This is a detailed model of Model X.', 1999, 50, 'Available', 'Limited Edition, New Arrival', 'Premium', 'None', 'Mint', 'upload/P3.png', '2024-10-30 22:38:22'),
+(26, 12, 1, 8, 'bid item test 1', '', 0, 1, 'Available', '', 'Bidding', 'None', 'Mint', 'upload/6723148c753e1-P1.png', '2024-11-06 15:09:19'),
+(27, 12, 1, 8, 'New Product Test', 'this is a description for new product test', 1000, 10, 'Available', 'Limited Edition, New Arrivals, Featured', 'Regular', 'Unopened', 'Mint', 'upload/6729991606115-P1.png', '2024-11-05 04:03:34'),
+(33, 12, 1, 8, 'bid item test 2', 'Empty Description', 0, 1, 'Available', 'Limited Edition, Featured, Best Seller', 'Bidding', 'Unopened', 'Good Condition', 'upload/67299c4d2a60f-P1.png', '2024-11-06 15:09:22'),
+(34, 12, 1, 8, 'bid item test 2', 'Empty Description', 0, 1, 'Available', 'Limited Edition, Featured, Best Seller', 'Bidding', 'Unopened', 'Good Condition', 'upload/67299c5acfac4-P1.png', '2024-11-06 15:09:26');
 
 -- --------------------------------------------------------
 
@@ -324,6 +332,7 @@ CREATE TABLE `order_info` (
   `order_total` double NOT NULL,
   `order_payment_option` enum('Cash on Delivery','','','') NOT NULL,
   `order_status` enum('Order Received','Processing','Packed','Ready to Ship','Shipped','Delivered','Order Placed','In Transit','Delivered','Waiting for courier') NOT NULL DEFAULT 'Processing',
+  `order_trackingnum` text NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -331,10 +340,10 @@ CREATE TABLE `order_info` (
 -- Dumping data for table `order_info`
 --
 
-INSERT INTO `order_info` (`order_id`, `customer_id`, `shipping_addr`, `order_ref_no`, `order_total`, `order_payment_option`, `order_status`, `created_at`) VALUES
-(4, 3, 'Sa tabi ng kanto ng dagat', 'REF-3-1728003594-571BD2', 1798, 'Cash on Delivery', 'Delivered', '2024-10-30 07:36:31'),
-(5, 3, 'Sa tabi ng kanto ng dagat', 'REF-3-1728067262-65B694', 2597, 'Cash on Delivery', 'Waiting for courier', '2024-10-30 07:37:44'),
-(17, 3, 'shipping address', 'REF-3-1728945073-5F047D', 7891, 'Cash on Delivery', 'Delivered', '2024-10-31 00:12:12');
+INSERT INTO `order_info` (`order_id`, `customer_id`, `shipping_addr`, `order_ref_no`, `order_total`, `order_payment_option`, `order_status`, `order_trackingnum`, `created_at`) VALUES
+(4, 3, 'Sa tabi ng kanto ng dagat', 'REF-3-1728003594-571BD2', 1798, 'Cash on Delivery', 'Order Placed', '1', '2024-11-05 04:34:50'),
+(5, 3, 'Sa tabi ng kanto ng dagat', 'REF-3-1728067262-65B694', 2597, 'Cash on Delivery', 'Order Placed', '100', '2024-11-05 04:32:08'),
+(17, 3, 'shipping address', 'REF-3-1728945073-5F047D', 7891, 'Cash on Delivery', 'Delivered', '', '2024-10-31 00:12:12');
 
 -- --------------------------------------------------------
 
@@ -354,7 +363,7 @@ CREATE TABLE `order_items` (
 --
 
 INSERT INTO `order_items` (`order_id`, `model_id`, `quantity`, `total`) VALUES
-(4, 1, 0, 0),
+(4, 1, 2, 2000),
 (5, 1, 2, 1798),
 (5, 2, 1, 799),
 (17, 1, 6, 5394),
@@ -385,7 +394,11 @@ INSERT INTO `order_tracker` (`order_id`, `current_track`, `status`, `created_at`
 (17, '', 'Not Done', '2024-10-31 00:07:22'),
 (17, '', 'Not Done', '2024-10-31 00:08:48'),
 (17, '', 'Not Done', '2024-10-31 00:09:10'),
-(17, 'Delivered', 'Not Done', '2024-10-31 00:12:12');
+(17, 'Delivered', 'Not Done', '2024-10-31 00:12:12'),
+(5, 'In Transit', 'Not Done', '2024-11-05 04:31:36'),
+(5, 'Delivered', 'Not Done', '2024-11-05 04:31:53'),
+(5, 'Order Placed', 'Not Done', '2024-11-05 04:32:08'),
+(4, 'Order Placed', 'Not Done', '2024-11-05 04:34:50');
 
 -- --------------------------------------------------------
 
@@ -401,9 +414,8 @@ CREATE TABLE `seller` (
   `address` varchar(200) NOT NULL,
   `email_address` varchar(200) NOT NULL,
   `password` varchar(200) NOT NULL,
-  `id_front_url` text DEFAULT NULL,
-  `id_back_url` text DEFAULT NULL,
   `proof_seller_url` text DEFAULT NULL,
+  `avatar` text NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -411,8 +423,10 @@ CREATE TABLE `seller` (
 -- Dumping data for table `seller`
 --
 
-INSERT INTO `seller` (`seller_id`, `first_name`, `last_name`, `contact_number`, `address`, `email_address`, `password`, `id_front_url`, `id_back_url`, `proof_seller_url`, `created_at`) VALUES
-(12, 'John', 'Doe', '1234567890', '123 Main St, Anytown, USA', 'johndoe@example.com', '$2y$10$IftVtSik9c9/qXCPaQhP2.IV3aWV5lNX9TFwUJofw84AsRXcEX/ma', NULL, NULL, NULL, '2024-10-03 23:54:36');
+INSERT INTO `seller` (`seller_id`, `first_name`, `last_name`, `contact_number`, `address`, `email_address`, `password`, `proof_seller_url`, `avatar`, `created_at`) VALUES
+(12, 'John', 'Doe', '12345678901', '123 Main St, Anytown, USA', 'johndoe@example.com', '$2y$10$4LJMnTd2rfj7ZIqCt5IRP.PDjhnvCYEquY0P.tt5Ic3LaTSXkCR.6', NULL, '', '2024-11-07 03:49:43'),
+(13, 'test', 'test', '12345678902', '', 'admin@gmail.com', '$2y$10$swHVJuwTi8ufN7HPQRVpWOL8UvUH6CJ4hqw8j464Xgc8uTsdqzKnW', NULL, '', '2024-11-07 03:57:30'),
+(17, 'test', 'test', '12345678903', '', 'adm1in@gmail.com', '$2y$10$Q3udrFo6AmPKzIQcJ.pmVu3e/aElA.p4kvgo.u.bLnHytvhHg6c4m', 'upload/672c3a3d626ba-P1.png', '', '2024-11-07 03:57:32');
 
 --
 -- Indexes for dumped tables
@@ -551,7 +565,7 @@ ALTER TABLE `appraisal`
 -- AUTO_INCREMENT for table `bid_room`
 --
 ALTER TABLE `bid_room`
-  MODIFY `bidding_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `bidding_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT for table `cart`
@@ -587,7 +601,7 @@ ALTER TABLE `diecast_brand`
 -- AUTO_INCREMENT for table `diecast_model`
 --
 ALTER TABLE `diecast_model`
-  MODIFY `model_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `model_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
 
 --
 -- AUTO_INCREMENT for table `diecast_size`
@@ -605,7 +619,7 @@ ALTER TABLE `order_info`
 -- AUTO_INCREMENT for table `seller`
 --
 ALTER TABLE `seller`
-  MODIFY `seller_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `seller_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- Constraints for dumped tables

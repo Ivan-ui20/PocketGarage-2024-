@@ -63,7 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
       
     function getProductWithFilter(brand, size, modelType, query) {
         let queryString = '';
-    
+        
         if (brand) {
             const trimmedBrand = brand.trim(); 
             if (trimmedBrand) {
@@ -120,12 +120,18 @@ document.addEventListener('DOMContentLoaded', () => {
     
                 const latestProducts = data.data.slice(0, limit);
                             
-                latestProducts.forEach(product => {
+                latestProducts.forEach(product => {                                        
                     const productBox = document.createElement('div');
                     productBox.classList.add('product-box');
-    
-                    if (userId) {
-                        productBox.innerHTML = `
+                    productBox.onclick = () => openProductModal(
+                        product.model_id, 
+                        product.model_image_url, 
+                        product.model_name,
+                        product.model_description,
+                        product.model_stock,
+                        product.model_price
+                    );
+                    productBox.innerHTML = `
                             <img src="http://localhost:3000/backend/${product.model_image_url}" alt="${product.model_name}">
                             <div class="product-text">
                                 <h4>${product.model_name}</h4>
@@ -133,6 +139,10 @@ document.addEventListener('DOMContentLoaded', () => {
                             <div class="price">
                                 <p>₱${product.model_price}</p>
                             </div>
+                    `;
+                    if (userId) {
+                        
+                        productBox.innerHTML += `                           
                             <button 
                                 class="add-to-cart-btn"
                                 data-product-id="${product.model_id}" 
@@ -141,14 +151,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                 data-product-price="${product.model_price}">Add to Cart</button>
                         `;
                     } else {
-                        productBox.innerHTML = `
-                            <img src="http://localhost:3000/backend/${product.model_image_url}" alt="${product.model_name}">
-                            <div class="product-text">
-                                <h4>${product.model_name}</h4>
-                            </div>
-                            <div class="price">
-                                <p>₱${product.model_price}</p>
-                            </div>
+                        productBox.innerHTML += `                            
                             <p class="login-prompt">Please log in to add items to your cart.</p>
                         `;
                     }
@@ -169,42 +172,41 @@ document.addEventListener('DOMContentLoaded', () => {
     
     getProductWithFilter("", "", "", "");
 
-    function saveCartItems(cartItems) {
+    function saveCartItems(cartItem) {
+                                               
+        const data = new URLSearchParams({                    
+            customer_id: sessionStorage.getItem("userId"),                    
+            items : JSON.stringify([
+                {
+                    model_id: cartItem.id,
+                    quantity: cartItem.quantity,
+                    total: cartItem.price * cartItem.quantity
+                }                       
+            ])
+        });                         
 
-        cartItems.forEach(cartItem => {
-                                    
-            const data = new URLSearchParams({                    
-                customer_id: sessionStorage.getItem("userId"),                    
-                items : JSON.stringify([
-                    {
-                        model_id: cartItem.id,
-                        quantity: cartItem.quantity,
-                        total: cartItem.price * cartItem.quantity
-                    }                       
-                ])
-            });
-            
-            fetch('/backend/src/customer/route.php?route=customer/save/cart', {
-                method: 'POST',
-                body: data.toString(),
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                }
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => {
-                console.log(data);
-                alert("item added to cart")
-            })
-            .catch(error => {
-                console.error('There was a problem with the fetch operation:', error);
-            });
+        fetch('/backend/src/customer/route.php?route=customer/save/cart', {
+            method: 'POST',
+            body: data.toString(),
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
         })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log(data);
+            if (data.success === "Success") {
+                alert("item added to cart")
+            }                 
+        })
+        .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+        });
         
     }
     function removeCartItem(cartItemId) {
@@ -235,6 +237,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
     function getCartItems () {
+        
         var userId = sessionStorage.getItem('userId');
         if (!userId) {
             return
@@ -251,24 +254,26 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             return response.json();
         })
-        .then(data => {        
-            const items = data.data            
-            sessionStorage.setItem('cartId', data.data[0].cart_id);
-            items.forEach(cartItem => {
-                
-                const existingItemIndex = cartItems.findIndex(item => item.id === cartItem.model_id);
-                if (existingItemIndex === -1) {
-                    cartItems.push({ 
-                        id: cartItem.model_id, 
-                        name: cartItem.model_name, 
-                        image: `${cartItem.model_image_url}`, 
-                        price: cartItem.model_price, 
-                        quantity: cartItem.quantity });
-                } else {
-                    cartItems[existingItemIndex].quantity += 1;
-                }
-                cartCountElement.textContent = cartItems.reduce((sum, item) => sum + item.quantity, 0);
-            })
+        .then(data => {            
+            if (data.data.length !== 0) {            
+                const items = data.data            
+                sessionStorage.setItem('cartId', data.data[0].cart_id);
+                items.forEach(cartItem => {
+                    
+                    const existingItemIndex = cartItems.findIndex(item => item.id === cartItem.model_id);
+                    if (existingItemIndex === -1) {
+                        cartItems.push({ 
+                            id: cartItem.model_id, 
+                            name: cartItem.model_name, 
+                            image: `${cartItem.model_image_url}`, 
+                            price: cartItem.model_price, 
+                            quantity: cartItem.quantity });
+                    } else {
+                        cartItems[existingItemIndex].quantity += 1;
+                    }
+                    cartCountElement.textContent = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+                })
+            }
         })
         .catch(error => {
             console.error('There was a problem with the fetch operation:', error);
@@ -281,49 +286,53 @@ document.addEventListener('DOMContentLoaded', () => {
         const addToCartButtons = document.querySelectorAll('.add-to-cart-btn');
         addToCartButtons.forEach(button => {
             button.addEventListener('click', (event) => {
+                event.preventDefault();
+                event.stopPropagation();
                 const productId = event.target.getAttribute('data-product-id');
                 const productName = event.target.getAttribute('data-product-name');
                 const productImage = event.target.getAttribute('data-product-image');
                 const productPrice = event.target.getAttribute('data-product-price');
                 
+
+                let updatedItem;
+
                 const existingItemIndex = cartItems.findIndex(item => item.id === productId);
                 if (existingItemIndex === -1) {
-                    cartItems.push({ id: productId, name: productName, image: productImage, price: productPrice, quantity: 1 });
+                    updatedItem = { id: productId, name: productName, image: productImage, price: productPrice, quantity: 1 };
+                    cartItems.push(updatedItem);
                 } else {
                     cartItems[existingItemIndex].quantity += 1;
+                    updatedItem = cartItems[existingItemIndex];
                 }
-                cartCountElement.textContent = cartItems.reduce((sum, item) => sum + item.quantity, 0);
-                alert(productName + ' has been added to the cart!');   
-                saveCartItems(cartItems)
+                cartCountElement.textContent = cartItems.reduce((sum, item) => sum + item.quantity, 0);                
+                                
+                saveCartItems(updatedItem)
             });
         });
     }
                             
     cartItemsElement.addEventListener('click', function (event) {
-        if (event.target.classList.contains('remove-btn')) {
-            const index = event.target.getAttribute('data-index');
-            const modelId = event.target.getAttribute('data-remove-id');
-            
+        const index = event.target.getAttribute('data-index');
+        if (event.target.classList.contains('remove-btn')) {            
+            const modelId = event.target.getAttribute('data-remove-id');            
             removeCartItem(modelId)
             cartItems.splice(index, 1);
-            cartCountElement.textContent = cartItems.reduce((sum, item) => sum + item.quantity, 0);
-            updateCartModal();
+            updateCartModal();            
             return
-        } else if (event.target.classList.contains('quantity-increase')) {
-            const index = event.target.getAttribute('data-index');
-            cartItems[index].quantity += 1;
-            cartCountElement.textContent = cartItems.reduce((sum, item) => sum + item.quantity, 0);
-            updateCartModal();
+        } else if (event.target.classList.contains('quantity-increase')) {            
+            cartItems[index].quantity += 1;                        
         } else if (event.target.classList.contains('quantity-decrease')) {
-            const index = event.target.getAttribute('data-index');
+            
             if (cartItems[index].quantity > 1) {
-                cartItems[index].quantity -= 1;
-                cartCountElement.textContent = cartItems.reduce((sum, item) => sum + item.quantity, 0);
-                updateCartModal();
+                cartItems[index].quantity -= 1;                           
             }
         }
-                
-        saveCartItems(cartItems)
+        
+        cartCountElement.textContent = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+        updateCartModal();
+
+        saveCartItems(cartItems[index])
+        
     });
 
         
@@ -332,68 +341,79 @@ document.addEventListener('DOMContentLoaded', () => {
     let modelTypeFilter = "";
     let searchFilter = "";
     
-        const brandLinks = document.querySelectorAll('.brand-link');
-        const sizeLinks = document.querySelectorAll('.size-link');
-        const modelTypeLink = document.querySelectorAll('.model-type-link');
+    const brandLinks = document.querySelectorAll('.brand-link');
+    const sizeLinks = document.querySelectorAll('.size-link');
+    const modelTypeLink = document.querySelectorAll('.model-type-link');
 
-        const searchForm = document.getElementById('search-form');
-                
-        searchForm.addEventListener('submit', function(event) {                    
-            event.preventDefault();
-                        
-            searchFilter = document.getElementById('search-query').value;     
+    const searchForm = document.getElementById('search-form');
             
-            window.location.href = `/products.php?search=${searchFilter}`;
-        });
-
-        brandLinks.forEach(link => {
-            link.addEventListener('click', function(event) {
-                event.preventDefault();
-                
-                brandFilter = this.getAttribute('data-brand-id');
-                window.location.href = `/products.php?brand=${brandFilter}`;
-            });
-        });
-        sizeLinks.forEach(link => {
-            link.addEventListener('click', function(event) {
-                event.preventDefault();
-                
-                sizeFilter = this.getAttribute('data-size-id');
-                window.location.href = `/products.php?size=${sizeFilter}`;
-                
-            });
-        });
-
-        modelTypeLink.forEach(link => {
-            link.addEventListener('click', function(event) {
-                event.preventDefault();
-                
-                modelTypeFilter = this.getAttribute('data-model-type');                
-                window.location.href = `/products.php?model=${modelTypeFilter}`;
-            });
-        });
-
-
-        function getQueryParameter(name) {
-            const urlParams = new URLSearchParams(window.location.search);
-            return urlParams.get(name);
-        }
+    searchForm.addEventListener('submit', function(event) {                    
+        event.preventDefault();
+                    
+        searchFilter = document.getElementById('search-query').value;     
         
-        // When the page loads, check for a brand filter
-        window.addEventListener('DOMContentLoaded', function() {
-            const brandFilter = getQueryParameter('brand');
-            const sizeFilter = getQueryParameter('size');
-            const modelFilter = getQueryParameter('model');
-            const searchFilter = getQueryParameter('search');
-                                                
-            getProductWithFilter(
-                brandFilter,
-                sizeFilter, 
-                modelFilter, 
-                searchFilter
-            );
+        window.location.href = `/products.php?search=${searchFilter}`;
+    });
+
+    brandLinks.forEach(link => {
+        link.addEventListener('click', function(event) {
+            event.preventDefault();
+            
+            brandFilter = this.getAttribute('data-brand-id');
+            window.location.href = `/products.php?brand=${brandFilter}`;
+        });
+    });
+    sizeLinks.forEach(link => {
+        link.addEventListener('click', function(event) {
+            event.preventDefault();
+            
+            sizeFilter = this.getAttribute('data-size-id');
+            window.location.href = `/products.php?size=${sizeFilter}`;
             
         });
+    });
+
+    modelTypeLink.forEach(link => {
+        link.addEventListener('click', function(event) {
+            event.preventDefault();
+            
+            modelTypeFilter = this.getAttribute('data-model-type');                
+            window.location.href = `/products.php?model=${modelTypeFilter}`;
+        });
+    });
+
+
+    function getQueryParameter(name) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(name);
+    }
+    
+    // When the page loads, check for a brand filter
+    window.addEventListener('DOMContentLoaded', function() {
+        const brandFilter = getQueryParameter('brand');
+        const sizeFilter = getQueryParameter('size');
+        const modelFilter = getQueryParameter('model');
+        const searchFilter = getQueryParameter('search');
+                                            
+        getProductWithFilter(
+            brandFilter,
+            sizeFilter, 
+            modelFilter, 
+            searchFilter
+        );
+        
+    });
+
+    document.getElementById('checkout-btn').addEventListener('click', function () {
+            
+        if (cartItems.length > 0) {
+            checkoutModal.style.display = 'block';
+                                                            
+        } else {                
+            alert('Your cart is empty!');
+            
+        }
+    });
 
     
 });

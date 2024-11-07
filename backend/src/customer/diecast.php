@@ -2,7 +2,7 @@
 
     function getDiecastProduct($connect, $brand, $scale, $minPrice, $maxPrice, 
     $modelStock, $modelAvailability, $modelTags, $modelType, $limit, $offset, 
-    $modelName) {
+    $modelName, $bidding) {
 
         try {
             $query = "SELECT diecast_brand.*,
@@ -15,12 +15,11 @@
                 LEFT JOIN diecast_size ON diecast_size.size_id = diecast_model.size_id
                 LEFT JOIN seller ON seller.seller_id = diecast_model.seller_id
                 WHERE 
-                    1=1 AND 
-                diecast_model.model_price != 0";
+                    1=1";
             
             $params = [];
             $paramTypes = "";
-
+           
             if ($brand) {
                 $query .= " AND diecast_brand.brand_id = ?";
                 $params[] = $brand;
@@ -32,41 +31,7 @@
                 $params[] = $scale;
                 $paramTypes .= "s";
             }
-
-            if ($minPrice !== null) {
-                $query .= " AND diecast_model.model_price >= ?";
-                $params[] = $minPrice;
-                $paramTypes .= "d";
-            }
-
-            if ($maxPrice !== null) {
-                $query .= " AND diecast_model.model_price <= ?";
-                $params[] = $maxPrice;
-                $paramTypes .= "d";
-            }
-
-            if ($modelStock !== null) {
-                $query .= " AND diecast_model.model_stock >= ?";
-                $params[] = $modelStock;
-                $paramTypes .= "i";
-            }
-
-            if ($modelAvailability !== null) {
-                $query .= " AND diecast_model.model_availability = ?";
-                $params[] = $modelAvailability;
-                $paramTypes .= "s";
-            }
-
-            if ($modelTags) {                
-                $tags = explode(',', $modelTags);
-                foreach ($tags as $tag) {
-                    $tag = trim($tag);
-                    $query .= " AND diecast_model.model_tags LIKE ?";
-                    $params[] = "%" . $tag . "%";
-                    $paramTypes .= "s";
-                }
-            }
-
+            
             if ($modelType) {
                 $query .= " AND diecast_model.model_type = ?";
                 $params[] = $modelType;

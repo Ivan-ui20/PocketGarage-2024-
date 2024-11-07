@@ -77,16 +77,7 @@
             checkoutModal.style.display = 'none'; // Close the checkout modal after submission
         });
 
-        document.getElementById('checkout-btn').addEventListener('click', function () {
-            
-            if (cartItems.length > 0) {
-                checkoutModal.style.display = 'block';
-                                                                
-            } else {                
-                alert('Your cart is empty!');
-                
-            }
-        });
+        
     })
     
 </script>

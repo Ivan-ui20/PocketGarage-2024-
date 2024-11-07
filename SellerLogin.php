@@ -74,7 +74,7 @@
                     <input type="file" id="Proof" name="Proof" accept="image/*" required />
                     
                     <div class="signup-button-container">
-                        <button type="submit" id="signup-btn">Sign Up</button>
+                        <button type="button" id="signup-btn">Sign Up</button>
                     </div>
                 </form>
 

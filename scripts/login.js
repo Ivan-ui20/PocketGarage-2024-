@@ -20,9 +20,9 @@ document.addEventListener("DOMContentLoaded", function() {
     const rememberMeCheckbox = document.getElementById("remember-me");
     const phoneField = document.getElementById("phone-number"); // Phone number field
     const passwordField = document.getElementById("password");  // Password field
-
+        
     // Login action (to avoid code duplication)
-    function handleLogin() {
+    function handleLogin() {        
         const phoneError = document.getElementById("phone-error");
         const passwordError = document.getElementById("password-error");
         let loginValid = true;
@@ -54,8 +54,20 @@ document.addEventListener("DOMContentLoaded", function() {
                 contact_number: phoneField.value,               
                 password: passwordField.value
             });
+
+            const currentPath = window.location.pathname;
+
+            let url;
+            let type;
+            if (currentPath.includes("SellerLogin.php")) {
+                url = "/backend/src/seller/route.php?route=seller/login";
+                type = 'seller';
+            } else if (currentPath.includes("Login.php")) {
+                url = "/backend/src/customer/route.php?route=customer/login";
+                type = 'buyer';
+            }
             
-            fetch('/backend/src/customer/route.php?route=customer/login', {
+            fetch(url, {
                     method: 'POST',
                     body: data.toString(),
                     headers: {
@@ -77,16 +89,26 @@ document.addEventListener("DOMContentLoaded", function() {
                                                                       
                             if (rememberMeCheckbox.checked) {
                                 localStorage.setItem("phone-number", phoneNumber);
-                                localStorage.setItem("password", password);                                
+                                localStorage.setItem("password", password);
                             } else {
                                 localStorage.removeItem("phone-number");
                                 localStorage.removeItem("password");
                             }
 
-                            sessionStorage.setItem("userId", data.data.user_id)
-                            alert("login success")
-                            // Redirect to index.html
-                            window.location.href = 'index.php';
+                            if(type === "seller") {
+                                sessionStorage.setItem("sellerId", data.data.seller_id)
+                                alert("login success")
+                                // Redirect to index.html
+                                window.location.href = 'seller.php';
+                            } else {
+                                sessionStorage.setItem("userId", data.data.user_id)
+                                alert("login success")
+                                // Redirect to index.html
+                                window.location.href = 'index.php';
+                            }
+                           
+
+                            
                         }                                                                    
                     })
                     .catch(error => {
@@ -150,71 +172,77 @@ const nextBtn = document.getElementById("next-btn");
 const signupStep1 = document.getElementById("signup-step-1");
 const signupStep2 = document.getElementById("signup-step-2");
 
-nextBtn.addEventListener("click", function() {
-    const inputs = signupStep1.querySelectorAll("input");
-    let allFilled = true;
-
-    // Clear previous error messages
-    const errorMessages = signupStep1.querySelectorAll(".error-message");
-    errorMessages.forEach(msg => {
-        msg.textContent = "";
-    });
-
-    // Check if all fields are filled and validate phone number and password
-    inputs.forEach(input => {
-        const errorMsgElement = document.getElementById(input.id + "-error");
-        if (!input.value) {
+if (nextBtn){
+    nextBtn.addEventListener("click", function() {
+        const inputs = signupStep1.querySelectorAll("input");
+        let allFilled = true;
+    
+        // Clear previous error messages
+        const errorMessages = signupStep1.querySelectorAll(".error-message");
+        errorMessages.forEach(msg => {
+            msg.textContent = "";
+        });
+    
+        // Check if all fields are filled and validate phone number and password
+        inputs.forEach(input => {
+            const errorMsgElement = document.getElementById(input.id + "-error");
+            if (!input.value) {
+                allFilled = false;
+                input.style.borderColor = "red"; // Highlight empty fields
+                errorMsgElement.textContent = "This field is required."; // Set error message
+            } else {
+                input.style.borderColor = ""; // Reset border color if filled
+            }
+        });
+    
+    
+        // Validate phone number field (should be exactly 11 digits)
+        const signupPhoneErrorMsg = document.getElementById("signup-phone-number-error");
+        const signupPhoneField = document.getElementById("signup-phone-number");
+        if (signupPhoneField.value.length !== 11) {
             allFilled = false;
-            input.style.borderColor = "red"; // Highlight empty fields
-            errorMsgElement.textContent = "This field is required."; // Set error message
+            signupPhoneField.style.borderColor = "red"; // Highlight invalid phone number
+            signupPhoneErrorMsg.textContent = "Please enter a valid 11-digit phone number."; // Set error message
         } else {
-            input.style.borderColor = ""; // Reset border color if filled
+            signupPhoneField.style.borderColor = ""; // Reset border color if valid
+        }
+    
+        // Validate password field (Check if it's filled)
+        const signupPasswordErrorMsg = document.getElementById("signup-password-error");
+        const signupPasswordField = document.getElementById("signup-password");
+        if (!signupPasswordField.value) {
+            allFilled = false;
+            signupPasswordField.style.borderColor = "red"; // Highlight empty password
+            signupPasswordErrorMsg.textContent = "Password is required."; // Set error message
+        } else {
+            signupPasswordField.style.borderColor = ""; // Reset border color if filled
+        }
+    
+        if (allFilled) {
+            // Hide the first step and show the second step
+            signupStep1.style.display = "none";
+            signupStep2.style.display = "block";                       
+    
+        } else {
+            alert("Please fill all fields correctly.");
         }
     });
-
-
-    // Validate phone number field (should be exactly 11 digits)
-    const signupPhoneErrorMsg = document.getElementById("signup-phone-number-error");
-    const signupPhoneField = document.getElementById("signup-phone-number");
-    if (signupPhoneField.value.length !== 11) {
-        allFilled = false;
-        signupPhoneField.style.borderColor = "red"; // Highlight invalid phone number
-        signupPhoneErrorMsg.textContent = "Please enter a valid 11-digit phone number."; // Set error message
-    } else {
-        signupPhoneField.style.borderColor = ""; // Reset border color if valid
-    }
-
-    // Validate password field (Check if it's filled)
-    const signupPasswordErrorMsg = document.getElementById("signup-password-error");
-    const signupPasswordField = document.getElementById("signup-password");
-    if (!signupPasswordField.value) {
-        allFilled = false;
-        signupPasswordField.style.borderColor = "red"; // Highlight empty password
-        signupPasswordErrorMsg.textContent = "Password is required."; // Set error message
-    } else {
-        signupPasswordField.style.borderColor = ""; // Reset border color if filled
-    }
-
-    if (allFilled) {
-        // Hide the first step and show the second step
-        signupStep1.style.display = "none";
-        signupStep2.style.display = "block";                       
-
-    } else {
-        alert("Please fill all fields correctly.");
-    }
-});
+}
 
 
 // Back button functionality for sign-up form
 const backBtn = document.getElementById("back-btn");
 
-backBtn.addEventListener("click", function() {
-    signupStep2.style.display = "none"; // Hide step 2
-    signupStep1.style.display = "block"; // Show step 1
-});
+if (backBtn){
+    backBtn.addEventListener("click", function() {
+        signupStep2.style.display = "none"; // Hide step 2
+        signupStep1.style.display = "block"; // Show step 1
+    });
+}
 
 document.getElementById("signup-btn").addEventListener("click", async function(event) {
+    console.log('yo');
+    
     event.preventDefault(); // Prevent form submission if needed
               
     const formData = new FormData();
@@ -222,22 +250,35 @@ document.getElementById("signup-btn").addEventListener("click", async function(e
     formData.append("first_name", document.getElementById("first-name").value);
     formData.append("last_name", document.getElementById("last-name").value);
     formData.append("contact_number", document.getElementById("signup-phone-number").value);
-    formData.append("address", document.getElementById("address").value);
+    formData.append("address", "");
     formData.append("email_address", document.getElementById("email").value);
     formData.append("password", document.getElementById("signup-password").value);
     
-    const idFrontFile = document.getElementById("id-front").files[0];
+    const idFrontFile = document.getElementById("id-front");
     if (idFrontFile) {
-        formData.append("id_front", idFrontFile);
+        formData.append("id_front", idFrontFile.files[0]);
     }
     
-    const idBackFile = document.getElementById("id-back").files[0];
+    const idBackFile = document.getElementById("id-back");
     if (idBackFile) {
-        formData.append("id_back", idBackFile);
+        formData.append("id_back", idBackFile.files[0]);
     }
-  
+
+    const proofSeller = document.getElementById("Proof");
+    if (proofSeller) {
+        formData.append("proof", proofSeller.files[0]);
+    }
+    
+    const currentPath = window.location.pathname;
+    let url;    
+    if (currentPath.includes("SellerLogin.php")) {
+        url = "/backend/src/seller/route.php?route=seller/signup";        
+    } else if (currentPath.includes("Login.php")) {
+        url = "/backend/src/customer/route.php?route=customer/signup";        
+    }
+    
     try {
-        const response = await fetch('/backend/src/customer/route.php?route=customer/signup', {
+        const response = await fetch(url, {
             method: 'POST', // Use POST method
             body: formData // Send the FormData object as the request body
         });
@@ -250,9 +291,11 @@ document.getElementById("signup-btn").addEventListener("click", async function(e
         // Parse the JSON response
         const responseData = await response.json();
         
-        // Log the response data or handle it as needed
-        console.log('Response:', responseData);
-        alert("signup successfull")
+        if (responseData.success === "Failed") {
+            alert(responseData.message)
+        }
+        
+        
     } catch (error) {
         console.error('Error during fetch:', error);
     }
@@ -308,7 +351,10 @@ if (email && emailPattern.test(email)) {
     document.getElementById('forgot-email-error').textContent = 'Please enter a valid email address.';
 }
 });
-document.getElementById('back-btn').addEventListener('click', function() {
-document.getElementById('signup-step-2').style.display = 'none';
-document.getElementById('signup-step-1').style.display = 'flex';
-});
+
+if(backBtn){
+    backBtn.addEventListener('click', function() {
+        document.getElementById('signup-step-2').style.display = 'none';
+        document.getElementById('signup-step-1').style.display = 'flex';
+    });
+}

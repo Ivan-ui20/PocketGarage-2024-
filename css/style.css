@@ -407,6 +407,7 @@ header .logo {
 }
 
 .product-box {
+  cursor: pointer;
   width: 350px; /* Adjust the width as needed */
   margin: 8px; /* Add margin for spacing between boxes */
   padding: 5px;

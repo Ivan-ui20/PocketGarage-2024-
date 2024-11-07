@@ -1,3 +1,6 @@
+<?php    
+    session_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,7 +17,7 @@
 </head>
 <body>
 
-    
+    <?php include './Modal/productModal.php';?>
     <?php include './shared/header.php';?>
     
     <section class="ProductsL" id="products-1"> 

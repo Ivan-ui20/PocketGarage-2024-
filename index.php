@@ -1,3 +1,6 @@
+<?php
+    session_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,11 +13,13 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Black+Ops+One&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="productModal.css">
     <link rel="stylesheet" href="https://unpkg.com/boxicons@latest/css/boxicons.min.css">
 </head>
 <body>
 
 <!-- copy and paste this to the page para may header sila (if need nila ng header) -->
+    <?php include './Modal/productModal.php';?>
     <?php include './shared/header.php';?>
     <?php include './shared/slider.php';?>
     
@@ -48,8 +53,7 @@
     </div>
 
         <!-- Cart Modal -->
-        <?php include './shared/cartModal.php';?>
-        
+        <?php include './shared/cartModal.php';?>        
         <!-- Checkout Modal -->
         <?php include './shared/checkoutModal.php';?>
 
@@ -66,9 +70,7 @@
 
     <?php include './shared/userAgreementModal.php';?>
    
-    
-    
-       
+               
 </body>
 
 <script src="./scripts/getProduct.js"></script>

@@ -33,21 +33,22 @@ function insertCartItem($connect, $payload, $items) {
         }
         
         
+        
         $insertOrUpdateItems = $connect->prepare("SELECT quantity, total FROM cart_items WHERE cart_id = ? AND model_id = ?");
 
         $updateItem = $connect->prepare("UPDATE cart_items SET quantity = ?, total = ? WHERE cart_id = ? AND model_id = ?");
 
         $insertItems = $connect->prepare("INSERT INTO cart_items (cart_id, model_id, quantity, total) VALUES (?, ?, ?, ?)");
 
-        foreach ($items as $item) {            
+        foreach ($items as $item) {
+
+                        
             $insertOrUpdateItems->bind_param("ss", $cartId, $item["model_id"]);
             $insertOrUpdateItems->execute();
             $result = $insertOrUpdateItems->get_result();
 
             if ($result->num_rows > 0) {
-
-                $row = $result->fetch_assoc();
-                     
+                                     
                 $updateItem->bind_param("ssss", $item["quantity"], $item["total"], $cartId, $item["model_id"]);
                 $updateItem->execute();
 
@@ -126,7 +127,9 @@ function getCartItem($connect, $customerId) {
         LEFT JOIN diecast_brand ON diecast_brand.brand_id = diecast_model.brand_id
         LEFT JOIN diecast_size ON diecast_size.size_id = diecast_model.size_id
         LEFT JOIN seller ON seller.seller_id = diecast_model.seller_id
-        WHERE customer_id = ?
+        WHERE 
+            customer_id = ? AND 
+            cart_items.cart_id IS NOT NULL;
 
         ");
         $getCartItems->bind_param("s", $customerId);

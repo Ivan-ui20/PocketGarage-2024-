@@ -38,17 +38,17 @@
         try {
             $password = password_hash($payload['password'], PASSWORD_DEFAULT);
 
-            $email_count = "";
+            $contactCount = "";
             
-            $email_check_stmt = $connect->prepare("SELECT COUNT(*) FROM customer WHERE email_address = ?");
-            $email_check_stmt->bind_param("s", $payload['email_address']);
+            $email_check_stmt = $connect->prepare("SELECT COUNT(*) FROM customer WHERE contact_number = ?");
+            $email_check_stmt->bind_param("s", $payload['contact_number']);
             $email_check_stmt->execute();
-            $email_check_stmt->bind_result($email_count);
+            $email_check_stmt->bind_result($contactCount);
             $email_check_stmt->fetch();
             $email_check_stmt->close();
 
-            if ($email_count > 0) {
-                return array("title" => "Failed", "message" => "Email already exists!", "data" => []);
+            if ($contactCount > 0) {
+                return array("title" => "Failed", "message" => "Contact Number already exists!", "data" => []);
             }
 
             $stmt = $connect->prepare("INSERT INTO customer 
@@ -57,6 +57,34 @@
             $stmt->bind_param("ssssssss", $payload['first_name'], $payload['last_name'], 
                 $payload['contact_number'], $payload['address'], 
                 $payload['email_address'], $password, $frontIdUrl, $backIdUrl);
+            
+                $stmt->execute();            
+            if ($stmt->affected_rows <= 0) {
+                return array("title" => "Failed", "message" => "Something went wrong!", "data" => []);
+            }
+            
+            return array("title" => "Success", "message" => "Signup Successful", "data" => []);
+            
+        } catch (\Throwable $th) {
+            
+            return array("title" => "Success", "message" => "Something went wrong!", "data" => []);
+        }        
+    }
+
+    function updateProfile($connect, $payload, $avatarUrl) {
+        try {
+
+            $fullname = $payload["fullname"];
+            $names = explode(" ", $fullname, 2);        
+            $first_name = $names[0]; 
+            $last_name = $names[1]; 
+
+            $stmt = $connect->prepare("UPDATE customer SET
+                first_name = ?, last_name = ?, contact_number = ?, address = ?, 
+                email_address = ?, avatar = ? WHERE customer_id = ?");
+            $stmt->bind_param("sssssss", $first_name, $last_name, 
+                $payload['phone'], $payload['address'], 
+                $payload['email'], $avatarUrl, $payload["user_id"]);
             
                 $stmt->execute();            
             if ($stmt->affected_rows <= 0) {

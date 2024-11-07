@@ -18,13 +18,13 @@
             $route = $_GET['route'] ?? null;
             if ($route === 'seller/login') {
 
-                if (isset($_POST['email_address']) && isset($_POST['password'])) {
-                    $email = $_POST['email_address'];
+                if (isset($_POST['contact_number']) && isset($_POST['password'])) {
+                    $contactnumber = $_POST['contact_number'];
                     $password = $_POST['password'];
 
-                    $response = login($conn, $email, $password);
+                    $response = login($conn, $contactnumber, $password);
 
-                    jsonResponse($response["title"], $response["message"]);
+                    jsonResponseWithData($response["title"], $response["message"], $response["data"]);
 
                 } else {
                     jsonResponse("Invalid Login", "Email and password are required.");
@@ -37,9 +37,13 @@
 
                 if (!array_diff_key(array_flip($requiredFields), $_POST)) {
                     
-                    $payload = array_intersect_key($_POST, array_flip($requiredFields));
-                    
-                    $response = signup($conn, $payload);
+                    $payload = array_intersect_key($_POST, array_flip($requiredFields));                    
+                    $proofUrl = handleFileUpload($_FILES['proof']);
+                    if ($proofUrl === false) {
+                        jsonResponse("File Upload Failed", "There was an error uploading the image. Please try again.");
+                        return;
+                    }
+                    $response = signup($conn, $payload, $proofUrl);
 
                     jsonResponse($response["title"], $response["message"]);
 

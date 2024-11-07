@@ -7,9 +7,7 @@
 
     $size = "SELECT * FROM diecast_size";
     $sizeResult = $conn->query($size);
-
-    session_start();
-    
+        
 ?>
 <header>
     <div class="top-nav">
@@ -23,7 +21,7 @@
                         <li><a href="Products.php">All Cars</a></li>
                         <li><a href="#" class="model-type-link" data-model-type="Regular">Regular Model</a></li>
                         <li><a href="#" class="model-type-link" data-model-type="Premium">Premium Model</a></li>
-                        <li><a href="">Bidding</a></li>
+                        <li><a href="#" class="model-type-link" data-model-type="Bidding">Bidding</a></li>                        
                     </ul>
                 </li>
                 <li class="dropdown">
@@ -57,14 +55,15 @@
                     </ul>
 
                 </li>
-
-                <li class="dropdown">
-                  <a href="#" class="nonclickable">Order</a>
-                    <ul class="dropdown-menu">
-                      <li><a href="">History</a></li>
-                      <li><a href="">Status</a></li>
-                    </ul>
-                </li>
+                <?php if (isset($_SESSION['user_id'])): ?>
+                    <li class="dropdown">
+                    <a href="#" class="nonclickable">Order</a>
+                        <ul class="dropdown-menu">
+                        <li><a href="">History</a></li>
+                        <li><a href="">Status</a></li>
+                        </ul>
+                    </li>
+                <?php endif; ?>
 
             </ul>
         </div>
@@ -95,7 +94,7 @@
                     <div class="profile-dropdown" id="profile-dropdown">
                         <a href="MyProfile.php">My Profile</a>
                         <a href="SellerLogin.php">Switch to Seller</a>
-                        <a href="shared/logout.php">Logout</a>
+                        <a onclick="logout()">Logout</a>
                   
                     </div>
                 </div>
@@ -186,6 +185,11 @@
 
 
     });
+
+    function logout () {
+        sessionStorage.clear();                
+        window.location.href = "shared/logout.php"
+    }
 </script>
 
 <script>
