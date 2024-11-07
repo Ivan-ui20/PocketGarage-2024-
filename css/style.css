@@ -8,12 +8,12 @@
 /* Adjust body or main content padding to avoid overlap with the fixed navbar */
 body {
   font-family: Arial, sans-serif;
-  background: #fff;
+  background: #afacac;
   display: flex;
   flex-direction: column;
   min-height: 100vh;
   margin: 0;
-  padding-top: 70px; /* Add padding equal to the height of the navbar */
+  padding-top: 0px; /* Add padding equal to the height of the navbar */
 }
 
 /* Define the hidden class */
@@ -21,18 +21,14 @@ body {
   display: none; /* This hides the product box */
 }
 
+/* Style for the top navigation */
 .top-nav {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 5px 5px;
-  background-color: #070707;
-  position: fixed; /* Make the navbar fixed at the top */
-  top: 0; /* Align it to the top of the page */
-  left: 0;
-  width: 100%; /* Stretch across the entire viewport width */
-  z-index: 1000; /* Ensure it stays above other elements */
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Optional: add a shadow for visibility */
+  padding: 10px 20px;
+  background-color: #0b0b45;
+  margin-top: 0;
 }
 
 .left-section {
@@ -306,12 +302,11 @@ header .logo {
 }
 
 .slider {
-  width: 85%;
+  width: 98%;
   height: 100%;
   overflow: hidden;
   position: relative;
   border-radius: 6px;
-  margin-top: 13px;
 }
 
 .slides {
@@ -392,12 +387,14 @@ header .logo {
 
 .ProductsL {
   margin-top: 40px; /* Adjust the top margin as needed */
+  background-color: #afacac;
 }
 
 .product-container {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+  margin-bottom: 4rem;
 }
 
 .product-container2 {
@@ -693,7 +690,7 @@ section.ProductsL {
   margin-top: 50px;
   pointer-events: auto;
   z-index: 10;
-  margin: 50px 0 100px;
+  margin: 30px 0 100px;
 }
 
 .view-more-btn {
@@ -929,14 +926,6 @@ section.ProductsL {
 .spacer {
   height: 50px; /* Adjust the height as needed */
 }
-/* Style for the top navigation */
-.top-nav {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10px 20px;
-  background-color: #0b0b45;
-}
 
 .cart-modal {
   display: none;
@@ -1042,12 +1031,23 @@ section.ProductsL {
   display: flex; /* Enables flexbox for alignment */
   flex-direction: column; /* Stack items vertically */
   align-items: center; /* Center items in the modal */
+  height: fit-content;
 }
 
 /* Button styles */
 #useragreementModal .modal-buttons .action-button {
-  margin-top: 20px;
-  padding: 8px 15px;
+  margin-top: 10px; /* Reduce margin-top for tighter spacing */
+  padding: 6px 12px; /* Reduce button padding */
+  cursor: pointer;
+  border: none;
+  border-radius: 5px;
+  color: #fff;
+  margin: 5px;
+}
+
+#useragreementModal .modal-buttons {
+  margin-top: 10px; /* Reduce margin-top for tighter spacing */
+  padding: 6px 12px; /* Reduce button padding */
   cursor: pointer;
   border: none;
   border-radius: 5px;
@@ -1122,142 +1122,129 @@ body .terms-conditions {
    font-family: Arial, sans-serif;
 }
 
-body {
-   display: flex;
-   justify-content: center;
-   align-items: center;
-   min-height: 100vh;
-   background-color: #f8f8f8;
-}
 
 .product-card {
-   width: 320px;
-   background-color: #fff;
-   border-radius: 12px;
-   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-   overflow: hidden;
-   cursor: pointer;
-   transition: transform 0.3s;
+  width: 320px;
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.3s;
 }
 
 .product-card:hover {
-   transform: translateY(-10px);
+  transform: translateY(-10px);
 }
 
 .product-image img {
-   width: 100%;
-   height: auto;
+  width: 100%;
+  height: auto;
 }
 
 .product-info {
-   padding: 20px;
-   text-align: center;
+  padding: 20px;
+  text-align: center;
 }
 
-.product-title, .modal-title {
-   font-size: 1.5em;
-   color: #333;
+.product-title,
+.modal-title {
+  font-size: 1.5em;
+  color: #333;
 }
 
-.product-description, .modal-description {
-   font-size: 0.9em;
-   color: #777;
-   margin-bottom: 15px;
+.product-description,
+.modal-description {
+  font-size: 0.9em;
+  color: #777;
+  margin-bottom: 15px;
 }
 
-.product-price, .modal-price {
-   font-size: 1.2em;
-   font-weight: bold;
-   color: #444;
-   margin-bottom: 20px;
+.product-price,
+.modal-price {
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #444;
+  margin-bottom: 20px;
 }
 
 /* Modal styles */
 .modal {
-   display: none;
-   position: fixed;
-   z-index: 10;
-   left: 0;
-   top: 0;
-   width: 100%;
-   height: 100%;
-   background-color: rgba(0, 0, 0, 0.5);
-   justify-content: center;
-   align-items: center;
+  display: none;
+  position: fixed;
+  z-index: 10;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  justify-content: center;
+  align-items: center;
 }
 
 .modal-content {
-   background-color: #fff;
-   height: 410px;
-   width: 800px; /* Adjusted width */
-   max-width: 800px; /* Smaller max width */
-   display: flex;
-   border-radius: 12px;
-   position: relative;
+  background-color: #fff;
+  height: 410px;
+  width: 800px; /* Adjusted width */
+  max-width: 800px; /* Smaller max width */
+  display: flex;
+  border-radius: 12px;
+  position: relative;
 }
 
-
 .modal-body {
-   display: flex;
+  display: flex;
 }
 
 .modal-image img {
-   width: 710px;
-   height: 380px;
-   max-width: 100%; /* Ensures it adapts if the screen is smaller */
-   max-height: 100%; /* Prevents overflow */
-   margin-top: 15px;
-   border-radius: 12px 0 0 12px;
-   margin-left: 10px;
+  width: 710px;
+  height: 380px;
+  max-width: 100%; /* Ensures it adapts if the screen is smaller */
+  max-height: 100%; /* Prevents overflow */
+  margin-top: 15px;
+  border-radius: 12px 0 0 12px;
+  margin-left: 10px;
 }
 .modal-info {
-   padding: 20px;
-   display: flex;
-   flex-direction: column;
-   justify-content: center;
-   width: 100%;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
 }
 
 .close-btn {
-   position: absolute;
-   top: 10px;
-   right: 20px;
-   font-size: 1.5em;
-   color: #333;
-   cursor: pointer;
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  font-size: 1.5em;
+  color: #333;
+  cursor: pointer;
 }
 
 .modal-buttons {
-   display: flex;
-   gap: 5px; /* Adjusts space between buttons */
-   margin-top: 220px;
-   justify-content: right;
+  display: flex;
+  gap: 5px; /* Adjusts space between buttons */
+  margin-top: 220px;
+  justify-content: right;
 }
 
-.add-to-cart-btn, .checkout-btn {
-   padding: 12px 20px;
-   border-radius: 8px;
-   font-size: 1em;
-   cursor: pointer;
-   border: none;
-   transition: background-color 0.3s;
-   /* Removed margin-top and margin-left to eliminate extra space */
-}
-
-.add-to-cart-btn {
-   background-color: #007bff;
-   color: #fff;
-}
-
-.add-to-cart-btn:hover {
-   background-color: #0056b3;
+.add-to-cart-btn,
+.checkout-btn {
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-size: 1em;
+  cursor: pointer;
+  border: none;
+  transition: background-color 0.3s;
+  /* Removed margin-top and margin-left to eliminate extra space */
 }
 
 .checkout-btn {
-   background-color: #28a745;
-   color: #fff;
+  background-color: #28a745;
+  color: #fff;
 }
 
 .checkout-btn:hover {
-   background-color: #218838;
+  background-color: #218838;
 }

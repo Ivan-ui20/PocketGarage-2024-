@@ -6,8 +6,6 @@
 
 body {
     display: flex;
-    justify-content: center;
-    align-items: center;
     min-height: 100vh;
     background-color: #f3f4f6;
     font-family: Arial, sans-serif;
@@ -54,15 +52,16 @@ body {
     width: 100%;
     padding: 8px;
     margin-top: 6px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
+    border: none;
+    border-bottom: 2px solid #ddd;
+    border-radius: 0;
     font-size: 16px;
     outline: none;
     transition: border-color 0.3s ease;
 }
 
 .profile-form input:focus {
-    border-color: #4CAF50;
+    border-bottom-color: #4CAF50;
 }
 
 .save-button-container {
@@ -145,5 +144,5 @@ body {
     align-items: center;
     justify-content: center;
     overflow: visible;
-    margin-right: 45px;
+    margin-right: 43px;
 }
