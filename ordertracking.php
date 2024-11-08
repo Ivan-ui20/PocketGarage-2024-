@@ -26,49 +26,115 @@
 
     <div class="order-tracking-container">
         <h1>Order Tracking</h1>
-        
-         <!-- Order Info Section -->
-    <div class="order-info">
-        <p>Order ID: #123456</p>
-        <p>Order Status:</p>
-        <!-- Order Status Timeline -->  
-        <div class="order-timeline">
-          
-            <!-- Add dynamic classes to show the current status -->
-            <div class="order-step active" id="step-1">
-                <div class="icon">✔️</div>
-                <p>Order Placed</p>
-            </div>
-            <div class="order-step current" id="step-2"> <!-- Current status -->
-                <div class="icon">🚚</div>
-                <p>Shipped</p>
-            </div>
-            <div class="order-step" id="step-3">
-                <div class="icon">📦</div>
-                <p>Out for Delivery</p>
-            </div>
-            <div class="order-step" id="step-4">
-                <div class="icon">🏠</div>
-                <p>Delivered</p>
-            </div>
-            <div class="order-step" id="step-5">
-                <div class="icon">📬</div>
-                <p>Received</p>
-            </div>
-        </div>
-
-        <!-- Conditionally display the "Order Received" button if the order is delivered -->
+        <?php
+            function getStepIcon($step) {
+                $icons = [
+                    "Order Placed" => "✔️",
+                    "Shipped" => "🚚",
+                    "Out for Delivery" => "📦",
+                    "Delivered" => "🏠",
+                    "Received" => "📬"
+                ];
+                return $icons[$step] ?? "❓";
+            }
+        ?>
         <?php 
-        $order_status = "delivered";  // Example: This value would come from your database or session
+            $getOrder = $conn->prepare("SELECT 
+                order_info.order_id,
+                order_info.shipping_addr,
+                order_info.order_ref_no,
+                order_info.order_total,
+                order_info.order_payment_option,
+                order_info.order_status,
+                order_info.created_at,
+                
+                GROUP_CONCAT(
+                    CONCAT(
+                        '{current_track: ', order_tracker.current_track, ', tracker_date: ', order_tracker.created_at, '}'
+                    ) SEPARATOR ', '
+                ) AS order_tracker_info,
+                
+                GROUP_CONCAT(
+                    CONCAT(
+                        '{model_name: ', diecast_model.model_name,
+                        ', brand_name: ', diecast_brand.brand_name,
+                        ', ratio: ', diecast_size.ratio,
+                        ', model_description: ', diecast_model.model_description,
+                        ', model_price: ', diecast_model.model_price,
+                        ', model_stock: ', diecast_model.model_stock,
+                        ', model_availability: ', diecast_model.model_availability,
+                        ', model_tags: ', diecast_model.model_tags,
+                        ', model_type: ', diecast_model.model_type,
+                        ', model_image_url: ', diecast_model.model_image_url,
+                        ', seller_name: ', CONCAT(seller.first_name, ' ', seller.last_name),
+                        ', contact_number: ', seller.contact_number, '}'
+                    ) SEPARATOR ', '
+                ) AS diecast_model_info
 
-        if ($order_status === "delivered"): ?>
-            <button onclick="orderReceived()">Order Received</button>
-        <?php endif; ?>
-        
+            FROM order_info 
+            LEFT JOIN order_items ON order_items.order_id = order_info.order_id
+            LEFT JOIN order_tracker ON order_tracker.order_id = order_info.order_id
+            LEFT JOIN diecast_model ON diecast_model.model_id = order_items.model_id
+            LEFT JOIN diecast_size ON diecast_size.size_id = diecast_model.size_id
+            LEFT JOIN diecast_brand ON diecast_brand.brand_id = diecast_model.brand_id
+            LEFT JOIN seller ON seller.seller_id = diecast_model.seller_id
+            WHERE order_info.customer_id = ?
+            GROUP BY order_info.order_id
+            ORDER BY order_info.created_at DESC;");
+            $getOrder->bind_param("s", $_SESSION['user_id']);
+            $getOrder->execute();
+            $result = $getOrder->get_result();
+            
+            if ($result->num_rows > 0) {
+                while ($row = $result->fetch_assoc()) {
+                    $orderId = htmlspecialchars($row['order_ref_no']);
+                    $orderStatus = htmlspecialchars($row['order_status']);
+                    $createdAt = new DateTime($row['created_at']);
+                    $formattedDate = $createdAt->format('F j, Y, H:i');
+            
+                    // Parse order tracking info JSON
+                    $orderTrackerInfo = json_decode("[" . $row['order_tracker_info'] . "]", true);
+                    
+                    // Parse diecast model info JSON
+                    $diecastModelInfo = json_decode("[" . $row['diecast_model_info'] . "]", true);
+                    ?>
+            
+                    <!-- Display order information -->
+                    <div class="order-info">
+                        <p>Order ID: <?php echo $orderId; ?></p>
+                        <p>Order Status: <?php echo ucfirst($orderStatus); ?></p>
+                        <p>Order Date: <?php echo $formattedDate; ?></p>
+            
+                        <!-- Order Status Timeline -->
+                        <div class="order-timeline">
+                            <?php
+                            // Define possible steps for timeline
+                            $steps = ["Order Placed", "Shipped", "Out for Delivery", "Delivered", "Received"];
+                            foreach ($steps as $index => $step) {
+                                // Determine if this step is completed or current
+                                $isActive = ($index <= array_search($orderStatus, array_map('strtolower', $steps)));
+                                $isCurrent = (strtolower($step) == strtolower($orderStatus));
+                                $stepClass = $isCurrent ? "current" : ($isActive ? "active" : "");
+            
+                                echo "<div class='order-step {$stepClass}' id='step-" . ($index + 1) . "'>";
+                                echo "<div class='icon'>" . getStepIcon($step) . "</div>";
+                                echo "<p>{$step}</p>";
+                                echo "</div>";
+                            }
+                            ?>
+                        </div>
+            
+                        <!-- Conditionally display the "Order Received" button -->
+                        <?php if (strtolower($orderStatus) === "delivered"): ?>
+                            <button onclick="orderReceived()">Order Received</button>
+                        <?php endif; ?>
+                    </div>
+                    <?php
+                }
+            }
+        ?>                
     </div>
       
-
-
     <!-- Cart Modal -->
     <?php include './shared/cartModal.php';?>
     <!-- Checkout Modal -->
@@ -82,6 +148,19 @@
 
    
 </body>
+<script>
+    function getStepIcon($step) {
+        $icons = [
+            "Order Placed" => "✔️",
+            "Shipped" => "🚚",
+            "Out for Delivery" => "📦",
+            "Delivered" => "🏠",
+            "Received" => "📬"
+        ];
+        return $icons[$step] ?? "❓";
+    }
+    
+</script>
 </html>
 
 <style>
