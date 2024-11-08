@@ -114,7 +114,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                         
                 latestProducts.forEach(product => {      
-                    console.log(product);
+                    
                     
                     const productBox = document.createElement('div');
                     productBox.classList.add('product-box');
