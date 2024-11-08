@@ -1047,7 +1047,8 @@ if ($sizeResult) {
             <input type="file" id="product-bid-image" name="product-bid-image" />
           </div>
 
-          <div class="form-group">
+          <div class="form-group-row">
+           <div class="form-group">
               <label for="starting-bid">Starting Bid (₱)</label>
               <input
                 type="number"
@@ -1058,6 +1059,18 @@ if ($sizeResult) {
               />
             </div>
 
+
+            <div class="form-group">
+              <label for="appraisal-value">Appraisal Value (₱)</label>
+              <input
+                type="number"
+                id="appraisal-value"
+                name="appraisal-value"
+                placeholder="Enter Appraisal Value - Meet the market price"
+                required
+              />
+            </div>
+          </div>
             <div class="form-group-row">
               <div class="form-group">
                 <label for="auction-start-date">Start Date</label>
