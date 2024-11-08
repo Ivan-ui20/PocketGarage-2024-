@@ -9,9 +9,9 @@ $dbname = $env["DBNAME"];
 
 
 $servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "pocketgarage";
+$username = "u219536372_PocketGarageDB";
+$password = "PocketGarageDB1";
+$dbname = "u219536372_PocketGarageDB";
 
 //Create New Database Connection
 $conn = new mysqli($servername, $username, $password, $dbname);
