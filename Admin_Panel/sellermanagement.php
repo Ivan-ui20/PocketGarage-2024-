@@ -1,3 +1,13 @@
+
+<?php
+    require_once '../backend/database/db.php';
+    session_start();
+
+    // if($_SESSION['admin_id']) {
+    //     header("index.php");
+    // }
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -111,21 +121,44 @@
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>001</td>
-                <td>John Doe</td>
-                <td>johndoe@example.com</td>
-                <td>12345678902</td>
-                <td>2024-01-15</td>
-                <td>Pending</td>
-                <td class="action-buttons">
-                    <a href="#" class="btn btn-approve">Approve</a>
-                    <a href="#" class="btn btn-reject">Reject</a>
-                    <a href="#" class="btn btn-details" onclick="openModal('001')">View Details</a>
-                </td>
-            </tr>
-            <!-- Additional rows as needed -->
-        </tbody>
+        <?php
+            $stmt = $conn->prepare("SELECT * FROM seller");
+            $stmt->execute();
+            $result = $stmt->get_result();
+
+            if ($result->num_rows > 0) {
+                while ($row = $result->fetch_assoc()) {
+                    $sellerId = htmlspecialchars($row['seller_id']);
+                    $fullname = htmlspecialchars($row['first_name']) . " " . htmlspecialchars($row['last_name']);
+                    $email = htmlspecialchars($row['email_address']);
+                    $contactNumber = htmlspecialchars($row['contact_number']);
+                    $registrationDate = htmlspecialchars($row['created_at']);
+                    $dateTime = new DateTime($registrationDate);
+                    $formattedDate = htmlspecialchars($dateTime->format('F j Y, H:i'));
+                    $status = htmlspecialchars($row['status']);
+                    
+                    // Set data-status attribute for filtering
+                    echo "<tr data-status='{$status}'>";
+                    echo "<td>{$sellerId}</td>";
+                    echo "<td>{$fullname}</td>";
+                    echo "<td>{$email}</td>";
+                    echo "<td>{$contactNumber}</td>";                        
+                    echo "<td>{$formattedDate}</td>";
+                    echo "<td>{$status}</td>";
+                    echo '<td class="action-buttons">';
+                    echo "<a href=\"#\" class=\"btn btn-approve\" onclick=\"updateSellerStatus({$sellerId}, 'Verified')\">Activate</a>";
+                    echo "<a href=\"#\" class=\"btn btn-reject\" onclick=\"updateSellerStatus({$sellerId}, 'Not Verified')\">Deactivate</a>";
+                    echo "</td>";
+                    echo "</tr>";
+                }
+            } else {
+                echo "<tr><td colspan='8'>No sellers found.</td></tr>";
+            }
+
+            $stmt->close();
+        ?>      
+    </tbody>
+
     </table>
 
     <!-- Account Management Options -->
@@ -177,6 +210,20 @@
 
 
 <script>
+    document.getElementById("status-filter").addEventListener("change", function() {
+        const selectedStatus = this.value;
+        const rows = document.querySelectorAll("tbody tr");
+
+        rows.forEach(row => {
+            const rowStatus = row.getAttribute("data-status").toLowerCase();
+            
+            if (selectedStatus === "all" || rowStatus === selectedStatus) {
+                row.style.display = "";
+            } else {
+                row.style.display = "none";
+            }
+        });
+    });
     // Open modal and display details
     function openModal(userId) {
         // Here you could add logic to fetch and display user data dynamically
@@ -194,6 +241,25 @@
         if (event.target == modal) {
             modal.style.display = 'none';
         }
+    }
+
+    async function updateSellerStatus(id, status) {           
+        const data = new URLSearchParams({
+            seller_id: id,
+            status: status
+        }); 
+
+        const response = await fetch('/backend/src/admin/route.php?route=admin/seller/status', {
+            method: 'POST', 
+            body: data 
+        });          
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }          
+        const responseData = await response.json();
+                                            
+        alert(responseData.message)
+        window.location.reload();
     }
 </script>
 

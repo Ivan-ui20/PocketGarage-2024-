@@ -4,7 +4,7 @@
 
     if($_SESSION['user_id']) {
         header("index.php");
-    }
+    }    
 ?>
 
 <!DOCTYPE html>
@@ -39,38 +39,34 @@
       <div class="chat-container">
         <!-- Left Chat List -->
         <div class="chat-list" id="chat-list">
-        <h2>Chat List</h2>
-          <div class="chat-list-item" onclick="openChat(1)">
-            John Doe - <small>Last message: Hi, I have a question...</small>
-          </div>
-
+        
         </div>
 
        <!-- Right Chat Box -->
-       <div class="chat-box" id="chat-box">
+        <div class="chat-box" id="chat-box">
           <div class="messages" id="messages">
             <!-- Messages will load here -->
           </div>
 
+          <form id="message-form">
             <div class="message-input">
+              <input type="hidden" id="room-id" value="">
+              <input type="hidden" id="customer-id" value="<?php echo $_SESSION["user_id"]?>">
+              <input type="hidden" id="user-type" value="<?php echo $_SESSION["user_type"]?>">
+
               <input type="text" id="message-input" placeholder="Type your message here..." />
-              
-              <!-- Hidden file input -->
+                                
               <input type="file" id="image-input" accept="image/*" style="display: none;" />
-              
-              <!-- Icon to trigger file selection -->
+                                
               <span class="material-symbols-outlined" id="file-icon" onclick="document.getElementById('image-input').click();">
-                attach_file
+                  attach_file
               </span>
 
-                <button onclick="sendMessage()">Send</button>
-            </div>  
+              <button type="button" onclick="sendMessage()">Send</button>
             </div>
-                 
-         </div>
-      
-
-       
+          </form> 
+        </div>                 
+      </div>           
     </div>
 
    <!-- need to fix chat routes-->
@@ -84,13 +80,148 @@
     <div class="footer">
         <?php include './shared/footer.php';?>
     </div>
-
-
-
-    
-
-    <script src="./scripts/getProduct.js"></script>
+        
     <script src="./scripts/java.js"></script>
+    <script>
+      const messagesData = {};
+      const customerId = document.getElementById("customer-id").value;
+      fetch(`/backend/src/chat/route.php?route=last/chat/get/customer&customer_id=${customerId}`, {
+        method: 'GET',                
+        headers: {
+            'Content-Type': 'application/json'
+        }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(chat => {            
+            const chatListDiv = document.getElementById("chat-list");            
+            chatListDiv.innerHTML = "";           
+     
+            console.log(chat.data);
+            
+            chat.data.forEach(chat => {                            
+                const chatItem = document.createElement("div");
+                chatItem.className = "chat-list-item";
+                chatItem.onclick = () => openChat(chat.room_id);                 
+                chatItem.innerHTML = `
+                    ${chat.seller_name} - <small>Last message: ${chat.message}</small>
+                `;
+
+                const chatItem1 = document.createElement("div");
+                chatItem1.className = "chat-list-item";
+                chatItem1.onclick = () => openChat(chat.room_id);                 
+                chatItem1.innerHTML = `
+                    ${chat.seller_name} - <small>Last message: ${chat.message}</small>
+                `;
+                
+                chatListDiv.appendChild(chatItem);                                 
+            });                      
+        })
+        .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+        });
+
+        async function sendMessage() {
+          event.preventDefault()
+          
+          const roomId = document.getElementById("room-id").value
+          const senderId = document.getElementById("seller-id").value
+          const userType = document.getElementById("user-type").value
+          const message = document.getElementById('message-input').value;
+                  
+          const file = document.getElementById('image-input').files[0];        
+          
+          const data = new URLSearchParams({          
+            room_id: roomId,
+            sender_id: senderId,
+            user_type: userType,
+            message: message,
+            attachment: file ? file : null,
+          });
+
+          const formData = new FormData();
+                          
+          formData.append('room_id', roomId);
+          formData.append('sender_id', senderId);
+          formData.append('user_type', userType);
+          formData.append('message', message);
+          formData.append('attachment', file);
+        
+          fetch('/backend/src/chat/route.php?route=chat/send', {
+            method: 'POST',
+            body: formData,          
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log(data);              
+                alert("message sent")
+                document.getElementById('message-form').reset();
+            })
+            .catch(error => {
+                console.error('There was a problem with the fetch operation:', error);
+            });          
+        }
+        function openChat(chatId) {
+          const chatBox = document.getElementById('messages');
+          chatBox.innerHTML = ''; // Clear previous messages      
+          
+          fetch(`/backend/src/chat/route.php?route=chat/get&room_id=${chatId}&limit=10&offset=0`, {
+            method: 'GET',                
+            headers: {
+                'Content-Type': 'application/json'
+            }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(chat => {
+              
+              chat.data.forEach(chat => {    
+                          
+                if (!messagesData[chatId]) {
+                    messagesData[chatId] = [];
+                }                                
+                const messageExists = messagesData[chatId].some(message => message.id === chat.message_id);
+                if (!messageExists) {
+                  messagesData[chatId].push({ id: chat.message_id, type: chat.sender_type, sender: chat.name, text: chat.message });
+                }
+              })
+              const chatMessages = messagesData[chatId];      
+                
+              
+              const roomId = document.getElementById("room-id");
+              roomId.value = chatId;
+
+              chatMessages.forEach((message) => {
+                const messageElement = document.createElement('div');
+                                            
+                messageElement.classList.add('message');
+                
+                if (message.type === "seller") {
+                  messageElement.innerHTML = ` <div class="message sent"> <strong>${message.sender}:</strong> ${message.text} </div>`;               
+                } else {                               
+                  messageElement.innerHTML = ` <div class="message received"> <strong>${message.sender}:</strong> ${message.text} </div>`;
+                }            
+                chatBox.appendChild(messageElement);
+              });
+            })
+            .catch(error => {
+                console.error('There was a problem with the fetch operation:', error);
+            });                  
+        }
+    </script>
 </body>
 </html>
 
@@ -207,240 +338,3 @@
 }
 
 </style>
-
-
-
-
-      const messagesData = {};
-      const sellerId = document.getElementById("seller-id").value;
-      fetch(`/backend/src/chat/route.php?route=last/chat/get&seller_id=${sellerId}`, {
-        method: 'GET',                
-        headers: {
-            'Content-Type': 'application/json'
-        }
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(chat => {            
-            const chatListDiv = document.getElementById("chat-list");
-            const chatListDiv1 = document.getElementById("chat-list1");
-            chatListDiv.innerHTML = ""; 
-            chatListDiv1.innerHTML = ""; 
-
-            const title = document.createElement("h2");
-            title.innerHTML = `Chat List`
-            chatListDiv1.appendChild(title); 
-            
-                        
-            chat.data.forEach(chat => {                            
-                const chatItem = document.createElement("div");
-                chatItem.className = "chat-list-item";
-                chatItem.onclick = () => openChat(chat.room_id);                 
-                chatItem.innerHTML = `
-                    ${chat.seller_name} - <small>Last message: ${chat.message}</small>
-                `;
-
-                const chatItem1 = document.createElement("div");
-                chatItem1.className = "chat-list-item";
-                chatItem1.onclick = () => openChat(chat.room_id);                 
-                chatItem1.innerHTML = `
-                    ${chat.seller_name} - <small>Last message: ${chat.message}</small>
-                `;
-                
-                chatListDiv.appendChild(chatItem);                 
-                chatListDiv1.appendChild(chatItem1);                
-            });
-                        
-        })
-        .catch(error => {
-            console.error('There was a problem with the fetch operation:', error);
-        });
-
-    </script>
-   
-    <script>
-
-      async function sendMessage() {
-        event.preventDefault()
-        
-        const roomId = document.getElementById("room-id").value
-        const senderId = document.getElementById("seller-id").value
-        const userType = document.getElementById("user-type").value
-        const message = document.getElementById('message-input').value;
-                
-        const file = document.getElementById('image-input').files[0];        
-        
-        const data = new URLSearchParams({          
-          room_id: roomId,
-          sender_id: senderId,
-          user_type: userType,
-          message: message,
-          attachment: file ? file : null,
-        });
-
-        const formData = new FormData();
-                        
-        formData.append('room_id', roomId);
-        formData.append('sender_id', senderId);
-        formData.append('user_type', userType);
-        formData.append('message', message);
-        formData.append('attachment', file);
-       
-        fetch('/backend/src/chat/route.php?route=chat/send', {
-          method: 'POST',
-          body: formData,          
-          })
-          .then(response => {
-              if (!response.ok) {
-                  throw new Error('Network response was not ok');
-              }
-              return response.json();
-          })
-          .then(data => {
-              console.log(data);              
-              alert("message sent")
-              document.getElementById('message-form').reset();
-          })
-          .catch(error => {
-              console.error('There was a problem with the fetch operation:', error);
-          });
-
-        
-
-      }
-
-      async function cancelBid(biddingId) {
-        
-        const data = new URLSearchParams({
-          bidding_id: biddingId
-        });
-        try {
-          const response = await fetch('/backend/src/seller/route.php?route=seller/cancel/bid', {
-              method: 'POST', 
-              body: data 
-          });          
-          if (!response.ok) {
-              throw new Error(`HTTP error! Status: ${response.status}`);
-          }          
-          const responseData = await response.json();
-                                              
-          alert('bid item cancelled')
-          window.location.reload();
-        } catch (error) {
-            console.error('Error during fetch:', error);
-        }
-      }
-
-      async function updateOrder(orderId, refNo, status) {
-                
-        const newStatus = document.getElementById(`order-status-${orderId}`).value
-        const trackingNumber = document.getElementById(`order-tracking-num-${orderId}`).value
-        if (status === newStatus || newStatus === "")  {         
-          return
-        }
-            
-        const data = new URLSearchParams({                
-          order_id: orderId,
-          order_ref_no: refNo,
-          order_status: newStatus,
-          order_trackingnum: trackingNumber
-        });
-        try {
-          const response = await fetch('/backend/src/seller/route.php?route=seller/update/status/order', {
-              method: 'POST', 
-              body: data 
-          });          
-          if (!response.ok) {
-              throw new Error(`HTTP error! Status: ${response.status}`);
-          }          
-          const responseData = await response.json();
-                                              
-          alert(responseData.message)
-          window.location.reload();
-        } catch (error) {
-            console.error('Error during fetch:', error);
-        }
-      }
-
-      async function deleteProduct(modelId, sellerid) {        
-          const data = new URLSearchParams({                
-            model_id: modelId,
-            seller_id: sellerId
-          });
-          try {
-            const response = await fetch('/backend/src/seller/route.php?route=seller/delete/product', {
-                method: 'POST', 
-                body: data 
-            });          
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }          
-            const responseData = await response.json();
-                                                
-            alert('product deleted')
-            window.location.reload();
-          } catch (error) {
-              console.error('Error during fetch:', error);
-          }
-        
-      }
-            
-      function openChat(chatId) {
-        const chatBox = document.getElementById('messages');
-        chatBox.innerHTML = ''; // Clear previous messages      
-        
-        fetch(`/backend/src/chat/route.php?route=chat/get&room_id=${chatId}&limit=10&offset=0`, {
-          method: 'GET',                
-          headers: {
-              'Content-Type': 'application/json'
-          }
-          })
-          .then(response => {
-              if (!response.ok) {
-                  throw new Error('Network response was not ok');
-              }
-              return response.json();
-          })
-          .then(chat => {
-            
-            chat.data.forEach(chat => {    
-                        
-              if (!messagesData[chatId]) {
-                  messagesData[chatId] = [];
-              }                                
-              const messageExists = messagesData[chatId].some(message => message.id === chat.message_id);
-              if (!messageExists) {
-                messagesData[chatId].push({ id: chat.message_id, type: chat.sender_type, sender: chat.name, text: chat.message });
-              }
-            })
-            const chatMessages = messagesData[chatId];      
-              
-            
-            const roomId = document.getElementById("room-id");
-            roomId.value = chatId;
-
-            chatMessages.forEach((message) => {
-              const messageElement = document.createElement('div');
-                                          
-              messageElement.classList.add('message');
-              
-              if (message.type === "seller") {
-                messageElement.innerHTML = ` <div class="message sent"> <strong>${message.sender}:</strong> ${message.text} </div>`;               
-              } else {                               
-                messageElement.innerHTML = ` <div class="message received"> <strong>${message.sender}:</strong> ${message.text} </div>`;
-              }            
-              chatBox.appendChild(messageElement);
-            });
-          })
-          .catch(error => {
-              console.error('There was a problem with the fetch operation:', error);
-          });                  
-      }
-
- 
-
-    </script>

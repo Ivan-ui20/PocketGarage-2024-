@@ -69,6 +69,17 @@
                     $response["message"], 
                     $response["data"]
                 );                         
+            } else if ($route === 'last/chat/get/customer' && $_GET["customer_id"] !== null) {
+                $payload = [
+                    "customer_id" => $_GET['customer_id'],                    
+                ];
+                $response = getLastMessage($conn, $payload);
+                                
+                jsonResponseWithData(
+                    $response["title"], 
+                    $response["message"], 
+                    $response["data"]
+                );                         
             } else {
                 jsonResponse("Invalid request", "Something went wrong!");
             }

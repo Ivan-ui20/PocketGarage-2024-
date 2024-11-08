@@ -166,8 +166,14 @@
 
     function getLastMessage($connect, $payload) {
         try {            
-            $roomQuery = $connect->prepare("SELECT room_id FROM chat_room WHERE seller_id = ?");
-            $roomQuery->bind_param("i", $payload["seller_id"]);
+
+            if (isset($payload["seller_id"])) {
+                $roomQuery = $connect->prepare("SELECT room_id FROM chat_room WHERE seller_id = ?");
+                $roomQuery->bind_param("i", $payload["seller_id"]);
+            } else {
+                $roomQuery = $connect->prepare("SELECT room_id FROM chat_room WHERE customer_id = ?");
+                $roomQuery->bind_param("i", $payload["customer_id"]);
+            }
             $roomQuery->execute();
             $roomResult = $roomQuery->get_result();
             

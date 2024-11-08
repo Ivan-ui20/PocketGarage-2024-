@@ -20,7 +20,6 @@
                 return array("title" => "Failed", "message" => "Incorrect Password. Please try again", "data" => []);
             }
             $_SESSION['user_id'] = $row['customer_id'];
-            $_SESSION["user_type"] = "customer";
             return array(
                 "title" => "Success", 
                 "message" => "Login Successful", 
