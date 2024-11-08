@@ -132,6 +132,7 @@ header .logo {
   border: none;
   background: transparent;
   cursor: pointer;
+  margin-bottom: 15px;
 }
 
 .search-container button i {
