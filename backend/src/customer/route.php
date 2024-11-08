@@ -171,6 +171,22 @@
                 }
             }
 
+            if ($route === 'customer/order/update') {
+                $requiredFields = ['status', 'order_id'];
+                                
+                if (!array_diff_key(array_flip($requiredFields), $_POST)) {
+                                
+                    $payload = $_POST;
+                        
+                    $response = setOrderReceived($conn, $payload);
+            
+                    jsonResponse($response["title"], $response["message"]);
+            
+                } else {
+                    jsonResponse("Invalid order", "All fields are required.");
+                }
+            }
+
 
         
         } catch (\Throwable $th) {            

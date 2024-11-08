@@ -11,9 +11,7 @@
                 <!-- <p class="modal-bid-description" id="modal-bid-description">
                     This is a detailed description of the product, including its features, specifications, and other relevant information.
                 </p> -->
-                
-                
-
+                                
                 <div class="modal-appraisal-value" >
                     <span>Appraisal Value: ₱</span> <!--appraisal value is integrated when a seller add productbid. To do, it can be collecting data similar sold product, marketprice, or use of Ebay price"
                 </p> -->
@@ -53,7 +51,7 @@
 
 <script>
     // Function to open the modal
-function openBidModal(bidID, modId, image, name, description, price) {
+function openBidModal(bidID, modId, image, name, description, price, appraValue) {
 
     document.getElementById("bidModal").style.display = "flex";
 
@@ -62,11 +60,13 @@ function openBidModal(bidID, modId, image, name, description, price) {
     const modalImage = document.getElementById("modal-bid-image");
     const modalTitle = document.getElementById("modal-bid-title");    
     const modalPrice = document.getElementById("modal-bid-price");
+    const ModalAppraVal = document.getElementById("modal-appraisal-value");
     
     modalImage.src = `http://localhost:3000/backend/${image}`;
     modalImage.alt = name;
     modalTitle.textContent = name;        
     modalPrice.textContent = price
+    ModalAppraVal.textContent = appraValue
     biddingId.value = bidID
     modelId.value = modId
 }

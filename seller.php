@@ -1427,7 +1427,7 @@ if ($sizeResult) {
       });
 
       document.getElementById('auction-form').addEventListener('submit', function(event) {
-        event.preventDefault(); // Prevent form submission for testing display
+        event.preventDefault(); 
 
         const sellerId = document.getElementById('seller-id').value
         const productName = document.getElementById('auction-product-name').value;
@@ -1437,6 +1437,7 @@ if ($sizeResult) {
         const productType = document.getElementById('model-type').value;
         const productPrice = document.getElementById('product-price').value;        
         const bidStartAmount = document.getElementById('starting-bid').value;
+        const appraisalValue = document.getElementById('appraisal-value').value;
         const bidStartDate = document.getElementById('auction-start-date').value;
         const bidEndDate = document.getElementById('auction-end-date').value;
         const fileInput = document.getElementById('product-bid-image').files[0];
@@ -1465,6 +1466,7 @@ if ($sizeResult) {
         formData.append('model_name', productName);
         formData.append('model_description', "Empty Description");
         formData.append('model_price', bidStartAmount);
+        formData.append('appraisal_value', appraisalValue);
         formData.append('model_stock', 1);
         formData.append('model_availability', 'Available');
         formData.append('model_tags', tags.length ? tags.join(', ') : '');

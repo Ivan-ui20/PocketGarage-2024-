@@ -114,8 +114,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                         
                 latestProducts.forEach(product => {      
+                    console.log(product);
                     
-                                                      
                     const productBox = document.createElement('div');
                     productBox.classList.add('product-box');
                     
@@ -126,7 +126,8 @@ document.addEventListener('DOMContentLoaded', () => {
                             product.model_image_url, 
                             product.model_name,
                             product.details,                            
-                            product.model_price
+                            product.model_price,
+                            product.appraisal_value
                         );
                     } else {
                         productBox.onclick = () => openProductModal(

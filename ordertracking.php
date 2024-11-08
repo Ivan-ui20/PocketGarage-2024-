@@ -87,6 +87,7 @@
             
             if ($result->num_rows > 0) {
                 while ($row = $result->fetch_assoc()) {
+                    $id = htmlspecialchars($row['order_id']);
                     $orderId = htmlspecialchars($row['order_ref_no']);
                     $orderStatus = htmlspecialchars($row['order_status']);
                     $createdAt = new DateTime($row['created_at']);
@@ -126,7 +127,7 @@
             
                         <!-- Conditionally display the "Order Received" button -->
                         <?php if (strtolower($orderStatus) === "delivered"): ?>
-                            <button onclick="orderReceived()">Order Received</button>
+                            <button onclick="orderReceived(<?php echo $id ?>)">Order Received</button>
                         <?php endif; ?>
                     </div>
                     <?php
@@ -149,16 +150,35 @@
    
 </body>
 <script>
-    function getStepIcon($step) {
-        $icons = [
-            "Order Placed" => "✔️",
-            "Shipped" => "🚚",
-            "Out for Delivery" => "📦",
-            "Delivered" => "🏠",
-            "Received" => "📬"
-        ];
-        return $icons[$step] ?? "❓";
+
+    function orderReceived(id) {
+        const data = new URLSearchParams({
+            order_id: id,
+            status: "Received"
+        });
+
+        fetch("/backend/src/customer/route.php?route=customer/order/update", {
+            method: "POST",
+            body: data.toString(),
+            headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            },
+        })
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error("Network response was not ok");
+            }
+            return response.json();
+        })
+        .then((data) => {
+            alert(data.message)
+            
+        })
+        .catch((error) => {
+            console.error("There was a problem with the fetch operation:", error);
+        });
     }
+
     
 </script>
 </html>

@@ -154,7 +154,7 @@
                 $requiredFields = ['seller_id', 'size_id', 'brand_id', 'model_name', 
                 'model_description', 'model_price', 'model_stock', 'model_availability', 
                 'model_tags', 'model_type', "model_packaging", "model_condition",
-                'details', 'start_amount', 'start_time', 'end_time'];
+                'details', 'start_amount', 'start_time', 'end_time', 'appraisal_value'];
       
 
                 if (!array_diff_key(array_flip($requiredFields), $_POST)) {

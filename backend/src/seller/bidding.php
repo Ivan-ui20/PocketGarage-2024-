@@ -51,13 +51,14 @@
     
             $model_id = $addBidItemProduct->insert_id; // corrected from insertId to insert_id
     
-            $postBidItem = $connect->prepare("INSERT INTO bid_room(seller_id, model_id, details, 
-                start_amount, start_time, end_time) VALUES (?, ?, ?, ?, ?, ?)");
+            $postBidItem = $connect->prepare("INSERT INTO bid_room(seller_id, model_id, details,
+                appraisal_value, start_amount, start_time, end_time) VALUES (?, ?, ?, ?, ?, ?, ?)");
             
-            $postBidItem->bind_param("ssssss",  // Adjust data types if needed
+            $postBidItem->bind_param("sssssss",  // Adjust data types if needed
                 $payload["seller_id"],
                 $model_id,
                 $payload["details"],
+                $payload["appraisal_value"],
                 $payload["start_amount"],
                 $payload["start_time"],
                 $payload["end_time"]

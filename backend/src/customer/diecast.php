@@ -16,7 +16,8 @@
                 bid_room.end_time,
                 bid_room.end_amount,
                 bid_room.start_amount,
-                bid_room.bid_status           
+                bid_room.bid_status,
+                bid_room.appraisal_value           
                 FROM diecast_model      
                 LEFT JOIN diecast_brand ON diecast_brand.brand_id = diecast_model.brand_id
                 LEFT JOIN diecast_size ON diecast_size.size_id = diecast_model.size_id

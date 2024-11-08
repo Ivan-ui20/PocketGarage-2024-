@@ -110,6 +110,37 @@
         }
     }
 
+    function setOrderReceived($connect, $payload) {
+        
+        try {
+            
+            $stmt = $connect->prepare("UPDATE order_info SET order_status = ? 
+            WHERE order_id = ?");
+            $stmt->bind_param("ss", $payload["status"], $payload["order_id"]);
+            $stmt->execute();
+
+            if ($stmt->affected_rows < 0) {
+                throw new Exception("We cannot update your order.");
+            }
+
+            return array(
+                "title" => "Success", 
+                "message" => "Order set to received.", 
+                "data" => []
+            );
+    
+        } catch (\Throwable $th) {
+        
+            $connect->rollback();
+    
+            return array(
+                "title" => "Failed", 
+                "message" => "Something went wrong! " . $th->getMessage() ." Please try again later",
+                "data" => []
+            );
+        }
+    }
+
     function getOrders($connect, $customerId) {
         try {
 
