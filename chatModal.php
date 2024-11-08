@@ -100,9 +100,7 @@
         .then(chat => {            
             const chatListDiv = document.getElementById("chat-list");            
             chatListDiv.innerHTML = "";           
-     
-            console.log(chat.data);
-            
+        
             chat.data.forEach(chat => {                            
                 const chatItem = document.createElement("div");
                 chatItem.className = "chat-list-item";
@@ -129,7 +127,7 @@
           event.preventDefault()
           
           const roomId = document.getElementById("room-id").value
-          const senderId = document.getElementById("seller-id").value
+          const senderId = document.getElementById("customer-id").value
           const userType = document.getElementById("user-type").value
           const message = document.getElementById('message-input').value;
                   
@@ -164,7 +162,8 @@
             .then(data => {
                 console.log(data);              
                 alert("message sent")
-                document.getElementById('message-form').reset();
+                document.getElementById('message-form').reset();                
+                openChat(roomId)
             })
             .catch(error => {
                 console.error('There was a problem with the fetch operation:', error);
@@ -216,11 +215,14 @@
                 }            
                 chatBox.appendChild(messageElement);
               });
+              // window.location.reload()
+              // openChat(chatId)
             })
             .catch(error => {
                 console.error('There was a problem with the fetch operation:', error);
             });                  
         }
+        // setInterval(openChat, 3000); 
     </script>
 </body>
 </html>

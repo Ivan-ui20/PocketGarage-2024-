@@ -1587,6 +1587,7 @@ if ($sizeResult) {
               console.log(data);              
               alert("message sent")
               document.getElementById('message-form').reset();
+              openChat(roomId)
           })
           .catch(error => {
               console.error('There was a problem with the fetch operation:', error);
@@ -1723,6 +1724,7 @@ if ($sizeResult) {
               console.error('There was a problem with the fetch operation:', error);
           });                  
       }
+      // setInterval(openChat, 3000); 
 
  
 

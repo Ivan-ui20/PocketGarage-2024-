@@ -18,27 +18,18 @@ document.addEventListener("DOMContentLoaded", () => {
 document.addEventListener("DOMContentLoaded", function () {
   const loginBtn = document.getElementById("login-btn");
   const rememberMeCheckbox = document.getElementById("remember-me");
-  const phoneField = document.getElementById("phone-number"); // Phone number field
+  const username = document.getElementById("username"); // Phone number field
   const passwordField = document.getElementById("password"); // Password field
 
   // Login action (to avoid code duplication)
   function handleLogin() {
-    const phoneError = document.getElementById("phone-error");
+    const usernameError = document.getElementById("username-error");
     const passwordError = document.getElementById("password-error");
     let loginValid = true;
 
     // Clear previous error messages
-    phoneError.textContent = "";
+    usernameError.textContent = "";
     passwordError.textContent = "";
-
-    // Validate phone number field (exactly 11 digits)
-    if (!phoneField.value || phoneField.value.length !== 11) {
-      phoneField.style.borderColor = "red";
-      phoneError.textContent = "Please enter a valid 11-digit phone number.";
-      loginValid = false;
-    } else {
-      phoneField.style.borderColor = "";
-    }
 
     // Validate password field (ensure it's filled)
     if (!passwordField.value) {
@@ -51,23 +42,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (loginValid) {
       const data = new URLSearchParams({
-        contact_number: phoneField.value,
+        username: username.value,
         password: passwordField.value,
       });
 
-      const currentPath = window.location.pathname;
-
-      let url;
-      let type;
-      if (currentPath.includes("SellerLogin.php")) {
-        url = "/backend/src/seller/route.php?route=seller/login";
-        type = "seller";
-      } else if (currentPath.includes("Login.php")) {
-        url = "/backend/src/customer/route.php?route=customer/login";
-        type = "buyer";
-      }
-
-      fetch(url, {
+      fetch("/backend/src/admin/route.php?route=admin/login", {
         method: "POST",
         body: data.toString(),
         headers: {
@@ -91,18 +70,9 @@ document.addEventListener("DOMContentLoaded", function () {
               localStorage.removeItem("phone-number");
               localStorage.removeItem("password");
             }
-
-            if (type === "seller") {
-              sessionStorage.setItem("sellerId", data.data.seller_id);
-              alert("login success");
-              // Redirect to index.html
-              window.location.href = "seller.php";
-            } else {
-              sessionStorage.setItem("userId", data.data.user_id);
-              alert("login success");
-              // Redirect to index.html
-              window.location.href = "index.php";
-            }
+            alert(data.message);
+            window.location.href = "Admin.php";
+            
           }
         })
         .catch((error) => {

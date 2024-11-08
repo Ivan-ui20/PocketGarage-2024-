@@ -16,11 +16,11 @@
             $route = $_GET['route'] ?? null;
             if ($route === 'admin/login') {
 
-                if (isset($_POST['contact_number']) && isset($_POST['password'])) {
-                    $contactnumber = $_POST['contact_number'];
+                if (isset($_POST['username']) && isset($_POST['password'])) {
+                    $username = $_POST['username'];
                     $password = $_POST['password'];
 
-                    $response = login($conn, $contactnumber, $password);
+                    $response = login($conn, $username, $password);
 
                     jsonResponseWithData($response["title"], $response["message"], $response["data"]);
 

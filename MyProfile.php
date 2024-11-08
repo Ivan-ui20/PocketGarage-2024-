@@ -129,8 +129,8 @@
             .then(data => {
                 console.log(data);              
                 alert("profile edited")
-                document.getElementsByClassName('profile-form').reset();
                 imageChanged = false;
+                window.location.reload()
             })
             .catch(error => {
                 console.error('There was a problem with the fetch operation:', error);
