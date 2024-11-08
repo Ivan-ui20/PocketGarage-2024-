@@ -7,7 +7,7 @@
             <p>Last Edit: 11/1/2024</p>
             <p>Welcome to Pocket Garage. By using our website, you agree to comply with and be bound by the following privacy notices:</p>
 
-            <p>This Privacy Notice for __________ ("we," "us," or "our"), describes how and why we might access, collect, store, use, and/or share ("process") your personal information when you use our services ("Services"), including when you:</p>
+            <p>This Privacy Notice for Pocket Garage("we," "us," or "our"), describes how and why we might access, collect, store, use, and/or share ("process") your personal information when you use our services ("Services"), including when you:</p>
             <p>Questions or concerns? Reading this Privacy Notice will help you understand your privacy rights and choices. We are responsible for making decisions about how your personal information is processed. If you do not agree with our policies and practices, please do not use our Services.</p>
 
 

@@ -2,8 +2,8 @@
         <div class="checkout-modal">
             <!-- Left side: Checkout form -->
             <div class="checkout-form-section">
-                <h2>Checkout</h2>
-                <span class="close" onclick="closeCheckoutModal()">&times;</span>                                
+                <h2>    <span class="close" onclick="closeCheckoutModal()">&times;</span> Checkout</h2>
+                                
                 <form class="checkout-form" id="checkout-form">
                     <label for="fullname">Shipping Address</label>
                     <input type="text" id="shipping-addr" name="shipping-addr" placeholder="Enter your shipping address" required>
