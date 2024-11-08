@@ -57,10 +57,9 @@
                     </ul>
 
                 </li>
-                <?php if (isset($_SESSION['user_id'])): ?>
-                    <li><a href="#">Order</a></li>
-                <?php endif; ?>
 
+                   <!-- Placed the order in dropdown -->
+               
             </ul>
         </div>
 
@@ -80,6 +79,40 @@
                         <span id="cart-count">0</span>
                     </a>
                 </div>
+
+                <div class="nav-icon-n">
+                    <a href="#" id="notification-icon">
+                        <i class='bx bx-bell'></i>
+                        <span id="notification-count">3</span> <!-- Change 3 to dynamic notification count -->
+                    </a>
+                 
+                <!-- Notification Dropdown Form -->
+                <div class="notification-dropdown" id="notification-dropdown" style="display: none;">
+                    <form action="process_notifications.php" method="post">
+                        <?php
+                        // Example array of notifications (replace with database query)
+                        $notifications = [
+                            "You have a new message",
+                            "Your order has been shipped",
+                            "New comment on your post"
+                        ];
+
+                        foreach ($notifications as $index => $notification) {
+                            echo "<div class='notification-item'>
+                                    <label>
+                                        <input type='checkbox' name='notification[]' value='$index'>
+                                        $notification
+                                    </label>
+                                </div>";
+                        }
+                        ?>
+                        <button type="submit" name="mark_read" class="mark-read-btn">Mark as Read</button>
+                    </form>
+                </div>
+                </div>
+
+           
+
                 
               <!-- Profile Icon with Dropdown Menu -->
                 <div class="nav-icon-p">
@@ -90,12 +123,14 @@
                         </div>
                     </div>
                     </a>
-                    
+                     <!-- Placed the order in dropdown -->
                     <!-- Dropdown Menu -->
                     <div class="profile-dropdown" id="profile-dropdown">
                         <a href="MyProfile.php">My Profile</a>
+                        <a href="ordertracking.php">Order</a>
                         <a href="chatModal.php">Message</a>
-                        <a href="SellerLogin.php">Switch to Seller (<span id="seller-status">Pending</span>)</a>
+                           <!-- change the seller status as needed when verified-->
+                        <a href="SellerLogin.php">Switch to Seller (<span id="seller-status">Pending</span>)</a> 
                         <a onclick="logout()">Logout</a>
                   
                     </div>
@@ -249,4 +284,20 @@
                 dropdown.style.display = 'none';
             }
         });
+
+        //NOTIfication 
+
+                function toggleNotificationDropdown(event) {
+            event.preventDefault();
+            var dropdown = document.getElementById("notification-dropdown");
+            dropdown.style.display = dropdown.style.display === "none" ? "block" : "none";
+        }
+
+        // Optional: Close dropdown when clicking outside of it
+        window.onclick = function(event) {
+            var dropdown = document.getElementById("notification-dropdown");
+            if (!event.target.matches('#notification-icon') && !dropdown.contains(event.target)) {
+                dropdown.style.display = "none";
+            }
+        }
 </script>

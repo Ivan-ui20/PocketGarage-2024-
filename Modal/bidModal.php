@@ -11,6 +11,15 @@
                 <!-- <p class="modal-bid-description" id="modal-bid-description">
                     This is a detailed description of the product, including its features, specifications, and other relevant information.
                 </p> -->
+                
+                
+
+                <div class="modal-appraisal-value" >
+                    <span>Appraisal Value: ₱</span> <!--appraisal value is integrated when a seller add productbid. To do, it can be collecting data similar sold product, marketprice, or use of Ebay price"
+                </p> -->
+                    <span id="modal-appraisal-value"></span>
+                </div>
+
                 <div class="modal-bid-price" >
                     <span>Highest Bid: ₱</span>
                     <span id="modal-bid-price"></span>
