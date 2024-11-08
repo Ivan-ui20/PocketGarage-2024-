@@ -27,6 +27,7 @@
 
             $_SESSION['seller_id'] = $row['seller_id'];
             $_SESSION["seller_name"] = $row['first_name'] . " " . $row['last_name'];
+            $_SESSION["avatar"] = "http://localhost:3000/backend/" . $row['avatar'];
             $_SESSION["user_type"] = "seller";
             return array(
                 "title" => "Success", 

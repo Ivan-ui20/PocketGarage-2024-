@@ -119,7 +119,7 @@
                     <a href="#" id="profile-icon">
                         <div class="header-profile-pic-container">
                         <div class="header-user-img">
-                            <img src="<?php echo $avatar; ?>" id="photo" alt="Profile Picture">            
+                            <img src="<?php echo $_SESSION["avatar"]; ?>" id="photo" alt="Profile Picture">            
                         </div>
                     </div>
                     </a>

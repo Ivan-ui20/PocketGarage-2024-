@@ -311,21 +311,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 const productImage = event.target.getAttribute('data-product-image');
                 const productPrice = event.target.getAttribute('data-product-price');
                 
-                console.log('yo');
+               
                 
-                // let updatedItem;
+                let updatedItem;
 
-                // const existingItemIndex = cartItems.findIndex(item => item.id === productId);
-                // if (existingItemIndex === -1) {
-                //     updatedItem = { id: productId, name: productName, image: productImage, price: productPrice, quantity: 1 };
-                //     cartItems.push(updatedItem);
-                // } else {
-                //     cartItems[existingItemIndex].quantity += 1;
-                //     updatedItem = cartItems[existingItemIndex];
-                // }
-                // cartCountElement.textContent = cartItems.reduce((sum, item) => sum + item.quantity, 0);                
+                const existingItemIndex = cartItems.findIndex(item => item.id === productId);
+                if (existingItemIndex === -1) {
+                    updatedItem = { id: productId, name: productName, image: productImage, price: productPrice, quantity: 1 };
+                    cartItems.push(updatedItem);
+                } else {
+                    cartItems[existingItemIndex].quantity += 1;
+                    updatedItem = cartItems[existingItemIndex];
+                }
+                cartCountElement.textContent = cartItems.reduce((sum, item) => sum + item.quantity, 0);                
                                 
-                // saveCartItems(updatedItem)
+                saveCartItems(updatedItem)
             });
         });
     }
