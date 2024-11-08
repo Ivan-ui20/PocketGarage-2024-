@@ -142,3 +142,60 @@ function placeBid() {
 // Attach the placeBid function to the Bid button
 document.querySelector(".bid-btn").addEventListener("click", placeBid);
 </script>
+
+<style>
+/* Bid input container styling */
+
+.modal-content {
+    background-color: #fff;
+    padding: 20px;
+    width: 70%; /* Increased width */
+    max-width: 800px; /* Adjust as needed */
+    border-radius: 8px;
+    position: relative;
+}
+
+.bid-input-container {
+    margin-top: 15px;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+}
+
+/* Appraisal and highest bid values */
+.modal-appraisal-value, .modal-bid-price {
+    font-size: 1.2rem;
+    margin-top: 10px;
+}
+
+
+.modal-info {
+    font-size: 1.2rem; /* Increase font size */
+    line-height: 1.5; /* Increase line height for readability */
+    width: 100%; /* Make it take up more space */
+}
+
+.bid-input {
+    font-size: 1.2rem; /* Larger input font */
+    padding: 10px;
+    width: 100%;
+    max-width: 200px;
+}
+
+
+.bid-btn {
+    margin-top: 15px;
+    padding: 10px 20px;
+    font-size: 1.2rem;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.bid-btn:hover {
+    background-color: #0056b3;
+}
+
+</style>
