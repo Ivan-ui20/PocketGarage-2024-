@@ -1,14 +1,9 @@
-
-
 <div class="modal" id="productModal">
     <div class="modal-content">
         <span class="close-btn" onclick="closeProductModal()">&times;</span>
         <div class="modal-body">
             <div class="modal-image">
-                <img src="https://via.placeholder.com/400" alt="Product Image" id="modal-product-image"> 
-           
-
-
+                <img src="https://via.placeholder.com/400" alt="Product Image" id="modal-product-image">            
             </div>
             <div class="modal-info">
                 <input type="hidden" id="modal-seller-id" value="">
@@ -28,7 +23,7 @@
 
                
                     <h2 id="out-of-stock-message" style="display: none;">Out of Stock</h2> 
-                    <div id="modal-buttons">                        
+                    <div id="modal-buttons1">                        
                         <?php if (isset($_SESSION['user_id'])): ?>
                             <button 
                                 class="add-to-cart-btn-modal add-to-cart-btn" 
@@ -66,7 +61,7 @@ function openProductModal(id, image, name, sellerId, sellerName, description, st
     const modalStock = document.getElementById("modal-product-stock");
     const modalPrice = document.getElementById("modal-product-price");
     const modalCart = document.getElementById("modal-cart");
-    const modalButtons = document.getElementById("modal-buttons");
+    const modalButtons = document.getElementById("modal-buttons1");
     const outOfStockMessage = document.getElementById("out-of-stock-message");
     const chatIcon = document.getElementById("chat-icon");
     
@@ -88,7 +83,7 @@ function openProductModal(id, image, name, sellerId, sellerName, description, st
     
     const customerId = "<?php echo $_SESSION['user_id']; ?>";  // PHP to JavaScript
     chatIcon.href = `chatModal.php?seller_id=${sellerId}&customer_id=${customerId}`;
-    
+
     if (stock <= 0) {            
         modalButtons.style.display = "none";        
         outOfStockMessage.style.display = "block"

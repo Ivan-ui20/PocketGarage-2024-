@@ -44,9 +44,6 @@
 </div>
 
 <!-- Success Message -->
-<div id="successMessage" class="success-message" style="display: none;">
-    Your bid has been successfully placed!
-</div>
 
 
 <script>

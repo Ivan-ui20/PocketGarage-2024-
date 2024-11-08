@@ -1,19 +1,5 @@
 
-<?php
-    require_once '../backend/database/db.php';
-    session_start();
 
-    // if($_SESSION['admin_id']) {
-    //     header("index.php");
-    // }
-?>
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Seller Management</title>
     <style>
         /* Basic styling */
     
@@ -101,7 +87,7 @@
           text-align: center;
       }
     </style>
-</head>
+
 <body>
 
 <div class="container-seller">

@@ -1,18 +1,4 @@
 
-<?php
-    require_once '../backend/database/db.php';
-    session_start();
-
-    // if($_SESSION['admin_id']) {
-    //     header("index.php");
-    // }
-?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard - Seller and Buyer Management</title>
     <style>
     
     .container-buyer {
@@ -86,7 +72,7 @@
           text-align: center;
       }
     </style>
-</head>
+
 <body>
 
 <div class="container-buyer">

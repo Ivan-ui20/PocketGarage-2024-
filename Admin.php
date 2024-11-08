@@ -44,105 +44,7 @@ if ($sizeResult) {
     />
 
     <link rel="stylesheet" href="css/admin.css" />
-    <style>
-      /* Hide all sections by default */
-      .section {
-        display: none;
-      }
-
-      /* Show the section when the 'visible' class is added */
-      .visible {
-        display: block;
-      }
-
-      nav ul {
-        list-style: none;
-        padding: 0;
-        display: flex;
-        align-items: center;
-        position: relative; /* To allow absolute positioning */
-      }
-
-      nav ul li.logo {
-        flex-grow: 1;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin: auto; /* Centers the logo */
-      }
-
-        nav ul li.logo a {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin: auto; /* Centers the logo */
-      }
-
-      nav ul li {
-        margin: 10px;
-      }
-      
-      nav li .logo {
-        margin-right: 1px  ; /* Reduce spacing between logo and navmenu */
-        height: 90px;
-      }
-
-      .btn {
-        padding: 10px;
-        margin-top: 10px;
-      }
-
-      .sell-btn {
-        background-color: green;
-        color: white;
-      }
-
-      .cancel-btn {
-        background-color: red;
-        color: white;
-      }
-
-      body {
-        background: url('assets/bgl.png');
-        background-size: cover;
-      } 
-
-      .sidebar {
-        position: fixed;
-        top: 0;
-        left:0;
-        height: 100vh;
-        width: 250px;
-        z-index: 1000;
-        background-color: rgba(45, 19, 116, 0.274);
-        backdrop-filter: blur(10px);
-        box-shadow: -10px 0 10px rgb(0, 0, 0, 0.1);
-        display: none;
-        flex-direction: column;
-        align-items: flex-start;
-        justify-content: flex-start;
-        overflow: hidden; /* Prevent overflow when collapsing */
-        transition: height 0.3s ease; 
-        overflow-y: auto;
-      }
-
-      nav .profile {
-        margin-left: auto; /* Pushes profile section to the right */
-        display: flex;
-        gap: 3rem;
-        text-align: left;
-        margin-right: 2rem;
-      }
-
-      nav .logo {
-      display: flex;
-      justify-content: center;
-      flex-grow: 1; /* Center the logo and make it the main focus */
-    }
-
-    
-    </style>
-
+  
 
   </head>
 
@@ -214,97 +116,20 @@ if ($sizeResult) {
         </ul>
       </div>
     </nav>
+    </nav>
 
  
 
 
-    <!-- For Dashboard Section -->
-    <div class="content">
+    </nav> 
 
-        <!-- Dashboard Section -->
-        <div id="dashboard-section" class="section">
-            <h1>Welcome, Admin</h1>
 
-          <!--start orecentupdate-->
-          
           <div class="recent_update">
 
-            <div class="all_pending_registration">
-              <h2>All Pending Seller Registration:</h2>
+          <div class="recent_update">
 
-              <div class="form">
-                <a href="#" class="logo" onclick="showSection('dashboard-section')"></a>
-                
-                  <?php                 
-                    $stmt = $conn->prepare("SELECT COUNT(*) FROM diecast_model WHERE seller_id = ?");
-                    $stmt->bind_param("s", $_SESSION["seller_id"]);
-                    $stmt->execute();
-                    
-                    $result = $stmt->get_result();
-                    $count = $result->fetch_row()[0]; 
-                    
-                    $stmt->close();
-                  ?> 
-                  <h1><?php echo $count; ?></h1>
-
-              
-              </div>
-            </div>
-
-        <div class="all_active_bids">
-
-          <h2>All Active Bids:</h2>
-          <div class="form">
-          <a href="#" class="logo" onclick="showSection('dashboard-section')"></a>
-            <?php                 
-              $stmt = $conn->prepare("SELECT COUNT(*) FROM bid_room WHERE seller_id = ?");
-              $stmt->bind_param("s", $_SESSION["seller_id"]);
-              $stmt->execute();
-              
-              $result = $stmt->get_result();
-              $count = $result->fetch_row()[0]; 
-              
-              $stmt->close();
-            ?> 
-            <h1><?php echo $count; ?></h1>
-       
-          </div>
-          </div>
-
-          <div class="all_active_sellers">
-            <h2>All Active Sellers:</h2>
-            <div class="form">
-                <a href="#" class="logo" onclick="showSection('dashboard-section')"></a>
-                
-                  <?php                 
-                    $stmt = $conn->prepare("SELECT COUNT(*) FROM diecast_model WHERE seller_id = ?");
-                    $stmt->bind_param("s", $_SESSION["seller_id"]);
-                    $stmt->execute();
-                    
-                    $result = $stmt->get_result();
-                    $count = $result->fetch_row()[0]; 
-                    
-                    $stmt->close();
-                  ?> 
-                  <h1><?php echo $count; ?></h1>
-
-              
-              </div>
-            </div>
-              </div>
-        </div>
-
-   
-
-              
-
-        </div>
-        </div>
-
-      </div>
-
-    </div>
-
+    <!-- For Dashboard Section -->
+    
 
     <div id="user-profile-section" class="section">
       <div id="settings-container" class="settings-container">
@@ -375,6 +200,26 @@ if ($sizeResult) {
 
     <!--seller management -->
    
+   
+    <div id="seller-management-section" class="section">
+    
+      <?php include './Admin_Panel/sellermanagement.php';?>
+
+    </div>
+
+
+    <div id="buyer-management-section" class="section">
+    
+    <?php include './Admin_Panel/buyermanagement.php';?>
+
+  </div>
+
+  <div id="bidding-management-section" class="section">
+    
+    <?php include './Admin_Panel/biddingmanagement.php';?>
+
+  </div>
+  
     <div id="seller-management-section" class="section">
     
       <?php include './Admin_Panel/sellermanagement.php';?>
@@ -445,13 +290,19 @@ if ($sizeResult) {
     
 
     function showSection(sectionId) {
+      console.log(sectionId);
+      
         try {
             // Hide all sections first
             const sections = document.querySelectorAll('.section');
+            console.log(sections);
+            
             sections.forEach(section => section.classList.remove('active'));
 
             // Show the selected section based on the ID
             const selectedSection = document.getElementById(sectionId);
+            console.log(selectedSection);
+            
             if (selectedSection) {
                 selectedSection.classList.add('active');
                 localStorage.setItem('activeSection', sectionId); // Save the active section in localStorage
@@ -602,7 +453,7 @@ if ($sizeResult) {
       
     </script>
 
-    <script>
+    <!-- <script>
 
       document.getElementById('product-form').addEventListener('submit', function (event) {
         event.preventDefault(); 
@@ -732,9 +583,9 @@ if ($sizeResult) {
         
       });
 
-    </script>
+    </script> -->
 
-    <script>
+    <!-- <script>
       const messagesData = {};
       const sellerId = document.getElementById("seller-id").value;
       fetch(`/backend/src/chat/route.php?route=last/chat/get&seller_id=${sellerId}`, {
@@ -785,8 +636,8 @@ if ($sizeResult) {
         });
 
     </script>
-   
-    <script>
+    -->
+    <!-- <script>
 
       async function sendMessage() {
         event.preventDefault()
@@ -966,6 +817,6 @@ if ($sizeResult) {
 
  
 
-    </script>
+    </script> -->
   </body>
 </html>
