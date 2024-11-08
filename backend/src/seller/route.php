@@ -37,13 +37,28 @@
 
                 if (!array_diff_key(array_flip($requiredFields), $_POST)) {
                     
-                    $payload = array_intersect_key($_POST, array_flip($requiredFields));                    
+                    $payload = array_intersect_key($_POST, array_flip($requiredFields)); 
+                    
+                    
+                    $frontIdUrl = handleFileUpload($_FILES['id_front']);                              
+                    if ($frontIdUrl === false) {
+                        jsonResponse("File Upload Failed", "There was an error uploading the image. Please try again.");
+                        return;
+                    }
+                    
+
+                    $backIdUrl = handleFileUpload($_FILES['id_back']);                    
+                    if ($backIdUrl === false) {
+                        jsonResponse("File Upload Failed", "There was an error uploading the image. Please try again.");
+                        return;
+                    }
+
                     $proofUrl = handleFileUpload($_FILES['proof']);
                     if ($proofUrl === false) {
                         jsonResponse("File Upload Failed", "There was an error uploading the image. Please try again.");
                         return;
                     }
-                    $response = signup($conn, $payload, $proofUrl);
+                    $response = signup($conn, $payload, $frontIdUrl, $backIdUrl, $proofUrl);
 
                     jsonResponse($response["title"], $response["message"]);
 

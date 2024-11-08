@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 07, 2024 at 04:57 AM
+-- Generation Time: Nov 08, 2024 at 01:09 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -62,6 +62,15 @@ CREATE TABLE `bid_listing` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `bid_listing`
+--
+
+INSERT INTO `bid_listing` (`bidding_id`, `customer_id`, `amount`, `created_at`) VALUES
+(16, 3, 1001, '2024-11-07 14:33:39'),
+(16, 3, 1002, '2024-11-07 14:36:15'),
+(16, 3, 1003, '2024-11-07 14:42:44');
+
 -- --------------------------------------------------------
 
 --
@@ -86,7 +95,7 @@ CREATE TABLE `bid_room` (
 --
 
 INSERT INTO `bid_room` (`bidding_id`, `seller_id`, `model_id`, `details`, `start_amount`, `end_amount`, `bid_status`, `start_time`, `end_time`, `created_at`) VALUES
-(16, 12, 26, 'this is the details of bid item test 1', 1000, 0, 'Closed', '2024-11-07 16:00:00', '2024-11-09 16:00:00', '2024-10-31 05:24:28'),
+(16, 12, 26, 'this is the details of bid item test 1', 1000, 1003, 'Closed', '2024-11-07 16:00:00', '2024-11-09 16:00:00', '2024-10-31 05:24:28'),
 (22, 12, 33, 'this is the details of bid item test 2', 1000, 0, 'Active', '2024-11-05 16:00:00', '2024-11-06 16:00:00', '2024-11-05 04:17:17'),
 (23, 12, 34, 'this is the details of bid item test 2', 1000, 0, 'Active', '2024-11-05 16:00:00', '2024-11-06 16:00:00', '2024-11-05 04:17:30');
 
@@ -202,19 +211,18 @@ CREATE TABLE `customer` (
   `email_address` varchar(200) NOT NULL,
   `password` varchar(200) NOT NULL,
   `role` enum('customer','seller') NOT NULL DEFAULT 'customer',
-  `front_id_url` text DEFAULT NULL,
-  `back_id_url` text DEFAULT NULL,
   `avatar` text NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `status` enum('Active','Pending','Deactivated','') NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `customer`
 --
 
-INSERT INTO `customer` (`customer_id`, `first_name`, `last_name`, `contact_number`, `address`, `email_address`, `password`, `role`, `front_id_url`, `back_id_url`, `avatar`, `created_at`) VALUES
-(3, 'John', ' Does', '12345678910', '123 Main St, Anytown, USA', 'admin1@gmail.com', '$2y$10$4LJMnTd2rfj7ZIqCt5IRP.PDjhnvCYEquY0P.tt5Ic3LaTSXkCR.6', 'customer', NULL, NULL, 'upload/672c29d183ff5-P3.png', '2024-11-07 03:25:49'),
-(4, 'Manuel', 'Marin', '123456789101', '123 taguig city', 'admin@gmail.com', '$2y$10$vrS5fGfJDw6TmtrZJWLmWecq05PBjqewEssMM0dr4IOixbCvdX2Im', 'customer', 'uploads/6705f82de8a9b-P1.png', 'uploads/6705f82de8cbf-P2.png', '', '2024-11-06 16:04:12');
+INSERT INTO `customer` (`customer_id`, `first_name`, `last_name`, `contact_number`, `address`, `email_address`, `password`, `role`, `avatar`, `status`, `created_at`) VALUES
+(3, 'John', ' Doeee', '12345678910', '123 Main St, Anytown, USA', 'admin1@gmail.com', '$2y$10$4LJMnTd2rfj7ZIqCt5IRP.PDjhnvCYEquY0P.tt5Ic3LaTSXkCR.6', 'customer', 'upload/672d050f35842-P1.png', 'Active', '2024-11-07 18:23:19'),
+
 
 -- --------------------------------------------------------
 
@@ -291,10 +299,10 @@ INSERT INTO `diecast_model` (`model_id`, `seller_id`, `size_id`, `brand_id`, `mo
 (17, 12, 4, 2, 'Model X', 'This is a detailed model of Model X.', 1999, 50, 'Available', 'Limited Edition, New Arrival', 'Premium', 'None', 'Mint', 'upload/P2.png', '2024-10-04 22:55:32'),
 (18, 12, 4, 2, 'Model X', 'This is a detailed model of Model X.', 1999, 50, 'Available', 'Limited Edition, New Arrival', 'Premium', 'None', 'Mint', 'upload/P1.png', '2024-10-04 22:55:15'),
 (19, 12, 4, 2, 'Model Z', 'This is a detailed model of Model X.', 1999, 50, 'Available', 'Limited Edition, New Arrival', 'Premium', 'None', 'Mint', 'upload/P3.png', '2024-10-30 22:38:22'),
-(26, 12, 1, 8, 'bid item test 1', '', 0, 1, 'Available', '', 'Bidding', 'None', 'Mint', 'upload/6723148c753e1-P1.png', '2024-11-06 15:09:19'),
+(26, 12, 1, 8, 'bid item test 1', '', 1003, 1, 'Available', '', 'Bidding', 'None', 'Mint', 'upload/6723148c753e1-P1.png', '2024-11-07 14:42:44'),
 (27, 12, 1, 8, 'New Product Test', 'this is a description for new product test', 1000, 10, 'Available', 'Limited Edition, New Arrivals, Featured', 'Regular', 'Unopened', 'Mint', 'upload/6729991606115-P1.png', '2024-11-05 04:03:34'),
-(33, 12, 1, 8, 'bid item test 2', 'Empty Description', 0, 1, 'Available', 'Limited Edition, Featured, Best Seller', 'Bidding', 'Unopened', 'Good Condition', 'upload/67299c4d2a60f-P1.png', '2024-11-06 15:09:22'),
-(34, 12, 1, 8, 'bid item test 2', 'Empty Description', 0, 1, 'Available', 'Limited Edition, Featured, Best Seller', 'Bidding', 'Unopened', 'Good Condition', 'upload/67299c5acfac4-P1.png', '2024-11-06 15:09:26');
+(33, 12, 1, 8, 'bid item test 2', 'Empty Description', 1000, 1, 'Available', 'Limited Edition, Featured, Best Seller', 'Bidding', 'Unopened', 'Good Condition', 'upload/67299c4d2a60f-P1.png', '2024-11-07 12:00:05'),
+(34, 12, 1, 8, 'bid item test 3', 'Empty Description', 1000, 1, 'Available', 'Limited Edition, Featured, Best Seller', 'Bidding', 'Unopened', 'Good Condition', 'upload/67299c5acfac4-P1.png', '2024-11-07 12:00:06');
 
 -- --------------------------------------------------------
 
@@ -330,7 +338,7 @@ CREATE TABLE `order_info` (
   `shipping_addr` varchar(200) NOT NULL,
   `order_ref_no` varchar(200) NOT NULL,
   `order_total` double NOT NULL,
-  `order_payment_option` enum('Cash on Delivery','','','') NOT NULL,
+  `order_payment_option` text NOT NULL,
   `order_status` enum('Order Received','Processing','Packed','Ready to Ship','Shipped','Delivered','Order Placed','In Transit','Delivered','Waiting for courier') NOT NULL DEFAULT 'Processing',
   `order_trackingnum` text NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
@@ -341,9 +349,10 @@ CREATE TABLE `order_info` (
 --
 
 INSERT INTO `order_info` (`order_id`, `customer_id`, `shipping_addr`, `order_ref_no`, `order_total`, `order_payment_option`, `order_status`, `order_trackingnum`, `created_at`) VALUES
-(4, 3, 'Sa tabi ng kanto ng dagat', 'REF-3-1728003594-571BD2', 1798, 'Cash on Delivery', 'Order Placed', '1', '2024-11-05 04:34:50'),
-(5, 3, 'Sa tabi ng kanto ng dagat', 'REF-3-1728067262-65B694', 2597, 'Cash on Delivery', 'Order Placed', '100', '2024-11-05 04:32:08'),
-(17, 3, 'shipping address', 'REF-3-1728945073-5F047D', 7891, 'Cash on Delivery', 'Delivered', '', '2024-10-31 00:12:12');
+(4, 3, 'Sa tabi ng kanto ng dagat', 'REF-3-1728003594-571BD2', 1798, 'Cash on Delivery (CoD)', 'Order Placed', '1', '2024-11-07 17:47:57'),
+(5, 3, 'Sa tabi ng kanto ng dagat', 'REF-3-1728067262-65B694', 2597, 'Cash on Delivery (CoD)', 'Order Placed', '100', '2024-11-07 17:47:59'),
+(17, 3, 'shipping address', 'REF-3-1728945073-5F047D', 7891, 'Cash on Delivery (CoD)', 'Delivered', '', '2024-11-07 17:48:00'),
+(18, 3, 'dito sa tabi ng kanto', 'REF-3-1731001787-0E3382', 5294, 'Cash on Delivery (CoD)', 'Processing', '', '2024-11-07 17:50:11');
 
 -- --------------------------------------------------------
 
@@ -368,7 +377,9 @@ INSERT INTO `order_items` (`order_id`, `model_id`, `quantity`, `total`) VALUES
 (5, 2, 1, 799),
 (17, 1, 6, 5394),
 (17, 2, 2, 1598),
-(17, 5, 1, 899);
+(17, 5, 1, 899),
+(18, 1, 5, 4495),
+(18, 2, 1, 799);
 
 -- --------------------------------------------------------
 
@@ -398,7 +409,8 @@ INSERT INTO `order_tracker` (`order_id`, `current_track`, `status`, `created_at`
 (5, 'In Transit', 'Not Done', '2024-11-05 04:31:36'),
 (5, 'Delivered', 'Not Done', '2024-11-05 04:31:53'),
 (5, 'Order Placed', 'Not Done', '2024-11-05 04:32:08'),
-(4, 'Order Placed', 'Not Done', '2024-11-05 04:34:50');
+(4, 'Order Placed', 'Not Done', '2024-11-05 04:34:50'),
+(18, '', 'Not Done', '2024-11-07 17:49:47');
 
 -- --------------------------------------------------------
 
@@ -414,19 +426,23 @@ CREATE TABLE `seller` (
   `address` varchar(200) NOT NULL,
   `email_address` varchar(200) NOT NULL,
   `password` varchar(200) NOT NULL,
+  `front_id_url` text NOT NULL,
+  `back_id_url` text NOT NULL,
   `proof_seller_url` text DEFAULT NULL,
   `avatar` text NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `status` enum('Approved','Pending','Rejected','Deactivated') NOT NULL DEFAULT 'Pending',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `seller`
 --
 
-INSERT INTO `seller` (`seller_id`, `first_name`, `last_name`, `contact_number`, `address`, `email_address`, `password`, `proof_seller_url`, `avatar`, `created_at`) VALUES
-(12, 'John', 'Doe', '12345678901', '123 Main St, Anytown, USA', 'johndoe@example.com', '$2y$10$4LJMnTd2rfj7ZIqCt5IRP.PDjhnvCYEquY0P.tt5Ic3LaTSXkCR.6', NULL, '', '2024-11-07 03:49:43'),
-(13, 'test', 'test', '12345678902', '', 'admin@gmail.com', '$2y$10$swHVJuwTi8ufN7HPQRVpWOL8UvUH6CJ4hqw8j464Xgc8uTsdqzKnW', NULL, '', '2024-11-07 03:57:30'),
-(17, 'test', 'test', '12345678903', '', 'adm1in@gmail.com', '$2y$10$Q3udrFo6AmPKzIQcJ.pmVu3e/aElA.p4kvgo.u.bLnHytvhHg6c4m', 'upload/672c3a3d626ba-P1.png', '', '2024-11-07 03:57:32');
+INSERT INTO `seller` (`seller_id`, `first_name`, `last_name`, `contact_number`, `address`, `email_address`, `password`, `front_id_url`, `back_id_url`, `proof_seller_url`, `avatar`, `status`, `created_at`) VALUES
+(12, 'John', 'Doe', '12345678901', '', 'johndoe@example.com', '$2y$10$4LJMnTd2rfj7ZIqCt5IRP.PDjhnvCYEquY0P.tt5Ic3LaTSXkCR.6', '', '', NULL, '', 'Approved', '2024-11-07 18:35:44'),
+(13, 'test', 'test', '12345678902', '', 'admin@gmail.com', '$2y$10$swHVJuwTi8ufN7HPQRVpWOL8UvUH6CJ4hqw8j464Xgc8uTsdqzKnW', '', '', NULL, '', 'Rejected', '2024-11-07 18:49:01'),
+(17, 'test', 'test', '12345678903', '', 'adm1in@gmail.com', '$2y$10$Q3udrFo6AmPKzIQcJ.pmVu3e/aElA.p4kvgo.u.bLnHytvhHg6c4m', '', '', 'upload/672c3a3d626ba-P1.png', '', 'Deactivated', '2024-11-07 18:59:25'),
+
 
 --
 -- Indexes for dumped tables
@@ -589,7 +605,7 @@ ALTER TABLE `chat_room`
 -- AUTO_INCREMENT for table `customer`
 --
 ALTER TABLE `customer`
-  MODIFY `customer_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `customer_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `diecast_brand`
@@ -613,13 +629,13 @@ ALTER TABLE `diecast_size`
 -- AUTO_INCREMENT for table `order_info`
 --
 ALTER TABLE `order_info`
-  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `seller`
 --
 ALTER TABLE `seller`
-  MODIFY `seller_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `seller_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- Constraints for dumped tables

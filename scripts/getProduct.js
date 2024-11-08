@@ -3,7 +3,6 @@ const checkoutModal = document.getElementById('checkout-modal');
 const closeCheckout = document.querySelector('.close-checkout');
 
 const cartItemsElement = document.getElementById('cart-items');   
-const checkoutItemsElement = document.getElementById('checkout-product-list');
 const checkoutTotalPrice = document.getElementById("checkout-total-price");
 const cartCountElement = document.getElementById('cart-count');
 const cartTotalPriceElement = document.getElementById('cart-total-price');
@@ -13,17 +12,23 @@ const closeModal = document.querySelector('.cart-modal .close');
 function updateCartModal() {
 
     cartItemsElement.innerHTML = '';
-    checkoutItemsElement.innerHTML = '';
+
     let totalPrice = 0;
     cartItems.forEach((item, index) => {
-     ;
-        
+             
         const li = document.createElement('li');
         li.innerHTML = `
             <div class="cart-item">
-                <img src="http://localhost:3000/backend/${item.image}" alt="${item.name}">
+                <div class="product-info">
+                    <img class="product-image" src="http://localhost:3000/backend/${item.image}" alt="${item.name}">
+                    <div class="product-description">
+                        <h3>${item.name}</h3>
+                        <p>${item.description}</p>
+                    </div>
+                </div>
+                
                 <div class="cart-item-details">
-                    <span>${item.name}</span>
+                    <span></span>
                     <span>₱${item.price}</span>
                     <div class="quantity-controls">
                         <button class="quantity-decrease" data-index="${index}">-</button>
@@ -36,27 +41,14 @@ function updateCartModal() {
         `;
         cartItemsElement.appendChild(li);
 
-        const li1 = document.createElement('li');
-        li1.innerHTML = `
-            <div class="checkout-item">
-                <span>${item.name}</span>
-                <div class="checkout-item-details">
-                    
-                    <span>₱${item.price}</span>
-                    <span>${item.quantity}</span>
-                </div>
-                
-            </div>
-        `;
-        checkoutItemsElement.appendChild(li1);        
-        
-        
+                        
         totalPrice += item.price * item.quantity;
+            
     });
-
-    // Format total price with commas
-    checkoutTotalPrice.textContent = `${totalPrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+        
     cartTotalPriceElement.textContent = `₱${totalPrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    
+    
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -159,12 +151,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (product.model_type !== "Bidding") {
                         if (userId ) {                        
                             productBox.innerHTML += `                           
-                                <button 
-                                    class="add-to-cart-btn"
-                                    data-product-id="${product.model_id}" 
-                                    data-product-name="${product.model_name}"
-                                    data-product-image="${product.model_image_url}"
-                                    data-product-price="${product.model_price}">Add to Cart</button>
+                                
                             `;
                         } else {
                             productBox.innerHTML += `                            
@@ -172,16 +159,25 @@ document.addEventListener('DOMContentLoaded', () => {
                             `;
                         }
                     }
+                    // <button 
+                    //                 class="add-to-cart-btn"
+                    //                 data-product-id="${product.model_id}" 
+                    //                 data-product-name="${product.model_name}"
+                    //                 data-product-image="${product.model_image_url}"
+                    //                 data-product-price="${product.model_price}">
+                    //                 Add to Cart</button>
                     
     
                     productList.appendChild(productBox);
                 });
     
                 // Add event listeners for all 'Add to Cart' buttons after loading products
-                attachAddToCartListeners();
+                
             } else {
                 productList.innerHTML = 'No products here...';
             }
+
+            
         })
         .catch(error => {
             console.error('There was a problem with the fetch operation:', error);
@@ -189,7 +185,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     getProductWithFilter("", "", "", "");
-
+    attachAddToCartListeners();
     function saveCartItems(cartItem) {
                                                
         const data = new URLSearchParams({                    
@@ -220,6 +216,8 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log(data);
             if (data.success === "Success") {
                 alert("item added to cart")
+            } else {
+                alert(data.message)
             }                 
         })
         .catch(error => {
@@ -283,6 +281,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         cartItems.push({ 
                             id: cartItem.model_id, 
                             name: cartItem.model_name, 
+                            description: cartItem.model_description,
                             image: `${cartItem.model_image_url}`, 
                             price: cartItem.model_price, 
                             quantity: cartItem.quantity });
@@ -306,25 +305,26 @@ document.addEventListener('DOMContentLoaded', () => {
             button.addEventListener('click', (event) => {
                 event.preventDefault();
                 event.stopPropagation();
-                const productId = event.target.getAttribute('data-product-id');
+                const productId = parseInt(event.target.getAttribute('data-product-id'));
                 const productName = event.target.getAttribute('data-product-name');
                 const productImage = event.target.getAttribute('data-product-image');
                 const productPrice = event.target.getAttribute('data-product-price');
                 
+                console.log('yo');
+                
+                // let updatedItem;
 
-                let updatedItem;
-
-                const existingItemIndex = cartItems.findIndex(item => item.id === productId);
-                if (existingItemIndex === -1) {
-                    updatedItem = { id: productId, name: productName, image: productImage, price: productPrice, quantity: 1 };
-                    cartItems.push(updatedItem);
-                } else {
-                    cartItems[existingItemIndex].quantity += 1;
-                    updatedItem = cartItems[existingItemIndex];
-                }
-                cartCountElement.textContent = cartItems.reduce((sum, item) => sum + item.quantity, 0);                
+                // const existingItemIndex = cartItems.findIndex(item => item.id === productId);
+                // if (existingItemIndex === -1) {
+                //     updatedItem = { id: productId, name: productName, image: productImage, price: productPrice, quantity: 1 };
+                //     cartItems.push(updatedItem);
+                // } else {
+                //     cartItems[existingItemIndex].quantity += 1;
+                //     updatedItem = cartItems[existingItemIndex];
+                // }
+                // cartCountElement.textContent = cartItems.reduce((sum, item) => sum + item.quantity, 0);                
                                 
-                saveCartItems(updatedItem)
+                // saveCartItems(updatedItem)
             });
         });
     }
@@ -422,16 +422,16 @@ document.addEventListener('DOMContentLoaded', () => {
         
     });
 
-    document.getElementById('checkout-btn').addEventListener('click', function () {
+    // document.getElementById('checkout-btn').addEventListener('click', function () {
             
-        if (cartItems.length > 0) {
-            checkoutModal.style.display = 'block';
+    //     if (cartItems.length > 0) {
+    //         checkoutModal.style.display = 'block';
                                                             
-        } else {                
-            alert('Your cart is empty!');
+    //     } else {                
+    //         alert('Your cart is empty!');
             
-        }
-    });
+    //     }
+    // });
 
     
 });

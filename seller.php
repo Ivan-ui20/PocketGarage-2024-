@@ -347,95 +347,98 @@ if ($sizeResult) {
    
     <div id="view-product-section" class="section">
       <h2>Product Details</h2>
-    
-
-     <div class="all-products">
-
-     <?php
-        $stmt = $conn->prepare("SELECT diecast_brand.*, diecast_size.*, diecast_model.* 
-            FROM diecast_model 
-            LEFT JOIN diecast_brand ON diecast_brand.brand_id = diecast_model.brand_id
-            LEFT JOIN diecast_size ON diecast_size.size_id = diecast_model.size_id
-            WHERE diecast_model.seller_id = ?");
-        $stmt->bind_param("s", $_SESSION["seller_id"]);
-        $stmt->execute();
-
-        $result = $stmt->get_result();
-      
-        if ($result->num_rows > 0) {          
-            while ($row = $result->fetch_assoc()) {
-                $modelId = $row['model_id'];
-                $sellerId = $row['seller_id'];
-                $modelName = htmlspecialchars($row['model_name']);
-                $modelDescription = htmlspecialchars($row['model_description']);
-                $modelPrice = htmlspecialchars($row['model_price']);
-                $modelStock = htmlspecialchars($row['model_stock']);
-                $modelImageUrl = htmlspecialchars($row['model_image_url']);
-                $brandName = htmlspecialchars($row['brand_name']);
-                $sizeName = htmlspecialchars($row['ratio']);
-                              
-                echo '<div class="product-card">';
-                                
-                echo '<div class="product-image">';
-                echo '<img src="http://localhost:3000/backend/' . $modelImageUrl . '" alt="' . $modelName . '">';
-                echo '</div>';
-                
-                echo '<div class="product-info">';
-                echo '<h3>' . $modelName . '</h3>';
-                echo '<p class="product-description">' . $modelDescription . '</p>';
-                echo '<p class="product-price"><b>Price:</b> $' . $modelPrice . '</p>';
-                echo '<p class="product-stock"><b>In Stock:</b> ' . ($modelStock > 0 ? 'Yes' : 'No') . '</p>';
-                echo '<p class="product-brand"><b>Brand:</b> ' . $brandName . '</p>';
-                echo '<p class="product-size"><b>Size:</b> ' . $sizeName . '</p>';
-                
-                echo '<div class="product-actions">';
-                echo '<button onclick="openEditForm(' . $modelId . ', \'' . addslashes($modelName) . '\', \'' . addslashes($modelDescription) . '\', ' . $modelPrice . ', \'' . ($modelStock > 0 ? 'Yes' : 'No') . '\')">Edit</button>';
-                echo '<button onclick="deleteProduct(' . $modelId . ', ' . $sellerId . ')">Delete</button>';
-                echo '</div>';
-                echo '</div>';
-                echo '</div>';
-            }
-        } else {
-            echo '<p>No products found for this seller.</p>';
-        }
-
-        $stmt->close();
-      ?>
-
-      
-
-       <div class="product-card">
-                
-        <!-- Edit Product Form -->
-        <div class="edit-product-form" id="editForm" style="display: none;">
-          <h3>Edit Product</h3>
-          <form onsubmit="submitEditForm(event)">
-            <label for="edit-name">Product Name</label>
-            <input type="hidden" id="seller-id" value=<?php echo $_SESSION["seller_id"] ?>>
-            <input type="hidden" id="edit-model-id" name="modelId">
-
-            <input type="text" id="edit-name" name="name">
-
-            <label for="edit-description">Description</label>
-            <textarea id="edit-description" name="description"></textarea>
-
-            <label for="edit-price">Price</label>
-            <input type="number" id="edit-price" name="price">
-
-            <label for="edit-stock">In Stock</label>
-            <select id="edit-stock" name="stock">
-              <option value="Yes">Yes</option>
-              <option value="No">No</option>
-            </select>
-
-            <div class="form-actions">
-              <button type="submit">Save</button>
-              <button type="button" onclick="closeEditForm()">Cancel</button>
-            </div>
-          </form>
-        </div>
-
+      <div class="filter-tab">
+        <button onclick="filterProducts('all')">All</button>
+        <button onclick="filterProducts('Premium')">Premium</button>
+        <button onclick="filterProducts('Regular')">Regular</button>
+        <button onclick="filterProducts('Bidding')">Bidding</button>
       </div>
+        
+      <div class="all-products">
+
+        <?php
+          $stmt = $conn->prepare("SELECT diecast_brand.*, diecast_size.*, diecast_model.* 
+              FROM diecast_model 
+              LEFT JOIN diecast_brand ON diecast_brand.brand_id = diecast_model.brand_id
+              LEFT JOIN diecast_size ON diecast_size.size_id = diecast_model.size_id
+              WHERE diecast_model.seller_id = ?");
+          $stmt->bind_param("s", $_SESSION["seller_id"]);
+          $stmt->execute();
+
+          $result = $stmt->get_result();
+        
+          if ($result->num_rows > 0) {          
+              while ($row = $result->fetch_assoc()) {
+                  $modelId = $row['model_id'];
+                  $sellerId = $row['seller_id'];
+                  $modelName = htmlspecialchars($row['model_name']);
+                  $modelDescription = htmlspecialchars($row['model_description']);
+                  $modelPrice = htmlspecialchars($row['model_price']);
+                  $modelStock = htmlspecialchars($row['model_stock']);
+                  $modelImageUrl = htmlspecialchars($row['model_image_url']);
+                  $brandName = htmlspecialchars($row['brand_name']);
+                  $sizeName = htmlspecialchars($row['ratio']);
+                                
+                  echo '<div class="product-card" data-category="' . $row['model_type'] . '">';
+                                  
+                  echo '<div class="product-image">';
+                  echo '<img src="http://localhost:3000/backend/' . $modelImageUrl . '" alt="' . $modelName . '">';
+                  echo '</div>';
+                  
+                  echo '<div class="product-info">';
+                  echo '<h3>' . $modelName . '</h3>';
+                  echo '<p class="product-description">' . $modelDescription . '</p>';
+                  echo '<p class="product-price"><b>Price:</b> $' . $modelPrice . '</p>';
+                  echo '<p class="product-stock"><b>In Stock:</b> ' . ($modelStock > 0 ? 'Yes' : 'No') . '</p>';
+                  echo '<p class="product-brand"><b>Brand:</b> ' . $brandName . '</p>';
+                  echo '<p class="product-size"><b>Size:</b> ' . $sizeName . '</p>';
+                  
+                  echo '<div class="product-actions">';
+                  echo '<button onclick="openEditForm(' . $modelId . ', \'' . addslashes($modelName) . '\', \'' . addslashes($modelDescription) . '\', ' . $modelPrice . ', \'' . ($modelStock > 0 ? 'Yes' : 'No') . '\')">Edit</button>';
+                  echo '<button onclick="deleteProduct(' . $modelId . ', ' . $sellerId . ')">Delete</button>';
+                  echo '</div>';
+                  echo '</div>';
+                  echo '</div>';
+              }
+          } else {
+              echo '<p>No products found for this seller.</p>';
+          }
+
+          $stmt->close();
+        ?>
+      
+        <div class="product-card">
+                
+          <!-- Edit Product Form -->
+          <div class="edit-product-form" id="editForm" style="display: none;">
+            <h3>Edit Product</h3>
+            <form onsubmit="submitEditForm(event)">
+              <label for="edit-name">Product Name</label>
+              <input type="hidden" id="seller-id" value=<?php echo $_SESSION["seller_id"] ?>>
+              <input type="hidden" id="edit-model-id" name="modelId">
+
+              <input type="text" id="edit-name" name="name">
+
+              <label for="edit-description">Description</label>
+              <textarea id="edit-description" name="description"></textarea>
+
+              <label for="edit-price">Price</label>
+              <input type="number" id="edit-price" name="price">
+
+              <label for="edit-stock">In Stock</label>
+              <select id="edit-stock" name="stock">
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+              </select>
+
+              <div class="form-actions">
+                <button type="submit">Save</button>
+                <button type="button" onclick="closeEditForm()">Cancel</button>
+              </div>
+            </form>
+          </div>
+
+        </div>
       </div>
     </div>
    
@@ -1121,6 +1124,20 @@ if ($sizeResult) {
       </div>
 
     <script>
+
+    function filterProducts(category) {
+        const productCards = document.querySelectorAll('.product-card');
+        
+        productCards.forEach(card => {
+            const productCategory = card.getAttribute('data-category');
+            
+            if (category === 'all' || productCategory === category) {
+                card.style.display = 'block';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    }
 
 /*
     function showUserInfo() {

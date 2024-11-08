@@ -786,6 +786,10 @@ section.ProductsL {
 }
 
 .cart-total {
+  display: flex;
+  justify-content: space-between;
+  font-weight: bold;
+  padding: 12px;
   margin-top: 20px;
   text-align: right;
   font-size: 18px;

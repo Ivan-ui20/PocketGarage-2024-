@@ -30,8 +30,8 @@
                             data-product-name=""
                             data-product-image=""
                             data-product-price=""
-                            class="add-to-cart-btn-modal" id="modal-cart">Add to Cart</button>
-                        <button id="checkout-btn-pmodal" class="checkout-btn-pmodal">Checkout</button>
+                            class="add-to-cart-btn-modal add-to-cart-btn" id="modal-cart">Add to Cart</button>
+                        <button id="cart-icon1" class="checkout-btn-pmodal">Checkout</button>
                     <?php else: ?>
                         <p class="login-prompt">Please log in to add items to your cart.</p>
                     <?php endif; ?>
@@ -42,7 +42,15 @@
 </div>
 
 <script>// Function to open the modal
+document.getElementById('cart-icon1').addEventListener('click', function (e) {        
+    // const cartModal = document.getElementById('cart-modal');
+    const checkout = document.getElementById("checkout-modal-container")
+    
+    e.preventDefault();
+    updateCartModal();
 
+    checkout.style.display = 'flex';
+});
 function openProductModal(id, image, name, description, stock, price) {
     document.getElementById("productModal").style.display = "flex";
 
@@ -70,6 +78,64 @@ function openProductModal(id, image, name, description, stock, price) {
 function closeProductModal() {
   document.getElementById("productModal").style.display = "none";
 }
+
+
+// function saveTheCartItem(cartItem) {
+                                               
+//     const data = new URLSearchParams({                    
+//         customer_id: sessionStorage.getItem("userId"),                    
+//         items : JSON.stringify([
+//             {
+//                 model_id: cartItem.id,
+//                 quantity: cartItem.quantity,
+//                 total: cartItem.price * cartItem.quantity
+//             }                       
+//         ])
+//     });                         
+
+//     fetch('/backend/src/customer/route.php?route=customer/save/cart', {
+//         method: 'POST',
+//         body: data.toString(),
+//         headers: {
+//             'Content-Type': 'application/x-www-form-urlencoded'
+//         }
+//     })
+//     .then(response => {
+//         if (!response.ok) {
+//             throw new Error('Network response was not ok');
+//         }
+//         return response.json();
+//     })
+//     .then(data => {
+//         console.log(data);
+//         if (data.success === "Success") {
+//             alert("item added to cart")
+//         }                 
+//     })
+//     .catch(error => {
+//         console.error('There was a problem with the fetch operation:', error);
+//     });
+    
+// }
+
+
+// function saveToCart(event) {
+//     const productId = event.target.getAttribute('data-product-id');
+//     const productName = event.target.getAttribute('data-product-name');
+//     const productImage = event.target.getAttribute('data-product-image');
+//     const productPrice = event.target.getAttribute('data-product-price');
+    
+
+//     let updatedItem = {
+//         id: productId, 
+//         name: productName, 
+//         image: productImage, 
+//         price: productPrice, 
+//         quantity: 1
+//     };
+                                     
+//     saveTheCartItem(updatedItem)
+// }
 
 // Close the modal when clicking outside of it
 window.onclick = function(event) {

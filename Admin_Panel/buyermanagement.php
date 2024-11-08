@@ -1,3 +1,12 @@
+
+<?php
+    require_once '../backend/database/db.php';
+    session_start();
+
+    // if($_SESSION['admin_id']) {
+    //     header("index.php");
+    // }
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -98,21 +107,44 @@
         </tr>
     </thead>
     <tbody>
-        <tr>
-            <td>001</td>
-            <td>johndoe</td>
-            <td>johndoe@example.com</td>
-            <td>12345678901</td>
-            <td>123 Main St, Anytown, USA</td>
-            <td>2024-01-15</td>
-            <td>Active</td>
-            <td class="action-buttons">
-                      <a href="#" class="btn btn-approve">Activate</a>
-                      <a href="#" class="btn btn-reject">Deactivate</a>
-                  </td>
-        </tr>
-        
-        <!-- Add more rows as needed -->
+        <?php
+            $stmt = $conn->prepare("SELECT * FROM customer");
+            $stmt->execute();
+            $result = $stmt->get_result();
+
+            if ($result->num_rows > 0) {
+                // Loop through each seller and create a table row
+                while ($row = $result->fetch_assoc()) {
+                    $sellerId = htmlspecialchars($row['customer_id']);
+                    $fullname = htmlspecialchars($row['first_name']) . " " . htmlspecialchars($row['last_name']);
+                    $email = htmlspecialchars($row['email_address']);
+                    $contactNumber = htmlspecialchars($row['contact_number']);
+                    $address = htmlspecialchars($row['address']);
+                    $registrationDate = htmlspecialchars($row['created_at']);
+                    $dateTime = new DateTime($registrationDate);
+                    $registrationDate = htmlspecialchars($dateTime->format('F j Y, H:i'));
+                    $status = htmlspecialchars($row['status']);
+                    
+                    echo "<tr data-status='{$status}'>";
+                    echo "<td>{$sellerId}</td>";
+                    echo "<td>{$fullname}</td>";
+                    echo "<td>{$email}</td>";
+                    echo "<td>{$contactNumber}</td>";
+                    echo "<td>{$address}</td>";
+                    echo "<td>{$registrationDate}</td>";
+                    echo "<td>{$status}</td>";
+                    echo '<td class="action-buttons">';
+                    echo "<a href=\"#\" class=\"btn btn-approve\" onclick=\"updateSellerStatus({$sellerId}, 'Active')\">Activate</a>";
+                    echo "<a href=\"#\" class=\"btn btn-reject\" onclick=\"updateSellerStatus({$sellerId}, 'Deactivated')\">Deactivate</a>";
+                    echo "</td>";
+                    echo "</tr>";
+                }
+            } else {
+                echo "<tr><td colspan='8'>No sellers found.</td></tr>";
+            }
+
+            $stmt->close();
+        ?>                
     </tbody>
   </table>
 
@@ -123,7 +155,7 @@
             <label for="status-filter">Filter by Account Status:</label>
             <select id="status-filter">
                 <<option value="all">All</option>
-              <option value="deactivated">Active</option>
+              <option value="active">Active</option>
               <option value="deactivated">Deactivated</option>
             </select>
         </div>
@@ -134,4 +166,40 @@
 </div>
 
 </body>
+
+<script>
+    document.getElementById("status-filter").addEventListener("change", function() {
+        const selectedStatus = this.value;
+        const rows = document.querySelectorAll("tbody tr");
+
+        rows.forEach(row => {
+            const rowStatus = row.getAttribute("data-status").toLowerCase();
+            
+            if (selectedStatus === "all" || rowStatus === selectedStatus) {
+                row.style.display = "";
+            } else {
+                row.style.display = "none";
+            }
+        });
+    });
+
+    async function updateSellerStatus(id, status) {           
+        const data = new URLSearchParams({
+            customer_id: id,
+            status: status
+        }); 
+
+        const response = await fetch('/backend/src/admin/route.php?route=admin/buyer/status', {
+            method: 'POST', 
+            body: data 
+        });          
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }          
+        const responseData = await response.json();
+                                            
+        alert(responseData.message)
+        window.location.reload();
+    }
+</script>
 </html>
