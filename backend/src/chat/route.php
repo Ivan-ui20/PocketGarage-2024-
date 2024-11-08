@@ -35,6 +35,21 @@
                 }
             
             }
+            if ($route === 'chat/room') {
+                $requiredFields = ['seller_id', 'customer_id'];
+                if (!array_diff_key(array_flip($requiredFields), $_POST)) {
+                    
+                    $payload = array_intersect_key($_POST, array_flip($requiredFields));
+                                              
+                    $response = createChatRoom($conn, $payload);
+
+                    jsonResponseWithData($response["title"], $response["message"], $response["data"]);
+
+                } else {
+                    jsonResponse("Invalid request", "Something went wrong!");
+                }
+            
+            }
         } catch (\Throwable $th) {            
             return array("title" => "Error", "message" => "Something went wrong!", "data" => []);
         }

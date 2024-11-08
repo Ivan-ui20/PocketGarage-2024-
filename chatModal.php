@@ -133,13 +133,13 @@
                   
           const file = document.getElementById('image-input').files[0];        
           
-          const data = new URLSearchParams({          
-            room_id: roomId,
-            sender_id: senderId,
-            user_type: userType,
-            message: message,
-            attachment: file ? file : null,
-          });
+          // const data = new URLSearchParams({          
+          //   room_id: roomId,
+          //   sender_id: senderId,
+          //   user_type: userType,
+          //   message: message,
+          //   attachment: file ? file : null,
+          // });
 
           const formData = new FormData();
                           
@@ -223,6 +223,45 @@
             });                  
         }
         // setInterval(openChat, 3000); 
+    </script>
+    <script>
+      function getUrlParams() {
+        const params = new URLSearchParams(window.location.search);
+        const sellerId = params.get('seller_id');
+        const customerId = params.get('customer_id');
+            
+        if (sellerId && customerId) {
+          createChatRoom(sellerId, customerId);
+        }
+      }
+      getUrlParams();
+
+    
+    function createChatRoom(sellerId, customerId) {       
+      
+      const formData = new FormData();
+                          
+      formData.append('seller_id', sellerId);
+      formData.append('customer_id', customerId);
+         
+      fetch('/backend/src/chat/route.php?route=chat/room', {
+        method: 'POST',       
+        body: formData
+      })
+      .then(response => {
+          if (!response.ok) {
+              throw new Error('Network response was not ok');
+          }
+          return response.json();
+      })
+      .then(data => {
+          console.log(data);          
+          openChat(data.data.room_id)
+      })
+      .catch(error => {
+          console.error('There was a problem with the fetch operation:', error);
+      });
+    }
     </script>
 </body>
 </html>

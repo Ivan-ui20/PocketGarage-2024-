@@ -51,6 +51,78 @@ function updateCartModal() {
     
 }
 
+function attachAddToCartListeners() {
+        
+    const addToCartButtons = document.querySelectorAll('.add-to-cart-btn');
+            
+    addToCartButtons.forEach(button => {
+        button.addEventListener('click', (event) => {                        
+            event.preventDefault();
+            event.stopPropagation();            
+            const productId = parseInt(event.target.getAttribute('data-product-id'));
+            const productName = event.target.getAttribute('data-product-name');
+            const productImage = event.target.getAttribute('data-product-image');
+            const productPrice = event.target.getAttribute('data-product-price');
+            
+           
+            
+            let updatedItem;
+
+            const existingItemIndex = cartItems.findIndex(item => item.id === productId);
+            if (existingItemIndex === -1) {
+                updatedItem = { id: productId, name: productName, image: productImage, price: productPrice, quantity: 1 };
+                cartItems.push(updatedItem);
+            } else {
+                cartItems[existingItemIndex].quantity += 1;
+                updatedItem = cartItems[existingItemIndex];
+            }
+            cartCountElement.textContent = cartItems.reduce((sum, item) => sum + item.quantity, 0);                
+                            
+            saveCartItems(updatedItem)
+        });
+    });
+}
+
+function saveCartItems(cartItem) {
+                                               
+    const data = new URLSearchParams({                    
+        customer_id: sessionStorage.getItem("userId"),                    
+        items : JSON.stringify([
+            {
+                model_id: cartItem.id,
+                quantity: cartItem.quantity,
+                total: cartItem.price * cartItem.quantity
+            }                       
+        ])
+    });                         
+
+    fetch('/backend/src/customer/route.php?route=customer/save/cart', {
+        method: 'POST',
+        body: data.toString(),
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log(data);
+        if (data.success === "Success") {
+            alert("item added to cart")
+        } else {
+            alert(data.message)
+        }                 
+    })
+    .catch(error => {
+        console.error('There was a problem with the fetch operation:', error);
+    });
+    
+}
+
 document.addEventListener('DOMContentLoaded', () => {
       
     function getProductWithFilter(brand, size, modelType, query) {
@@ -111,8 +183,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
     
                 const latestProducts = data.data.slice(0, limit);
-                
-                        
+                                        
                 latestProducts.forEach(product => {      
                     
                     
@@ -134,6 +205,8 @@ document.addEventListener('DOMContentLoaded', () => {
                             product.model_id, 
                             product.model_image_url, 
                             product.model_name,
+                            product.seller_id,
+                            product.seller_name,
                             product.model_description,
                             product.model_stock,
                             product.model_price
@@ -187,45 +260,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     getProductWithFilter("", "", "", "");
     attachAddToCartListeners();
-    function saveCartItems(cartItem) {
-                                               
-        const data = new URLSearchParams({                    
-            customer_id: sessionStorage.getItem("userId"),                    
-            items : JSON.stringify([
-                {
-                    model_id: cartItem.id,
-                    quantity: cartItem.quantity,
-                    total: cartItem.price * cartItem.quantity
-                }                       
-            ])
-        });                         
-
-        fetch('/backend/src/customer/route.php?route=customer/save/cart', {
-            method: 'POST',
-            body: data.toString(),
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            }
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log(data);
-            if (data.success === "Success") {
-                alert("item added to cart")
-            } else {
-                alert(data.message)
-            }                 
-        })
-        .catch(error => {
-            console.error('There was a problem with the fetch operation:', error);
-        });
-        
-    }
+   
     function removeCartItem(cartItemId) {
         const data = new URLSearchParams({                    
             cart_id: sessionStorage.getItem("cartId"),
@@ -299,36 +334,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     }
     getCartItems();
-    function attachAddToCartListeners() {
-        
-        const addToCartButtons = document.querySelectorAll('.add-to-cart-btn');
-        addToCartButtons.forEach(button => {
-            button.addEventListener('click', (event) => {
-                event.preventDefault();
-                event.stopPropagation();
-                const productId = parseInt(event.target.getAttribute('data-product-id'));
-                const productName = event.target.getAttribute('data-product-name');
-                const productImage = event.target.getAttribute('data-product-image');
-                const productPrice = event.target.getAttribute('data-product-price');
-                
-               
-                
-                let updatedItem;
-
-                const existingItemIndex = cartItems.findIndex(item => item.id === productId);
-                if (existingItemIndex === -1) {
-                    updatedItem = { id: productId, name: productName, image: productImage, price: productPrice, quantity: 1 };
-                    cartItems.push(updatedItem);
-                } else {
-                    cartItems[existingItemIndex].quantity += 1;
-                    updatedItem = cartItems[existingItemIndex];
-                }
-                cartCountElement.textContent = cartItems.reduce((sum, item) => sum + item.quantity, 0);                
-                                
-                saveCartItems(updatedItem)
-            });
-        });
-    }
+   
                             
     cartItemsElement.addEventListener('click', function (event) {
         const index = event.target.getAttribute('data-index');
@@ -371,7 +377,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     
         searchFilter = document.getElementById('search-query').value;     
         
-        window.location.href = `/products.php?search=${searchFilter}`;
+        window.location.href = `/Products.php?search=${searchFilter}`;
     });
 
     brandLinks.forEach(link => {
@@ -379,7 +385,7 @@ document.addEventListener('DOMContentLoaded', () => {
             event.preventDefault();
             
             brandFilter = this.getAttribute('data-brand-id');
-            window.location.href = `/products.php?brand=${brandFilter}`;
+            window.location.href = `/Products.php?brand=${brandFilter}`;
         });
     });
     sizeLinks.forEach(link => {
@@ -387,7 +393,7 @@ document.addEventListener('DOMContentLoaded', () => {
             event.preventDefault();
             
             sizeFilter = this.getAttribute('data-size-id');
-            window.location.href = `/products.php?size=${sizeFilter}`;
+            window.location.href = `/Products.php?size=${sizeFilter}`;
             
         });
     });
@@ -397,7 +403,7 @@ document.addEventListener('DOMContentLoaded', () => {
             event.preventDefault();
             
             modelTypeFilter = this.getAttribute('data-model-type');                
-            window.location.href = `/products.php?model=${modelTypeFilter}`;
+            window.location.href = `/Products.php?model=${modelTypeFilter}`;
         });
     });
 

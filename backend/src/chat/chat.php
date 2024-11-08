@@ -31,18 +31,21 @@
 
         try {
 
-            $checkExistingRoom = $connect->prepare("SELECT COUNT(*) FROM chat_room WHERE seller_id = ? AND customer_id = ?");
+            $checkExistingRoom = $connect->prepare("SELECT room_id FROM chat_room WHERE seller_id = ? AND customer_id = ?");
             $checkExistingRoom->bind_param("ss", $payload["seller_id"], $payload["customer_id"]);
             $checkExistingRoom->execute();
-        
+            
             $result = $checkExistingRoom->get_result();
             $checkExistingRoom->close();
-            
+                        
             if ($result->num_rows > 0) {
+                $existingRoom = $result->fetch_assoc();
                 return array(
                     "title" => "Success", 
-                    "message" => "Chat room already exist", 
-                    "data" => []
+                    "message" => "Chat room already exists", 
+                    "data" => [
+                        "room_id" => $existingRoom["room_id"]
+                    ]
                 );
             } 
 
@@ -54,11 +57,14 @@
             if ($createChatRoom->affected_rows < 0) {
                 throw new Exception("We cannot create a new chat room.");
             }
-
+            $roomId = $connect->insert_id;
+            $createChatRoom->close();
             return array(
                 "title" => "Success", 
                 "message" => "Chat room created.",
-                "data" => []
+                "data" => [
+                    "room_id" => $roomId
+                ]
             );
 
         } catch (\Throwable $th) {

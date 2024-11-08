@@ -33,7 +33,7 @@
                 <?php if (isset($_SESSION['user_id'])): ?>
                     <input type="hidden" id="bidding_id">
                     <input type="hidden" id="model_id">
-                    <button class="bid-btn" id="modal-cart">Bid</button>
+                    <button class="bid-btn">Bid</button>
                 <?php else: ?>
                     <p class="login-prompt">Please log in first to start 
                         bid this item.</p>

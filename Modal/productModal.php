@@ -11,6 +11,7 @@
 
             </div>
             <div class="modal-info">
+                <input type="hidden" id="modal-seller-id" value="">
                 <h2 class="modal-title" id="modal-product-title"></h2>
                 <p class="modal-seller" id="modal-product-seller">Posted by <span id="modal-seller-name"></span></p>
                 <p class="modal-description" id="modal-product-description"></p>
@@ -19,22 +20,25 @@
                     <span></span>
                 </div>
                 <div class="modal-buttons">
-                    <a href="chatModal.php" id="chat-icon" >
-                        <i class='bx bx-chat' ></i> 
-                    </a>
+                    <?php if (isset($_SESSION['user_id'])): ?>
+                        <a href="#" id="chat-icon">
+                            <i class='bx bx-chat'></i>
+                        </a>
+                    <?php endif; ?>
 
                
-                    <?php if (isset($_SESSION['user_id'])): ?>
-                        <button 
-                            data-product-id=""
-                            data-product-name=""
-                            data-product-image=""
-                            data-product-price=""
-                            class="add-to-cart-btn-modal add-to-cart-btn" id="modal-cart">Add to Cart</button>
-                        <button id="cart-icon1" class="checkout-btn-pmodal">Checkout</button>
-                    <?php else: ?>
-                        <p class="login-prompt">Please log in to add items to your cart.</p>
-                    <?php endif; ?>
+                    <h2 id="out-of-stock-message" style="display: none;">Out of Stock</h2> 
+                    <div id="modal-buttons">                        
+                        <?php if (isset($_SESSION['user_id'])): ?>
+                            <button 
+                                class="add-to-cart-btn-modal add-to-cart-btn" 
+                                id="modal-cart"
+                                onclick="saveToCart(event)">Add to Cart</button>
+                            <button id="cart-icon1" class="checkout-btn-pmodal">Checkout</button>
+                        <?php else: ?>
+                            <p class="login-prompt">Please log in to add items to your cart.</p>
+                        <?php endif; ?>
+                    </div>
                 </div>
             </div>
         </div>
@@ -51,27 +55,45 @@ document.getElementById('cart-icon1').addEventListener('click', function (e) {
 
     checkout.style.display = 'flex';
 });
-function openProductModal(id, image, name, description, stock, price) {
+function openProductModal(id, image, name, sellerId, sellerName, description, stock, price) {
     document.getElementById("productModal").style.display = "flex";
 
     const modalImage = document.getElementById("modal-product-image");
     const modalTitle = document.getElementById("modal-product-title");
+    const modalSellerId = document.getElementById("modal-seller-id");
+    const modalSeller = document.getElementById("modal-seller-name");
     const modalDescription = document.getElementById("modal-product-description");
     const modalStock = document.getElementById("modal-product-stock");
     const modalPrice = document.getElementById("modal-product-price");
     const modalCart = document.getElementById("modal-cart");
-
+    const modalButtons = document.getElementById("modal-buttons");
+    const outOfStockMessage = document.getElementById("out-of-stock-message");
+    const chatIcon = document.getElementById("chat-icon");
+    
+  
     modalImage.src = `http://localhost:3000/backend/${image}`;
     modalImage.alt = name;
     modalTitle.textContent = name;
+    modalSellerId.value = sellerId;
+    modalSeller.textContent = sellerName;
     modalDescription.textContent = description;
     modalStock.textContent = `Available stocks: ${stock}`;
     modalPrice.innerHTML = `<span>₱${price}</span>`;
-
-    modalCart.dataset.productId = id;
-    modalCart.dataset.productName = name;
-    modalCart.dataset.productImage = image;
-    modalCart.dataset.productPrice = price;
+        
+    modalCart.setAttribute("data-product-id", id);
+    modalCart.setAttribute("data-product-name", name);
+    modalCart.setAttribute("data-product-description", description);
+    modalCart.setAttribute("data-product-image", image);
+    modalCart.setAttribute("data-product-price", price);  
+    
+    const customerId = "<?php echo $_SESSION['user_id']; ?>";  // PHP to JavaScript
+    chatIcon.href = `chatModal.php?seller_id=${sellerId}&customer_id=${customerId}`;
+    
+    if (stock <= 0) {            
+        modalButtons.style.display = "none";        
+        outOfStockMessage.style.display = "block"
+    } 
+    
 }
 
 // Function to close the modal
@@ -120,12 +142,14 @@ function closeProductModal() {
 
 
 // function saveToCart(event) {
+    
 //     const productId = event.target.getAttribute('data-product-id');
 //     const productName = event.target.getAttribute('data-product-name');
 //     const productImage = event.target.getAttribute('data-product-image');
 //     const productPrice = event.target.getAttribute('data-product-price');
     
-
+//     console.log(productId);
+    
 //     let updatedItem = {
 //         id: productId, 
 //         name: productName, 
@@ -134,7 +158,7 @@ function closeProductModal() {
 //         quantity: 1
 //     };
                                      
-//     saveTheCartItem(updatedItem)
+//     // saveTheCartItem(updatedItem)
 // }
 
 // Close the modal when clicking outside of it

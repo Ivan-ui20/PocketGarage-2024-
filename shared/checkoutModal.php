@@ -79,11 +79,15 @@ document.getElementById('checkout-form').addEventListener('submit', function(eve
     })
     .then(data => {
         console.log(data);
-        cartItems = []
-        updateCartModal()
-        cartCountElement.textContent = 0
-        checkoutModal.style.display = 'none'; // Close the checkout modal after submission
-        document.getElementById('checkout-form').reset()
+        if(data.success === "Success"){
+            cartItems = []
+            updateCartModal()
+            cartCountElement.textContent = 0
+            checkoutModal.style.display = 'none'; // Close the checkout modal after submission
+            document.getElementById('checkout-form').reset()
+        }
+        alert(data.message)
+        
     })
     .catch(error => {
         console.error('There was a problem with the fetch operation:', error);
