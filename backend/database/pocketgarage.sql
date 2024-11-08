@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 08, 2024 at 01:09 AM
+-- Generation Time: Nov 08, 2024 at 06:54 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -32,6 +32,13 @@ CREATE TABLE `admin` (
   `username` varchar(200) NOT NULL,
   `password` varchar(200) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `admin`
+--
+
+INSERT INTO `admin` (`admin_id`, `username`, `password`) VALUES
+(1, 'admin', '$2y$10$4LJMnTd2rfj7ZIqCt5IRP.PDjhnvCYEquY0P.tt5Ic3LaTSXkCR.6');
 
 -- --------------------------------------------------------
 
@@ -82,6 +89,7 @@ CREATE TABLE `bid_room` (
   `seller_id` int(11) NOT NULL,
   `model_id` int(11) NOT NULL,
   `details` text NOT NULL,
+  `appraisal_value` double NOT NULL,
   `start_amount` double NOT NULL,
   `end_amount` int(11) NOT NULL DEFAULT 0,
   `bid_status` enum('Active','Closed','','') NOT NULL DEFAULT 'Active',
@@ -94,10 +102,10 @@ CREATE TABLE `bid_room` (
 -- Dumping data for table `bid_room`
 --
 
-INSERT INTO `bid_room` (`bidding_id`, `seller_id`, `model_id`, `details`, `start_amount`, `end_amount`, `bid_status`, `start_time`, `end_time`, `created_at`) VALUES
-(16, 12, 26, 'this is the details of bid item test 1', 1000, 1003, 'Closed', '2024-11-07 16:00:00', '2024-11-09 16:00:00', '2024-10-31 05:24:28'),
-(22, 12, 33, 'this is the details of bid item test 2', 1000, 0, 'Active', '2024-11-05 16:00:00', '2024-11-06 16:00:00', '2024-11-05 04:17:17'),
-(23, 12, 34, 'this is the details of bid item test 2', 1000, 0, 'Active', '2024-11-05 16:00:00', '2024-11-06 16:00:00', '2024-11-05 04:17:30');
+INSERT INTO `bid_room` (`bidding_id`, `seller_id`, `model_id`, `details`, `appraisal_value`, `start_amount`, `end_amount`, `bid_status`, `start_time`, `end_time`, `created_at`) VALUES
+(16, 12, 26, 'this is the details of bid item test 1', 1200, 1000, 1003, 'Closed', '2024-11-07 16:00:00', '2024-11-09 16:00:00', '2024-10-31 05:24:28'),
+(22, 12, 33, 'this is the details of bid item test 2', 1100, 1000, 0, 'Active', '2024-11-05 16:00:00', '2024-11-06 16:00:00', '2024-11-05 04:17:17'),
+(23, 12, 34, 'this is the details of bid item test 2', 1500, 1000, 0, 'Active', '2024-11-05 16:00:00', '2024-11-06 16:00:00', '2024-11-05 04:17:30');
 
 -- --------------------------------------------------------
 
@@ -174,7 +182,12 @@ INSERT INTO `chat_message` (`message_id`, `room_id`, `sender_id`, `user_type`, `
 (21, 1, 12, 'seller', 'VjdqTHZlN1NObnArNG5hWVlxckU2b2tKUWZac094MDdTUGxkWVhNTi9VZHlGSjcrMUQ3cFBxOXNFbmpOWUJTWDo6dhlKjxKWksq55icW4YhCEg==', NULL, '2024-10-31 06:05:05'),
 (22, 1, 12, 'seller', 'NlRYQnlicGhtMnpuVHc0cFNtbTAxSzhwekZhbG04OG1pb0VaWmpiNy9PYURoVElicmxhcXlXR0RPeXVWRGJ2STo6BEC7oBG2E0S9kGMojiT6sg==', NULL, '2024-10-31 06:05:29'),
 (23, 1, 12, 'seller', 'SVhiblF5SGU0SkV2dEFXRlU5NlBOMVBGMVRxOFJTV09JVG5ZcTgyeGFSM3ZuZ0VoWXcvVVBPeUlsTGRKVDJ1YXJhZ09rMkp4WU1SN0ZFOVJZdWhnNGc9PTo6QamNpP5NTqjyPtxvS6wReA==', NULL, '2024-10-31 06:06:09'),
-(24, 1, 12, 'seller', 'WnNYNXNsQmZ1aW9DTVZENDZzNitzRTFyTGpYTW5VbHFhazBRbTZ4WkNBY3ArdnNjMWxDOFdDb005UjQvb2pzYXRwS2drQzhVSWcrZU1laG5lWGsyaGc9PTo6S/+6C05p5x8DWq81J/XdLA==', 'upload/67231eef9d0fa-P1.png', '2024-10-31 06:08:47');
+(24, 1, 12, 'seller', 'WnNYNXNsQmZ1aW9DTVZENDZzNitzRTFyTGpYTW5VbHFhazBRbTZ4WkNBY3ArdnNjMWxDOFdDb005UjQvb2pzYXRwS2drQzhVSWcrZU1laG5lWGsyaGc9PTo6S/+6C05p5x8DWq81J/XdLA==', 'upload/67231eef9d0fa-P1.png', '2024-10-31 06:08:47'),
+(25, 1, 3, 'customer', 'OHNZV0dldFJVRXh0WHFkT0RzWEdZZz09OjpgRV5BC/H418eIVXIvEZnf', NULL, '2024-11-08 00:13:33'),
+(26, 1, 3, 'customer', 'T2t0NjE4a21UckVUSWF6dVZ2T1VMdz09OjpO7inHDDyLjfjvOeyWyGDj', NULL, '2024-11-08 00:20:42'),
+(27, 1, 3, 'customer', 'UmdscmdUM3JPSkx5amhWd3NiYmZHdz09Ojr9XelBszNxbd76nym/JI0Q', NULL, '2024-11-08 00:23:10'),
+(28, 1, 3, 'customer', 'cEgrazd4Z3BXQVNDS0NlRnAwNDJOUT09OjpRnk3dBzaBDVRIesGSZrJw', NULL, '2024-11-08 00:23:22'),
+(29, 1, 3, 'customer', 'YTNwVjE3VEF6RVk5UUtZTW9xb2didz09Ojpyaj5ydJigDyrQMfj1rxhR', NULL, '2024-11-08 00:23:27');
 
 -- --------------------------------------------------------
 
@@ -221,8 +234,10 @@ CREATE TABLE `customer` (
 --
 
 INSERT INTO `customer` (`customer_id`, `first_name`, `last_name`, `contact_number`, `address`, `email_address`, `password`, `role`, `avatar`, `status`, `created_at`) VALUES
-(3, 'John', ' Doeee', '12345678910', '123 Main St, Anytown, USA', 'admin1@gmail.com', '$2y$10$4LJMnTd2rfj7ZIqCt5IRP.PDjhnvCYEquY0P.tt5Ic3LaTSXkCR.6', 'customer', 'upload/672d050f35842-P1.png', 'Active', '2024-11-07 18:23:19'),
-
+(3, 'John', ' Doeee', '12345678910', '123 Main St, Anytown, USA', 'admin1@gmail.com', '$2y$10$4LJMnTd2rfj7ZIqCt5IRP.PDjhnvCYEquY0P.tt5Ic3LaTSXkCR.6', 'customer', 'upload/672d6a82e50b8-P2.png', 'Active', '2024-11-07 18:23:19'),
+(4, 'Manuel', 'Marin', '123456789101', '123 taguig city', 'admin@gmail.com', '$2y$10$vrS5fGfJDw6TmtrZJWLmWecq05PBjqewEssMM0dr4IOixbCvdX2Im', 'customer', '', 'Pending', '2024-11-06 16:04:12'),
+(6, 'Manuel', 'Marin', '09686012922', '', 'admin111@gmail.com', '$2y$10$3jSVh6aEaLKkHLqAKhJeau9Y1ghRsr39E/wz6Ft276vZu/BR2SptC', 'customer', '', 'Pending', '2024-11-07 15:20:50'),
+(7, 'Manuel', 'Marin', '09686012925', '19 Purok 10 South Daang Hari, Taguig City, NCR, 1630, PH', 'adm121212in@gmail.com', '$2y$10$FoBplb01xirmlfRxEVW8Yu/S3DR5xrxA5twb9IkNmPZ24TKDYzm4a', 'customer', '', 'Deactivated', '2024-11-07 18:59:18');
 
 -- --------------------------------------------------------
 
@@ -339,7 +354,7 @@ CREATE TABLE `order_info` (
   `order_ref_no` varchar(200) NOT NULL,
   `order_total` double NOT NULL,
   `order_payment_option` text NOT NULL,
-  `order_status` enum('Order Received','Processing','Packed','Ready to Ship','Shipped','Delivered','Order Placed','In Transit','Delivered','Waiting for courier') NOT NULL DEFAULT 'Processing',
+  `order_status` enum('Received','Processing','Packed','Ready to Ship','Shipped','Delivered','Order Placed','In Transit','Delivered','Waiting for courier') NOT NULL DEFAULT 'Processing',
   `order_trackingnum` text NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -351,7 +366,7 @@ CREATE TABLE `order_info` (
 INSERT INTO `order_info` (`order_id`, `customer_id`, `shipping_addr`, `order_ref_no`, `order_total`, `order_payment_option`, `order_status`, `order_trackingnum`, `created_at`) VALUES
 (4, 3, 'Sa tabi ng kanto ng dagat', 'REF-3-1728003594-571BD2', 1798, 'Cash on Delivery (CoD)', 'Order Placed', '1', '2024-11-07 17:47:57'),
 (5, 3, 'Sa tabi ng kanto ng dagat', 'REF-3-1728067262-65B694', 2597, 'Cash on Delivery (CoD)', 'Order Placed', '100', '2024-11-07 17:47:59'),
-(17, 3, 'shipping address', 'REF-3-1728945073-5F047D', 7891, 'Cash on Delivery (CoD)', 'Delivered', '', '2024-11-07 17:48:00'),
+(17, 3, 'shipping address', 'REF-3-1728945073-5F047D', 7891, 'Cash on Delivery (CoD)', 'Received', '', '2024-11-08 04:34:59'),
 (18, 3, 'dito sa tabi ng kanto', 'REF-3-1731001787-0E3382', 5294, 'Cash on Delivery (CoD)', 'Processing', '', '2024-11-07 17:50:11');
 
 -- --------------------------------------------------------
@@ -442,7 +457,8 @@ INSERT INTO `seller` (`seller_id`, `first_name`, `last_name`, `contact_number`, 
 (12, 'John', 'Doe', '12345678901', '', 'johndoe@example.com', '$2y$10$4LJMnTd2rfj7ZIqCt5IRP.PDjhnvCYEquY0P.tt5Ic3LaTSXkCR.6', '', '', NULL, '', 'Approved', '2024-11-07 18:35:44'),
 (13, 'test', 'test', '12345678902', '', 'admin@gmail.com', '$2y$10$swHVJuwTi8ufN7HPQRVpWOL8UvUH6CJ4hqw8j464Xgc8uTsdqzKnW', '', '', NULL, '', 'Rejected', '2024-11-07 18:49:01'),
 (17, 'test', 'test', '12345678903', '', 'adm1in@gmail.com', '$2y$10$Q3udrFo6AmPKzIQcJ.pmVu3e/aElA.p4kvgo.u.bLnHytvhHg6c4m', '', '', 'upload/672c3a3d626ba-P1.png', '', 'Deactivated', '2024-11-07 18:59:25'),
-
+(18, 'asd', 'asdasd', '09686012929', '', 'a111dmin@gmail.com', '$2y$10$QO6hW21VXXI8QzzQNOsaFOrsWp8lSBjNjuaAGTFtwi2D.HKofGn5G', '', '', 'upload/672cff06e3235-P3.png', '', 'Pending', '2024-11-07 17:57:25'),
+(20, 'asdasd', 'asdada', '09686012921', '', 'a11dmin@gmail.com', '$2y$10$3VVQg3vatnWu7Wg7IM5/QOB0J296I554Li1KMbRIDZKL2JGUQMHrC', 'upload/672cff883cba7-P1.png', 'upload/672cff883cd60-P2.png', 'upload/672cff883cede-P3.png', '', 'Pending', '2024-11-07 17:57:28');
 
 --
 -- Indexes for dumped tables
@@ -569,7 +585,7 @@ ALTER TABLE `seller`
 -- AUTO_INCREMENT for table `admin`
 --
 ALTER TABLE `admin`
-  MODIFY `admin_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `admin_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `appraisal`
@@ -593,7 +609,7 @@ ALTER TABLE `cart`
 -- AUTO_INCREMENT for table `chat_message`
 --
 ALTER TABLE `chat_message`
-  MODIFY `message_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `message_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 
 --
 -- AUTO_INCREMENT for table `chat_room`
