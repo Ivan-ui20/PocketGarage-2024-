@@ -29,6 +29,21 @@
     position: relative;
  }
  
+ /* Success Message Styling */
+.success-message {
+   display: none;
+   position: fixed;
+   top: 10%;
+   left: 50%;
+   transform: translateX(-50%);
+   background-color: #28a745; /* Green background for success */
+   color: #fff;
+   padding: 15px 20px;
+   border-radius: 8px;
+   font-size: 1em;
+   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+   z-index: 20;
+}
  
  .modal-body {
     display: flex;
