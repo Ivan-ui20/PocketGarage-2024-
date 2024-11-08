@@ -59,7 +59,7 @@ function openBidModal(bidID, modId, image, name, description, price, appraValue)
     const modalPrice = document.getElementById("modal-bid-price");
     const ModalAppraVal = document.getElementById("modal-appraisal-value");
     
-    modalImage.src = `http://localhost:3000/backend/${image}`;
+    modalImage.src = `http://pocket-garage.com/backend/${image}`;
     modalImage.alt = name;
     modalTitle.textContent = name;        
     modalPrice.textContent = price

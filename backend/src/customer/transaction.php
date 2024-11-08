@@ -49,7 +49,7 @@
             $insertOrder->execute();
     
             if ($insertOrder->affected_rows <= 0) {
-                print_r("1");
+                
                 throw new Exception("We cannot process your order.");
             }
             
@@ -66,7 +66,7 @@
                     $insertItems->execute();
                     
                     if ($insertItems->affected_rows <= 0) {
-                        print_r("2");
+                        
                         throw new Exception("We cannot process your order.");
                     }
                     
@@ -77,11 +77,11 @@
                     $deleteItem->execute();
         
                     if ($deleteItem->affected_rows <= 0) {
-                        print_r("3");
+                        
                         throw new Exception("We cannot process your order.");
                     }
                 } else {
-                    print_r("here");   
+                    
                     throw new Exception("We cannot process your order");
                 }                
             }
@@ -91,7 +91,7 @@
             $insertTracker->execute();
     
             if ($insertTracker->affected_rows <= 0) {
-                print_r("4");
+                
                 throw new Exception("We cannot process your order.");
             }            
             $connect->commit();

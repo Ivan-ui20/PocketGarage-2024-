@@ -19,6 +19,7 @@
 <body>
 
 <!-- copy and paste this to the page para may header sila (if need nila ng header) -->
+    <?php include './Modal/bidModal.php';?>
     <?php include './Modal/productModal.php';?>
     <?php include './shared/header.php';?>
     <?php include './shared/slider.php';?>

@@ -382,7 +382,7 @@ if ($sizeResult) {
                   echo '<div class="product-card" data-category="' . $row['model_type'] . '">';
                                   
                   echo '<div class="product-image">';
-                  echo '<img src="http://localhost:3000/backend/' . $modelImageUrl . '" alt="' . $modelName . '">';
+                  echo '<img src="http://pocket-garage.com/backend/' . $modelImageUrl . '" alt="' . $modelName . '">';
                   echo '</div>';
                   
                   echo '<div class="product-info">';

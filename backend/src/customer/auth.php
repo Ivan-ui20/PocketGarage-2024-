@@ -20,7 +20,7 @@
                 return array("title" => "Failed", "message" => "Incorrect Password. Please try again", "data" => []);
             }
             $_SESSION['user_id'] = $row['customer_id'];
-            $_SESSION["avatar"] = "http://localhost:3000/backend/" . $row['avatar'];
+            $_SESSION["avatar"] = "http://pocket-garage.com/backend/" . $row['avatar'];
             $_SESSION["user_type"] = "customer";
             return array(
                 "title" => "Success", 

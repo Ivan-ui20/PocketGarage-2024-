@@ -28,7 +28,7 @@
                             <button 
                                 class="add-to-cart-btn-modal add-to-cart-btn" 
                                 id="modal-cart"
-                                onclick="saveToCart(event)">Add to Cart</button>
+                                >Add to Cart</button>
                             <button id="cart-icon1" class="checkout-btn-pmodal">Checkout</button>
                         <?php else: ?>
                             <p class="login-prompt">Please log in to add items to your cart.</p>
@@ -66,7 +66,7 @@ function openProductModal(id, image, name, sellerId, sellerName, description, st
     const chatIcon = document.getElementById("chat-icon");
     
   
-    modalImage.src = `http://localhost:3000/backend/${image}`;
+    modalImage.src = `http://pocket-garage.com/backend/${image}`;
     modalImage.alt = name;
     modalTitle.textContent = name;
     modalSellerId.value = sellerId;

@@ -20,7 +20,7 @@ function updateCartModal() {
         li.innerHTML = `
             <div class="cart-item">
                 <div class="product-info">
-                    <img class="product-image" src="http://localhost:3000/backend/${item.image}" alt="${item.name}">
+                    <img class="product-image" src="http://pocket-garage.com/backend/${item.image}" alt="${item.name}">
                     <div class="product-description">
                         <h3>${item.name}</h3>
                         <p>${item.description}</p>
@@ -214,7 +214,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                                        
                     productBox.innerHTML = `
-                        <img src="http://localhost:3000/backend/${product.model_image_url}" alt="${product.model_name}">
+                        <img src="http://pocket-garage.com/backend/${product.model_image_url}" alt="${product.model_name}">
                         <div class="product-text">
                             <h4>${product.model_name}</h4>
                         </div>

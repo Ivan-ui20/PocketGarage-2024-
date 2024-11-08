@@ -43,7 +43,7 @@
                 $result = $getData->get_result();
                 $userData = $result->fetch_assoc();
 
-                $avatar = !empty($userData['avatar']) ? 'http://localhost:3000/backend/' . $userData['avatar'] : '';
+                $avatar = !empty($userData['avatar']) ? 'http://pocket-garage.com/backend/' . $userData['avatar'] : '';
                 $getData->close();
                 
             ?>
