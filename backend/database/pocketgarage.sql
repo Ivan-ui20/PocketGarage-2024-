@@ -222,9 +222,7 @@ CREATE TABLE `customer` (
 
 INSERT INTO `customer` (`customer_id`, `first_name`, `last_name`, `contact_number`, `address`, `email_address`, `password`, `role`, `avatar`, `status`, `created_at`) VALUES
 (3, 'John', ' Doeee', '12345678910', '123 Main St, Anytown, USA', 'admin1@gmail.com', '$2y$10$4LJMnTd2rfj7ZIqCt5IRP.PDjhnvCYEquY0P.tt5Ic3LaTSXkCR.6', 'customer', 'upload/672d050f35842-P1.png', 'Active', '2024-11-07 18:23:19'),
-(4, 'Manuel', 'Marin', '123456789101', '123 taguig city', 'admin@gmail.com', '$2y$10$vrS5fGfJDw6TmtrZJWLmWecq05PBjqewEssMM0dr4IOixbCvdX2Im', 'customer', '', 'Pending', '2024-11-06 16:04:12'),
-(6, 'Manuel', 'Marin', '09686012922', '', 'admin111@gmail.com', '$2y$10$3jSVh6aEaLKkHLqAKhJeau9Y1ghRsr39E/wz6Ft276vZu/BR2SptC', 'customer', '', 'Pending', '2024-11-07 15:20:50'),
-(7, 'Manuel', 'Marin', '09686012925', '19 Purok 10 South Daang Hari, Taguig City, NCR, 1630, PH', 'adm121212in@gmail.com', '$2y$10$FoBplb01xirmlfRxEVW8Yu/S3DR5xrxA5twb9IkNmPZ24TKDYzm4a', 'customer', '', 'Deactivated', '2024-11-07 18:59:18');
+
 
 -- --------------------------------------------------------
 
@@ -444,8 +442,7 @@ INSERT INTO `seller` (`seller_id`, `first_name`, `last_name`, `contact_number`, 
 (12, 'John', 'Doe', '12345678901', '', 'johndoe@example.com', '$2y$10$4LJMnTd2rfj7ZIqCt5IRP.PDjhnvCYEquY0P.tt5Ic3LaTSXkCR.6', '', '', NULL, '', 'Approved', '2024-11-07 18:35:44'),
 (13, 'test', 'test', '12345678902', '', 'admin@gmail.com', '$2y$10$swHVJuwTi8ufN7HPQRVpWOL8UvUH6CJ4hqw8j464Xgc8uTsdqzKnW', '', '', NULL, '', 'Rejected', '2024-11-07 18:49:01'),
 (17, 'test', 'test', '12345678903', '', 'adm1in@gmail.com', '$2y$10$Q3udrFo6AmPKzIQcJ.pmVu3e/aElA.p4kvgo.u.bLnHytvhHg6c4m', '', '', 'upload/672c3a3d626ba-P1.png', '', 'Deactivated', '2024-11-07 18:59:25'),
-(18, 'Manuel', 'Marin', '09686012929', '', 'a111dmin@gmail.com', '$2y$10$QO6hW21VXXI8QzzQNOsaFOrsWp8lSBjNjuaAGTFtwi2D.HKofGn5G', '', '', 'upload/672cff06e3235-P3.png', '', 'Pending', '2024-11-07 17:57:25'),
-(20, 'Manuel', 'Marin', '09686012921', '', 'a11dmin@gmail.com', '$2y$10$3VVQg3vatnWu7Wg7IM5/QOB0J296I554Li1KMbRIDZKL2JGUQMHrC', 'upload/672cff883cba7-P1.png', 'upload/672cff883cd60-P2.png', 'upload/672cff883cede-P3.png', '', 'Pending', '2024-11-07 17:57:28');
+
 
 --
 -- Indexes for dumped tables
