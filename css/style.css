@@ -259,7 +259,8 @@ header .logo {
   color: #fff;
   margin-left: 20px;
   font-size: 30px;
-  margin-top: 5px;
+  width: 30px;
+  height: 30px;
 }
 
 .nav-icon-c a {
@@ -530,8 +531,6 @@ header .logo {
 .submit-checkout:hover {
   background-color: #27ae60;
 }
-
-
 
 /* ---Section Content--- */
 section.ProductsL {
@@ -902,28 +901,36 @@ section.ProductsL {
 
 /*profile*/
 
+/* Profile dropdown styling */
 .profile-dropdown {
-  display: none;
+  display: none; /* Hidden by default */
   position: absolute;
   right: 0;
-  background-color: black;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: #0b0b45;
+  box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.1);
   border-radius: 5px;
   overflow: hidden;
   z-index: 1000;
-  margin-top: 35px;
+  margin-top: 50px;
+  min-width: 250px; /* Consistent width */
+  padding: 10px 0; /* Add padding to the dropdown container */
 }
 
+/* Style each item in the dropdown */
 .profile-dropdown a {
   display: block;
-  padding: 10px 20px;
+  padding: 10px 5px; /* Adds space inside each link item */
   text-decoration: none;
-  color: white;
-  font-size: 16px;
+  font-size: 18px;
+  white-space: nowrap; /* Prevents text wrapping */
+  border: none; /* Remove any default borders */
+  outline: none;
 }
 
 .profile-dropdown a:hover {
-  background-color: #000000;
+  color: #ffde59; /* Maintain text color */
+  outline: none; /* Remove any focus outline */
+  border: none; /* Remove any border */
 }
 
 .checkout-product-list {
@@ -1055,12 +1062,11 @@ body .terms-conditions {
 }
 
 * {
-   margin: 0;
-   padding: 0;
-   box-sizing: border-box;
-   font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
 }
-
 
 .product-card {
   width: 320px;
@@ -1189,8 +1195,44 @@ body .terms-conditions {
   background-color: #218838;
 }
 
- /* Modal styles */
- .modal {
+.header-user-img {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: #fff;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+/* Profile picture styling */
+.header-profile-pic-container {
+  display: flex;
+  align-items: center;
+}
+
+.header-user-img {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: #fff;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+/* Profile picture styling */
+.header-profile-pic-container {
+  display: flex;
+  align-items: center;
+}
+
+/* Modal styles */
+.modal {
   display: none;
   position: fixed;
   z-index: 10;
@@ -1212,7 +1254,6 @@ body .terms-conditions {
   border-radius: 12px;
   position: relative;
 }
-
 
 .modal-body {
   display: flex;
@@ -1252,7 +1293,8 @@ body .terms-conditions {
   justify-content: right;
 }
 
-.add-to-cart-btn-modal, .checkout-btn-pmodal {
+.add-to-cart-btn-modal,
+.checkout-btn-pmodal {
   padding: 12px 20px;
   border-radius: 8px;
   font-size: 1em;
@@ -1280,13 +1322,13 @@ body .terms-conditions {
   background-color: #218838;
 }
 
-#chat-icon{
+#chat-icon {
   color: black;
   font-size: 40px;
-  margin-right: 166px;  
+  margin-right: 166px;
 }
 
 #modal-product-image {
-    width: 790px;
-    height: 330px;
+  width: 790px;
+  height: 330px;
 }

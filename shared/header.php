@@ -9,6 +9,8 @@
     $sizeResult = $conn->query($size);
         
 ?>
+
+
 <header>
     <div class="top-nav">
         <div class="left-section"> <!-- Wrap logo and navmenu in one container -->
@@ -81,14 +83,20 @@
               <!-- Profile Icon with Dropdown Menu -->
                 <div class="nav-icon-p">
                     <a href="#" id="profile-icon">
-                        <i class='bx bx-user-circle'></i>
+                        <div class="header-profile-pic-container">
+                        <div class="header-user-img">
+                            <img src="<?php echo $avatar; ?>" id="photo" alt="Profile Picture">            
+                        </div>
+                    </div>
                     </a>
+
+                    
 
                     <!-- Dropdown Menu -->
                     <div class="profile-dropdown" id="profile-dropdown">
                         <a href="MyProfile.php">My Profile</a>
-                        <a href="">Message</a>
-                        <a href="SellerLogin.php">Switch to Seller</a>
+                        <a href="chatModal.php">Message</a>
+                        <a href="SellerLogin.php">Switch to Seller (<span id="seller-status">Pending</span>)</a>
                         <a onclick="logout()">Logout</a>
                   
                     </div>
