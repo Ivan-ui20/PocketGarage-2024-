@@ -245,11 +245,24 @@ header .logo {
 
 .nav-icon-s,
 .nav-icon-p,
-.nav-icon-c {
+.nav-icon-c,
+.nav-icon-n {
   display: flex;
 }
 
-.nav-icon-s a {
+.nav-icon-n a {
+  color: #fff;
+  margin-left: 20px;
+  font-size: 30px;
+  margin-top: 5px;
+  position: relative;
+}
+
+.nav-icon-n a:hover {
+  color: yellow;
+}
+
+.nav-icon-n .nav-icon-n .nav-icon-s a {
   color: #fff;
   margin-left: 20px;
   font-size: 30px;
@@ -283,6 +296,18 @@ header .logo {
 }
 
 #cart-count {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  background: red;
+  color: white;
+  border-radius: 50%;
+  padding: 5px 10px;
+  font-size: 14px;
+  margin-top: 4px;
+}
+
+#notification-count {
   position: absolute;
   top: -10px;
   right: -10px;
@@ -1331,4 +1356,47 @@ body .terms-conditions {
 #modal-product-image {
   width: 790px;
   height: 330px;
+}
+
+#notification-container {
+  position: relative;
+}
+
+.notification-dropdown {
+  position: absolute;
+  top: 30px;
+  right: 0;
+  width: 250px;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  padding: 10px;
+  display: none;
+  z-index: 1000;
+}
+
+.notification-item {
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+}
+
+.notification-item input {
+  margin-right: 8px;
+}
+
+.mark-read-btn {
+  display: block;
+  width: 100%;
+  background-color: #007bff;
+  color: white;
+  padding: 8px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.mark-read-btn:hover {
+  background-color: #0056b3;
 }
