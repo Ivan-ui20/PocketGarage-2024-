@@ -491,11 +491,28 @@ header .logo {
   display: none; /* Hidden by default */
   position: fixed;
   z-index: 1;
-  left: 0;
-  top: 0;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* Center the modal */
   width: 100%;
-  height: 100%;
+  height: 90%;
   background-color: rgba(0, 0, 0, 0.5);
+  /* Remove the background color overlay */
+  background-color: transparent; /* No background overlay */
+}
+
+.checkout-modal-content {
+  background-color: #fff;
+  margin: 10% auto;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  width: 90%;
+  max-width: 500px;
+  /* Center the content within the modal */
+  position: absolute;
+  top: 50%;
+  left: 50%;
 }
 
 .checkout-product-list {
@@ -508,16 +525,6 @@ header .logo {
   margin-bottom: 15px;
   border-bottom: 1px solid #ccc;
   padding-bottom: 10px;
-}
-
-.checkout-modal-content {
-  background-color: #fff;
-  margin: 10% auto;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  width: 90%;
-  max-width: 500px;
 }
 
 .checkout-product-details {
@@ -1404,4 +1411,92 @@ body .terms-conditions {
 
 .mark-read-btn:hover {
   background-color: #0056b3;
+}
+
+/* General mobile adjustments for screens 768px and below */
+@media (max-width: 768px) {
+  /* Center content */
+  body {
+    font-size: 16px; /* Adjust font size for readability */
+  }
+
+  /* Product container styling */
+  .product-container {
+    display: flex;
+    flex-direction: column; /* Stack products vertically */
+    padding: 10px;
+  }
+
+  /* Product Details Modal */
+  .modal {
+    width: 90vw; /* Set modal width relative to viewport width */
+    height: auto; /* Allow modal to adapt to content */
+    padding: 20px; /* Adjust padding */
+    overflow-y: auto; /* Enable scrolling for long content */
+  }
+
+  .modal-content {
+    flex-direction: column; /* Stack content vertically */
+    padding: 10px;
+  }
+
+  .modal-image img {
+    width: 100%; /* Ensure image scales to full modal width */
+    height: auto;
+  }
+
+  /* Buttons in modal */
+  .action-button {
+    width: 100%;
+    padding: 10px; /* Increase padding for better tap targets */
+    margin-bottom: 10px; /* Separate buttons */
+    font-size: 1rem;
+  }
+
+  /* Header adjustments */
+  .header {
+    padding: 10px;
+  }
+
+  .header-logo {
+    font-size: 1.5rem; /* Adjust logo font-size for mobile */
+  }
+
+  /* Footer adjustments */
+  .footer {
+    padding: 20px;
+    font-size: 0.9rem;
+    text-align: center;
+  }
+
+  /* View More Button */
+  .view-more-btn {
+    width: 100%;
+    padding: 12px;
+    font-size: 1rem;
+  }
+}
+
+/* Extra small screens (480px and below) */
+@media (max-width: 480px) {
+  /* Further adjustments for small phones */
+  .header-logo {
+    font-size: 1.2rem;
+  }
+
+  .product-container {
+    padding: 5px;
+  }
+
+  .modal-content h2,
+  .modal-content p {
+    font-size: 0.9rem;
+    margin: 5px 0;
+  }
+
+  /* Make the modal close button larger and easier to tap */
+  .close-modal,
+  .close {
+    font-size: 1.5rem;
+  }
 }
