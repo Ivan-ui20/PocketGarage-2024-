@@ -4,7 +4,7 @@
         
         try {
 
-            $stmt = $connect->prepare("SELECT * from customer WHERE contact_number = ?");
+            $stmt = $connect->prepare("SELECT * FROM customer WHERE contact_number = ?");
             $stmt->bind_param("s", $contactNumber);
             $stmt->execute();
             
@@ -15,19 +15,41 @@
             }
 
             $row = $userExist->fetch_assoc();
+            
+            if ($row['status'] === "Deactivated") {                
+                return array("title" => "Failed", "message" => "Your accoount is deactivated.", "data" => []);
+            }
+
+            if ($row['status'] === "Pending") {                
+                return array("title" => "Failed", "message" => "Your accoount is not yet activated.", "data" => []);
+            }
 
             if (!password_verify($password, $row['password'])) {                
                 return array("title" => "Failed", "message" => "Incorrect Password. Please try again", "data" => []);
             }
-            $_SESSION['user_id'] = $row['customer_id'];
+
             $_SESSION["avatar"] = "http://pocket-garage.com/backend/" . $row['avatar'];
+            $id = $row['customer_id'];
+
+            $checkIfRegisteredSeller = $connect->prepare("SELECT * FROM seller WHERE user_id = ?");            
+            $checkIfRegisteredSeller->bind_param("s", $id);
+            $checkIfRegisteredSeller->execute();
+
+            $registeredSeller = $checkIfRegisteredSeller->get_result();
+
+            if ($registeredSeller->num_rows <= 0 ) {
+                $_SESSION["seller_verified"] = false;
+            } else {
+                $row = $registeredSeller->fetch_assoc();
+                $_SESSION["seller_verified"] = $row["status"] === "Approved" ? true : false;
+            }
+
+            $_SESSION['user_id'] = $id;                        
             $_SESSION["user_type"] = "customer";
             return array(
                 "title" => "Success", 
                 "message" => "Login Successful", 
-                "data" => [
-                    "user_id" => $row['customer_id']
-                ]
+                "data" => []
             );
         } catch (\Throwable $th) {
             

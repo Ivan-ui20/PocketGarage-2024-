@@ -2,8 +2,9 @@
     require_once './backend/database/db.php';
     session_start();
 
-    if($_SESSION['user_id']) {
-        header("index.php");
+    if(!isset($_SESSION['user_id'])) {
+        header("Location: index.php");
+        exit();
     }
 ?>
 <!DOCTYPE html>
@@ -23,7 +24,7 @@
 </head>
 <body>
     <?php include './shared/header.php';?>
-
+    
     <div class="order-tracking-container">
         <h1>Order Tracking</h1>
         <?php
@@ -66,8 +67,8 @@
                         ', model_tags: ', diecast_model.model_tags,
                         ', model_type: ', diecast_model.model_type,
                         ', model_image_url: ', diecast_model.model_image_url,
-                        ', seller_name: ', CONCAT(seller.first_name, ' ', seller.last_name),
-                        ', contact_number: ', seller.contact_number, '}'
+                        ', seller_name: ', CONCAT(customer.first_name, ' ', customer.last_name),
+                        ', contact_number: ', customer.contact_number, '}'
                     ) SEPARATOR ', '
                 ) AS diecast_model_info
 
@@ -78,6 +79,7 @@
             LEFT JOIN diecast_size ON diecast_size.size_id = diecast_model.size_id
             LEFT JOIN diecast_brand ON diecast_brand.brand_id = diecast_model.brand_id
             LEFT JOIN seller ON seller.seller_id = diecast_model.seller_id
+            LEFT JOIN customer ON customer.customer_id = seller.user_id
             WHERE order_info.customer_id = ?
             GROUP BY order_info.order_id
             ORDER BY order_info.created_at DESC;");
@@ -137,8 +139,9 @@
     </div>
       
     <!-- Cart Modal -->
-    <?php include './shared/cartModal.php';?>
+    <?php include './shared/cartModal.php';?>        
     <!-- Checkout Modal -->
+    <?php include './shared/checkoutModal.php';?>
 
 
     <div class="footer">
@@ -149,6 +152,9 @@
 
    
 </body>
+<script>
+    const customerId = "<?php echo isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null; ?>" || null;
+</script>
 <script>
 
     function orderReceived(id) {
@@ -181,6 +187,9 @@
 
     
 </script>
+<script src="./scripts/getProduct.js"></script>
+<script src="./scripts/java.js"></script>
+<script src="./scripts/productModal.js"></script>
 </html>
 
 <style>

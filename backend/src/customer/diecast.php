@@ -7,9 +7,9 @@
         try {
             $query = "SELECT diecast_brand.*,
                 diecast_size.*, diecast_model.*,
-                CONCAT(seller.first_name, ' ', seller.last_name) AS seller_name,
-                seller.contact_number AS seller_contact,
-                seller.address AS seller_address,
+                CONCAT(customer.first_name, ' ', customer.last_name) AS seller_name,
+                customer.contact_number AS seller_contact,
+                customer.address AS seller_address,
                 bid_room.bidding_id,
                 bid_room.details,
                 bid_room.start_time,
@@ -22,6 +22,7 @@
                 LEFT JOIN diecast_brand ON diecast_brand.brand_id = diecast_model.brand_id
                 LEFT JOIN diecast_size ON diecast_size.size_id = diecast_model.size_id
                 LEFT JOIN seller ON seller.seller_id = diecast_model.seller_id
+                LEFT JOIN customer ON customer.customer_id = seller.user_id
                 LEFT JOIN bid_room ON bid_room.model_id = diecast_model.model_id
                 WHERE 
                     1=1";
@@ -45,6 +46,8 @@
                 $query .= " AND diecast_model.model_type = ?";
                 $params[] = $modelType;
                 $paramTypes .= "s";
+            } else {
+                $query .= " AND diecast_model.model_type != 'Bidding'";           
             }
 
             if ($modelName) {

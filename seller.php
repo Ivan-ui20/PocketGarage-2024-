@@ -4,9 +4,11 @@
 require_once './backend/database/db.php';
 session_start();
 
-if($_SESSION['seller_id']) {
-  header("index.php");
+if(!isset($_SESSION['seller_id'])) {
+  header("Location: index.php");
+  exit();
 }
+
 
 $brand = "SELECT * FROM diecast_brand";
 $brandResult = $conn->query($brand);
@@ -170,14 +172,34 @@ if ($sizeResult) {
             </a>
           </li>
         
+          <?php
+            $getData = $conn->prepare("SELECT 
+              CONCAT(customer.first_name, ' ', customer.last_name) AS seller_name,
+              customer.contact_number,
+              customer.address,
+              customer.email_address,
+              customer.avatar
+              FROM customer
+              WHERE customer_id = ?");
+              $getData->bind_param("s", $_SESSION['user_id']);
+              $getData->execute();
+
+              $result = $getData->get_result();
+              $userData = $result->fetch_assoc();
+
+              $avatar = !empty($userData['avatar']) ? 'http://pocket-garage.com/backend/' . $userData['avatar'] : '';
+              $getData->close();
+          ?>
           <li class="profile"  >
             <div class="Info">
-              <p><b><?php echo $_SESSION["seller_name"]?></b></p>
+              <p><b>
+                <?php echo $userData["seller_name"]?>
+              </b></p>
               <p>Verified Seller</p>
             </div>
 
             <div class="profile-photo"  onclick="showSection('user-profile-section')">
-              <img src="assets/profile.jpeg" alt="" />
+              <img src="<?php echo $avatar ?>" alt="" />
               
             </div>
               
@@ -297,29 +319,21 @@ if ($sizeResult) {
       <form id="profileForm" method="post" action="">
         <div class="form-group">
           <label for="fullname">Full Name:</label>
-          <input type="text" id="fullname" name="fullname" value="<?php echo $fullname; ?>" required>
+          <input type="text" id="fullname" name="fullname" value="<?php echo $userData["seller_name"]; ?>" required>
         </div>
         <div class="form-group">
           <label for="email">Email:</label>
-          <input type="email" id="email" name="email" value="<?php echo $email; ?>" required>
+          <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($userData['email_address']); ?>" required>
         </div>
         <div class="form-group">
           <label for="phone">Phone Number:</label>
-          <input type="tel" id="phone" name="phone" value="<?php echo $phone; ?>" required>
+          <input type="tel" id="phone" name="phone" value="<?php echo htmlspecialchars($userData['contact_number']); ?>" required>
         </div>
         <div class="form-group">
           <label for="address">Address:</label>
-          <input type="text" id="address" name="address" value="<?php echo $address; ?>" required>
+          <input type="text" id="address" name="address" value="<?php echo htmlspecialchars($userData['address']); ?>" required>
         </div>
-        <div class="form-group">
-          <label for="gender">Gender:</label>
-          <select id="gender" name="gender" required>
-            <option value="" <?php echo ($gender == "") ? "selected" : ""; ?>>Select...</option>
-            <option value="male" <?php echo ($gender == "male") ? "selected" : ""; ?>>Male</option>
-            <option value="female" <?php echo ($gender == "female") ? "selected" : ""; ?>>Female</option>
-            <option value="other" <?php echo ($gender == "other") ? "selected" : ""; ?>>Other</option>
-          </select>
-        </div>
+        
         <button type="submit">Save Changes</button>
       </form>
 
@@ -742,9 +756,10 @@ if ($sizeResult) {
                         <select class="order-status" id="order-status-' . htmlspecialchars($row['order_id']) . '">
                             <option value="">Select a status</option>
                             <option value="Order Placed"' . ($row['order_status'] === 'Order Placed' ? ' selected' : '') . '>Order Placed</option>
-                            <option value="Waiting for courier"' . ($row['order_status'] === 'Waiting for courier' ? ' selected' : '') . '>Waiting for courier</option>
-                            <option value="In Transit"' . ($row['order_status'] === 'In Transit' ? ' selected' : '') . '>In Transit</option>
+                            <option value="Shipped"' . ($row['order_status'] === 'Shipped' ? ' selected' : '') . '>Shipped</option>
+                            <option value="Out for Delivery"' . ($row['order_status'] === 'Out for Delivery' ? ' selected' : '') . '>Out for Delivery</option>
                             <option value="Delivered"' . ($row['order_status'] === 'Delivered' ? ' selected' : '') . '>Delivered</option>
+                            <option value="Received"' . ($row['order_status'] === 'Received' ? ' selected' : '') . '>Received</option>
                         </select>
                     </td>
                     <td>
@@ -753,7 +768,7 @@ if ($sizeResult) {
                             class="tracking-number" 
                             id="order-tracking-num-' . htmlspecialchars($row['order_id']) . '" 
                             placeholder="Enter tracking number" 
-                            value="' . (!empty($row['order_trackingnum']) ? htmlspecialchars($row['order_trackingnum']) : '') . '" 
+                            value="' . (!empty($row['order_trackingnum']) ? htmlspecialchars($row['order_trackingnum']) : 'No Tracking Number Yet') . '" 
                         />
                     </td>
                     <td>

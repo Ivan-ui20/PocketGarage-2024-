@@ -118,17 +118,18 @@ function getCartItem($connect, $customerId) {
 
         $getCartItems = $connect->prepare("SELECT 
             cart_items.*, diecast_model.*, diecast_brand.*, diecast_size.*,
-            CONCAT(seller.first_name, ' ', seller.last_name) AS seller_name,
-            seller.contact_number AS seller_contact,
-            seller.address AS seller_address
+            CONCAT(customer.first_name, ' ', customer.last_name) AS seller_name,
+            customer.contact_number AS seller_contact,
+            customer.address AS seller_address
         FROM cart 
         LEFT JOIN cart_items ON cart_items.cart_id = cart.cart_id
         LEFT JOIN diecast_model ON diecast_model.model_id = cart_items.model_id
         LEFT JOIN diecast_brand ON diecast_brand.brand_id = diecast_model.brand_id
         LEFT JOIN diecast_size ON diecast_size.size_id = diecast_model.size_id
         LEFT JOIN seller ON seller.seller_id = diecast_model.seller_id
+        LEFT JOIN customer ON customer.customer_id = seller.user_id
         WHERE 
-            customer_id = ? AND 
+            cart.customer_id = ? AND 
             cart_items.cart_id IS NOT NULL;
 
         ");

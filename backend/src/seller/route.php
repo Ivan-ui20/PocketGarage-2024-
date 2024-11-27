@@ -32,8 +32,7 @@
             }
 
             if ($route === 'seller/signup') {
-                $requiredFields = ['first_name', 'last_name', 'contact_number', 'address', 
-                    'email_address', 'password'];
+                $requiredFields = ["customer_id"];
 
                 if (!array_diff_key(array_flip($requiredFields), $_POST)) {
                     

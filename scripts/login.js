@@ -55,19 +55,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 password: passwordField.value
             });
 
-            const currentPath = window.location.pathname;
-
-            let url;
-            let type;
-            if (currentPath.includes("SellerLogin.php")) {
-                url = "/backend/src/seller/route.php?route=seller/login";
-                type = 'seller';
-            } else if (currentPath.includes("Login.php")) {
-                url = "/backend/src/customer/route.php?route=customer/login";
-                type = 'buyer';
-            }
-            
-            fetch(url, {
+            fetch('/backend/src/customer/route.php?route=customer/login', {
                     method: 'POST',
                     body: data.toString(),
                     headers: {
@@ -81,33 +69,12 @@ document.addEventListener("DOMContentLoaded", function() {
                         return response.json();
                     })
                     .then(data => {
-                    
-                        if (data.success === "Failed") {
-                            alert(data.message)
-                        } else {
-                                                                      
-                            if (rememberMeCheckbox.checked) {
-                                localStorage.setItem("phone-number", phoneNumber);
-                                localStorage.setItem("password", password);
-                            } else {
-                                localStorage.removeItem("phone-number");
-                                localStorage.removeItem("password");
-                            }
+                        
+                        alert(data.message)
 
-                            if(type === "seller") {
-                                sessionStorage.setItem("sellerId", data.data.seller_id)
-                                alert("login success")
-                                // Redirect to index.html
-                                window.location.href = 'seller.php';
-                            } else {
-                                sessionStorage.setItem("userId", data.data.user_id)
-                                alert("login success")
-                                // Redirect to index.html
-                                window.location.href = 'index.php';
-                            }
-                           
 
-                            
+                        if (data.success !== "Failed") {
+                            window.location.href = 'index.php';                                                    
                         }                                                                    
                     })
                     .catch(error => {
@@ -240,63 +207,57 @@ if (backBtn){
 }
 
 document.getElementById("signup-btn").addEventListener("click", async function(event) {
-    console.log('yo');
-    
-    event.preventDefault(); // Prevent form submission if needed
+      
+    event.preventDefault(); 
               
-    const formData = new FormData();
-
-    formData.append("first_name", document.getElementById("first-name").value);
-    formData.append("last_name", document.getElementById("last-name").value);
-    formData.append("contact_number", document.getElementById("signup-phone-number").value);
-    formData.append("address", document.getElementById("address") ? document.getElementById("address").value : "");
-    formData.append("email_address", document.getElementById("email").value);
-    formData.append("password", document.getElementById("signup-password").value);
-    
-    const idFrontFile = document.getElementById("id-front");
-    if (idFrontFile) {
-        formData.append("id_front", idFrontFile.files[0]);
-    }
-    
-    const idBackFile = document.getElementById("id-back");
-    if (idBackFile) {
-        formData.append("id_back", idBackFile.files[0]);
-    }
-
-    const proofSeller = document.getElementById("Proof");
-    if (proofSeller) {
-        formData.append("proof", proofSeller.files[0]);
-    }
-    
     const currentPath = window.location.pathname;
+
+    const formData = new FormData();
+    const idFrontFile = document.getElementById("id-front");
+    const idBackFile = document.getElementById("id-back");
+    const proofSeller = document.getElementById("Proof");
     let url;    
     if (currentPath.includes("SellerLogin.php")) {
-        url = "/backend/src/seller/route.php?route=seller/signup";        
+        url = "/backend/src/seller/route.php?route=seller/signup";
+        
+        formData.append("customer_id", customerId);
+        if (idFrontFile) {
+            formData.append("id_front", idFrontFile.files[0]);
+        }
+        
+       
+        if (idBackFile) {
+            formData.append("id_back", idBackFile.files[0]);
+        }
+
+       
+        if (proofSeller) {
+            formData.append("proof", proofSeller.files[0]);
+        }  
     } else if (currentPath.includes("Login.php")) {
-        url = "/backend/src/customer/route.php?route=customer/signup";        
-    }
-    
+        url = "/backend/src/customer/route.php?route=customer/signup";       
+        formData.append("first_name", document.getElementById("first-name").value);
+        formData.append("last_name", document.getElementById("last-name").value);
+        formData.append("contact_number", document.getElementById("signup-phone-number").value);
+        formData.append("address", document.getElementById("address") ? document.getElementById("address").value : "");
+        formData.append("email_address", document.getElementById("email").value);
+        formData.append("password", document.getElementById("signup-password").value);       
+    }                   
+        
+  
     try {
         const response = await fetch(url, {
-            method: 'POST', // Use POST method
-            body: formData // Send the FormData object as the request body
+            method: 'POST', 
+            body: formData 
         });
-
-        // Check if the response is okay
+        
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
-
-        // Parse the JSON response
-        const responseData = await response.json();
         
-        if (responseData.success === "Failed") {
-            alert(responseData.message)
-        } else {
-            alert("Success")
-        }
-
-        window.location.reload();
+        const responseData = await response.json();        
+        alert(responseData.message)
+        window.location.href = 'index.php'        
         
     } catch (error) {
         console.error('Error during fetch:', error);

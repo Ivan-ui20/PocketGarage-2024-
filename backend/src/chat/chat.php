@@ -110,27 +110,29 @@
             $limit = $payload['limit'] ?? 10;
             $offset = $payload['offset'] ?? 0; 
                         
-            $getMessages = $connect->prepare("SELECT 
-                chat_message.message_id,
-                chat_message.encrypted_message AS message,
-                chat_message.attachment,
-                chat_message.sent_at,                
-                CONCAT(customer.first_name, ' ', customer.last_name) AS customer_name,
-                CONCAT(seller.first_name, ' ', seller.last_name) AS seller_name,                
-                CASE
-                    WHEN chat_message.sender_id = chat_room.customer_id THEN 'customer'
-                    WHEN chat_message.sender_id = chat_room.seller_id THEN 'seller'
-                END AS sender_type                
-            FROM 
-                chat_message
-                        
-            INNER JOIN chat_room ON chat_message.room_id = chat_room.room_id
-                        
-            LEFT JOIN customer ON chat_room.customer_id = customer.customer_id
-            LEFT JOIN seller ON chat_room.seller_id = seller.seller_id            
-            WHERE 
-                chat_message.room_id = ?                 
-            ORDER BY chat_message.sent_at ASC");
+            $getMessages = $connect->prepare("
+                SELECT 
+                    chat_message.message_id,
+                    chat_message.encrypted_message AS message,
+                    chat_message.attachment,
+                    chat_message.sent_at,                
+                    CONCAT(buyer_customer.first_name, ' ', buyer_customer.last_name) AS customer_name,
+                    CONCAT(seller_customer.first_name, ' ', seller_customer.last_name) AS seller_name,                
+                    CASE
+                        WHEN chat_message.sender_id = chat_room.customer_id THEN 'customer'
+                        WHEN chat_message.sender_id = chat_room.seller_id THEN 'seller'
+                    END AS sender_type                
+                FROM 
+                    chat_message
+                INNER JOIN chat_room ON chat_message.room_id = chat_room.room_id                
+                LEFT JOIN customer buyer_customer ON chat_room.customer_id = buyer_customer.customer_id
+                LEFT JOIN seller ON chat_room.seller_id = seller.seller_id
+                LEFT JOIN customer seller_customer ON seller.user_id = seller_customer.customer_id
+                WHERE 
+                    chat_message.room_id = ?                 
+                ORDER BY chat_message.sent_at ASC
+            ");
+        
 
         
             $getMessages->bind_param("i", $payload["room_id"]);
@@ -194,7 +196,7 @@
                     chat_message.attachment,
                     chat_message.sent_at,                    
                     CONCAT(customer.first_name, ' ', customer.last_name) AS customer_name,
-                    CONCAT(seller.first_name, ' ', seller.last_name) AS seller_name,
+                    CONCAT(seller_customer.first_name, ' ', seller_customer.last_name) AS seller_name,
                     CASE
                         WHEN chat_message.sender_id = chat_room.customer_id THEN 'customer'
                         WHEN chat_message.sender_id = chat_room.seller_id THEN 'seller'
@@ -204,8 +206,9 @@
                 INNER JOIN chat_room ON chat_message.room_id = chat_room.room_id
                 LEFT JOIN customer ON chat_room.customer_id = customer.customer_id
                 LEFT JOIN seller ON chat_room.seller_id = seller.seller_id
+                LEFT JOIN customer seller_customer ON seller.user_id = seller_customer.customer_id
                 WHERE 
-                    chat_message.room_id = ?                     
+                    chat_message.room_id = ?
                 ORDER BY chat_message.sent_at DESC
                 LIMIT 1"); // Get only the most recent message
         

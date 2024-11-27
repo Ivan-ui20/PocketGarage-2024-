@@ -47,28 +47,13 @@
     function signup($connect, $payload, $frontIdUrl, $backIdUrl, $proofUrl) {
                 
         try {
-            $password = password_hash($payload['password'], PASSWORD_DEFAULT);
-
-            $contactCount = "";
-            
-            $checkEmailExist = $connect->prepare("SELECT COUNT(*) FROM seller WHERE contact_number = ?");
-            $checkEmailExist->bind_param("s", $payload['contact_number']);
-            $checkEmailExist->execute();
-            $checkEmailExist->bind_result($contactCount);
-            $checkEmailExist->fetch();
-            $checkEmailExist->close();
-
-            if ($contactCount > 0) {
-                return array("title" => "Failed", "message" => "Contact Number exists!", "data" => []);
-            }
-            
+                                
             $stmt = $connect->prepare("INSERT INTO seller 
-            (first_name, last_name, contact_number, address, email_address, password, front_id_url,
+            (user_id, front_id_url,
             back_id_url, proof_seller_url) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            VALUES (?, ?, ?, ?)");
                         
-            $stmt->bind_param("sssssssss", $payload['first_name'], $payload['last_name'], $payload['contact_number'], 
-                $payload['address'], $payload['email_address'], $password, $frontIdUrl, $backIdUrl, $proofUrl);                    
+            $stmt->bind_param("ssss", $payload["customer_id"], $frontIdUrl, $backIdUrl, $proofUrl);                    
             $stmt->execute();            
             if ($stmt->affected_rows <= 0) {
                 return array("title" => "Failed", "message" => "Something went wrong!", "data" => []);

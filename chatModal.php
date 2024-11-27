@@ -2,9 +2,10 @@
     require_once './backend/database/db.php';
     session_start();
 
-    if($_SESSION['user_id']) {
-        header("index.php");
-    }    
+    if(!isset($_SESSION['user_id'])) {
+      header("Location: index.php");
+      exit();
+  }  
 ?>
 
 <!DOCTYPE html>

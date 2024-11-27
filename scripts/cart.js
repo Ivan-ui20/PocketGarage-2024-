@@ -1,6 +1,6 @@
 // cart.js
 document.addEventListener('DOMContentLoaded', () => {
-    const cart = JSON.parse(sessionStorage.getItem('cart')) || [];
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
     const cartIcon = document.querySelector('.bx-cart');
     const addToCartButtons = document.querySelectorAll('.add-to-cart');
 
@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Add product to cart
             cart.push(product);
-            sessionStorage.setItem('cart', JSON.stringify(cart));
+            localStorage.setItem('cart', JSON.stringify(cart));
 
             // Update cart icon (optional)
             updateCartIcon();

@@ -120,8 +120,16 @@
                     echo "<td>{$registrationDate}</td>";
                     echo "<td>{$status}</td>";
                     echo '<td class="action-buttons">';
-                    echo "<a href=\"#\" class=\"btn btn-approve\" onclick=\"updateSellerStatus({$sellerId}, 'Active')\">Activate</a>";
-                    echo "<a href=\"#\" class=\"btn btn-reject\" onclick=\"updateSellerStatus({$sellerId}, 'Deactivated')\">Deactivate</a>";
+                    if ($status === "Active") {                        
+                        echo "<a href=\"#\" class=\"btn btn-reject\" onclick=\"updateCustomerStatus({$sellerId}, 'Deactivated')\">Deactivate</a>";
+                    } else if ($status === "Deactivated") {                        
+                        echo "<a href=\"#\" class=\"btn btn-approve\" onclick=\"updateCustomerStatus({$sellerId}, 'Active')\">Activate</a>";
+                    } else if ($status === "Pending") {
+                        echo "<a href=\"#\" class=\"btn btn-approve\" onclick=\"updateCustomerStatus({$sellerId}, 'Active')\">Approve</a>";
+                        echo "<a href=\"#\" class=\"btn btn-reject\" onclick=\"updateCustomerStatus({$sellerId}, 'Deactivated')\">Deactivate</a>";
+                    } else {
+                        echo "";
+                    }                    
                     echo "</td>";
                     echo "</tr>";
                 }
@@ -169,7 +177,7 @@
         });
     });
 
-    async function updateSellerStatus(id, status) {           
+    async function updateCustomerStatus(id, status) {           
         const data = new URLSearchParams({
             customer_id: id,
             status: status

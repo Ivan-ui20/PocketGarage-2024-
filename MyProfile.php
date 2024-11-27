@@ -2,8 +2,9 @@
     require_once './backend/database/db.php';
     session_start();
 
-    if($_SESSION['user_id']) {
-        header("index.php");
+    if(!isset($_SESSION['user_id'])) {
+        header("Location: index.php");
+        exit();
     }
 ?>
 <!DOCTYPE html>
@@ -155,7 +156,7 @@
             }
         });
     </script>
-
+    
     <script src="./scripts/getProduct.js"></script>
     <script src="./scripts/java.js"></script>
 </body>

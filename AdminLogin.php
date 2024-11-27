@@ -55,11 +55,10 @@
                 </form>    
             </div>
 
-            <div class="box signup-form" id="signup-form">
+            <!-- <div class="box signup-form" id="signup-form">
                 <h1>Sign Up as a Admin</h1>
                 <form id="signup-step-1">
-
-                 <!-- Username Field -->
+                
                 <input 
                     type="text" 
                     id="signup-username" 
@@ -86,11 +85,9 @@
                     <span class="error-message" id="signup-password-error"></span>
                     
                 </form>
-
       
-
                 <p>Already a member? <span id="login-link">Login</span></p>
-            </div>
+            </div> -->
 
         </div>
     </div>

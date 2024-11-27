@@ -1,3 +1,4 @@
+
 let cartItems = [];
 const checkoutModal = document.getElementById('checkout-modal');
 const closeCheckout = document.querySelector('.close-checkout');
@@ -63,9 +64,7 @@ function attachAddToCartListeners() {
             const productName = event.target.getAttribute('data-product-name');
             const productImage = event.target.getAttribute('data-product-image');
             const productPrice = event.target.getAttribute('data-product-price');
-            
-           
-            
+                                   
             let updatedItem;
 
             const existingItemIndex = cartItems.findIndex(item => item.id === productId);
@@ -83,10 +82,9 @@ function attachAddToCartListeners() {
     });
 }
 
-function saveCartItems(cartItem) {
-                                               
+function saveCartItems(cartItem) {   
     const data = new URLSearchParams({                    
-        customer_id: sessionStorage.getItem("userId"),                    
+        customer_id: customerId,                    
         items : JSON.stringify([
             {
                 model_id: cartItem.id,
@@ -156,8 +154,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (queryString.endsWith('&')) {
             queryString = queryString.slice(0, -1);
         }
-                           
-        var userId = sessionStorage.getItem('userId');
+                                   
         fetch(`./backend/src/customer/route.php?route=products&${queryString}`, {
             method: 'GET',                
             headers: {
@@ -184,9 +181,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
                 const latestProducts = data.data.slice(0, limit);
                                         
-                latestProducts.forEach(product => {      
-                    
-                    
+                latestProducts.forEach(product => {                                              
                     const productBox = document.createElement('div');
                     productBox.classList.add('product-box');
                     
@@ -223,11 +218,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                     `;
                     if (product.model_type !== "Bidding") {
-                        if (userId ) {                        
-                            productBox.innerHTML += `                           
-                                
-                            `;
-                        } else {
+                        if (!customerId) {                        
                             productBox.innerHTML += `                            
                                 <p class="login-prompt">Please log in to add items to your cart.</p>
                             `;
@@ -263,7 +254,7 @@ document.addEventListener('DOMContentLoaded', () => {
    
     function removeCartItem(cartItemId) {
         const data = new URLSearchParams({                    
-            cart_id: sessionStorage.getItem("cartId"),
+            cart_id: localStorage.getItem("cartId"),
             model_id: cartItemId,            
         });
 
@@ -289,12 +280,11 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
     function getCartItems () {
-        
-        var userId = sessionStorage.getItem('userId');
-        if (!userId) {
+            
+        if (!customerId) {
             return
         }
-        fetch(`./backend/src/customer/route.php?route=customer/get/cart&customer_id=${userId}`, {
+        fetch(`./backend/src/customer/route.php?route=customer/get/cart&customer_id=${customerId}`, {
             method: 'GET',                
             headers: {
                 'Content-Type': 'application/json'
@@ -309,7 +299,7 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(data => {            
             if (data.data.length !== 0) {            
                 const items = data.data            
-                sessionStorage.setItem('cartId', data.data[0].cart_id);
+                localStorage.setItem('cartId', data.data[0].cart_id);
                 items.forEach(cartItem => {
                     
                     const existingItemIndex = cartItems.findIndex(item => item.id === cartItem.model_id);

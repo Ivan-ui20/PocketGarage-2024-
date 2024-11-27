@@ -43,8 +43,14 @@
     </p>
     </footer>
 
+
+    <script>
+        const customerId = "<?php echo isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null; ?>" || null;            
+    </script>
+
     <script src="./scripts/getProduct.js"></script>
     <script src="./scripts/java.js"></script>
+    <script src="./scripts/productModal.js"></script>
     
 </body>
 </html>

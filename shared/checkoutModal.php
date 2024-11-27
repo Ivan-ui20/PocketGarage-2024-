@@ -53,14 +53,15 @@ document.getElementById('checkout-form').addEventListener('submit', function(eve
     const totalPrice = parseFloat(totalPriceStr);
     const shippingAddress = document.getElementById("shipping-addr").value;    
     const shippingMethod = document.querySelector('input[name="shipping"]:checked').value;
-
+    const customerId = "<?php echo isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null; ?>" || null;
+    if(!customerId) return
     const data = new URLSearchParams({
-        customer_id: sessionStorage.getItem("userId"),                
+        customer_id: customerId,                
         shipping_addr: shippingAddress,                
         order_total: totalPrice,
         order_payment_option: shippingMethod,
         items : JSON.stringify(cartItems),
-        cart_id: sessionStorage.getItem("cartId")
+        cart_id: localStorage.getItem("cartId")
     });
     
     

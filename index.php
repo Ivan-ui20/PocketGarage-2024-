@@ -18,8 +18,7 @@
 </head>
 <body>
 
-<!-- copy and paste this to the page para may header sila (if need nila ng header) -->
-    <?php include './Modal/bidModal.php';?>
+<!-- copy and paste this to the page para may header sila (if need nila ng header) -->    
     <?php include './Modal/productModal.php';?>
     <?php include './shared/header.php';?>
     <?php include './shared/slider.php';?>
@@ -63,18 +62,18 @@
     </div>
 
     <div class="footer">
-
-    <?php include './shared/footer.php';?>
+        <?php include './shared/footer.php';?>
     </div>
-
     
-
     <?php include './shared/userAgreementModal.php';?>
    
                
 </body>
-
+<script>
+    const customerId = "<?php echo isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null; ?>" || null;
+</script>
 <script src="./scripts/getProduct.js"></script>
 <script src="./scripts/java.js"></script>
+<script src="./scripts/productModal.js"></script>
 
 </html>

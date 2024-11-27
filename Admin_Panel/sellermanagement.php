@@ -108,7 +108,14 @@
         </thead>
         <tbody>
         <?php
-            $stmt = $conn->prepare("SELECT * FROM seller");
+            $stmt = $conn->prepare("SELECT 
+                seller.seller_id, 
+                seller.front_id_url, 
+                seller.back_id_url, 
+                proof_seller_url, 
+                seller.status as seller_status, 
+                customer.* 
+                FROM seller LEFT JOIN customer ON customer.customer_id = seller.user_id");
             $stmt->execute();
             $result = $stmt->get_result();
 
@@ -121,10 +128,20 @@
                     $registrationDate = htmlspecialchars($row['created_at']);
                     $dateTime = new DateTime($registrationDate);
                     $formattedDate = htmlspecialchars($dateTime->format('F j Y, H:i'));
-                    $status = htmlspecialchars($row['status']);
+                    $status = htmlspecialchars($row['seller_status']);
+                    $frontIdUrl = htmlspecialchars($row['front_id_url']);
+                    $backIdUrl = htmlspecialchars($row['back_id_url']);
                     
                     // Set data-status attribute for filtering
-                    echo "<tr data-status='{$status}'>";
+                    echo "<tr data-status='{$status}' onclick=\"showDetailsModal(
+                    '{$sellerId}', 
+                    '{$fullname}', 
+                    '{$email}', 
+                    '{$contactNumber}', 
+                    '{$status}', 
+                    '{$frontIdUrl}', 
+                    '{$backIdUrl}')\">";
+                    
                     echo "<td>{$sellerId}</td>";
                     echo "<td>{$fullname}</td>";
                     echo "<td>{$email}</td>";
@@ -132,8 +149,17 @@
                     echo "<td>{$formattedDate}</td>";
                     echo "<td>{$status}</td>";
                     echo '<td class="action-buttons">';
-                    echo "<a href=\"#\" class=\"btn btn-approve\" onclick=\"updateSellerStatus({$sellerId}, 'Verified')\">Activate</a>";
-                    echo "<a href=\"#\" class=\"btn btn-reject\" onclick=\"updateSellerStatus({$sellerId}, 'Not Verified')\">Deactivate</a>";
+                    if ($status === "Approved") {                        
+                        echo "<a href=\"#\" class=\"btn btn-reject\" onclick=\"updateSellerStatus({$sellerId}, 'Deactivated')\">Deactivate</a>";
+                    } else if ($status === "Deactivated") {                        
+                        echo "<a href=\"#\" class=\"btn btn-approve\" onclick=\"updateSellerStatus({$sellerId}, 'Approved')\">Activate</a>";
+                    } else if ($status === "Pending") {
+                        echo "<a href=\"#\" class=\"btn btn-approve\" onclick=\"updateSellerStatus({$sellerId}, 'Approved')\">Approve</a>";
+                        echo "<a href=\"#\" class=\"btn btn-reject\" onclick=\"updateSellerStatus({$sellerId}, 'Deactivated')\">Deactivate</a>";
+                    } else {
+                        echo "";
+                    }
+                    
                     echo "</td>";
                     echo "</tr>";
                 }
@@ -160,39 +186,32 @@
     </div>
 </div>
 
-<!-- Modal for Viewing Details -->
-<div id="detailsModal" class="modal">
+
+<div id="detailsModal" class="modal" style="display:none;">
     <div class="modal-content">
         <span class="close" onclick="closeModal()">&times;</span>
-        <div class="modal-header">User Details</div>
+        <div id="modal-header" class="modal-header">User Details</div>
 
-        <p><strong>Fullname:</strong> John Doe</p>
-        <p><strong>Email:</strong> johndoe@example.com</p>
-        <p><strong>Mobile Number:</strong> 12345678902</p>
-        <p><strong>Account Type:</strong> Seller</p>
-        <p><strong>Status:</strong> Pending</p>
+        <p><strong>Fullname:</strong> <span id="details-fullname"></span></p>
+        <p><strong>Email:</strong> <span id="details-email"></span></p>
+        <p><strong>Mobile Number:</strong> <span id="details-contact-number"></span></p>
+        <p><strong>Status:</strong> <span id="details-status"></span></p>
 
         <!-- ID Images Section -->
         <div class="id-images">
             <div>
                 <p><strong>Valid ID (Front):</strong></p>
-                <img src="id_front.jpg" alt="ID Front">
+                <img id="details-front-id" src="" alt="ID Front">
             </div>
             <div>
                 <p><strong>Valid ID (Back):</strong></p>
-                <img src="id_back.jpg" alt="ID Back">
-            </div>
-        </div>
-
-        <!-- Past Transactions Section -->
-        <div class="transaction-list">
-     <div>          
-            <h4>Past Transactions:</h4>
-                <img src="id_back.jpg" alt="ID Back">
+                <img id="details-back-id" src="" alt="ID Back">
             </div>
         </div>
     </div>
 </div>
+
+
 
 
 <script>
@@ -210,16 +229,29 @@
             }
         });
     });
-    // Open modal and display details
-    function openModal(userId) {
-        // Here you could add logic to fetch and display user data dynamically
-        document.getElementById('detailsModal').style.display = 'flex';
+    function showDetailsModal(sellerId, fullname, email, contactNumber, status, frontIdUrl, backIdUrl) {
+        // Update the modal header
+        document.getElementById('modal-header').textContent = "Seller Details";
+
+        // Populate modal content
+        document.getElementById('details-fullname').textContent = fullname;
+        document.getElementById('details-email').textContent = email;
+        document.getElementById('details-contact-number').textContent = contactNumber;
+        document.getElementById('details-status').textContent = status;
+
+        // Update ID images
+        document.getElementById('details-front-id').src = "http://pocket-garage.com/backend/" + frontIdUrl || 'placeholder.jpg';
+        document.getElementById('details-back-id').src = "http://pocket-garage.com/backend/" +  backIdUrl || 'placeholder.jpg';
+
+        // Show the modal
+        document.getElementById('detailsModal').style.display = 'block';
     }
 
-    // Close modal
+    // Close the modal
     function closeModal() {
         document.getElementById('detailsModal').style.display = 'none';
     }
+
 
     // Close modal if clicking outside of it
     window.onclick = function(event) {
@@ -234,7 +266,7 @@
             seller_id: id,
             status: status
         }); 
-
+                
         const response = await fetch('/backend/src/admin/route.php?route=admin/seller/status', {
             method: 'POST', 
             body: data 

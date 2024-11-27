@@ -9,8 +9,6 @@
     $sizeResult = $conn->query($size);
         
 ?>
-
-
 <header>
     <div class="top-nav">
         <div class="left-section"> <!-- Wrap logo and navmenu in one container -->
@@ -57,9 +55,7 @@
                     </ul>
 
                 </li>
-
-                   <!-- Placed the order in dropdown -->
-               
+                                  
             </ul>
         </div>
 
@@ -71,8 +67,7 @@
                 </form>
             </div>
             
-            <?php if (isset($_SESSION['user_id'])): ?>
-                <!-- Show Cart and Profile icons if user is logged in -->
+            <?php if (isset($_SESSION['user_id'])): ?>                
                 <div class="nav-icon-c">
                     <a href="#" id="cart-icon">
                         <i class='bx bx-cart'></i>
@@ -83,14 +78,12 @@
                 <div class="nav-icon-n">
                     <a href="#" id="notification-icon">
                         <i class='bx bx-bell'></i>
-                        <span id="notification-count">3</span> <!-- Change 3 to dynamic notification count -->
+                        <span id="notification-count">3</span>
                     </a>
-                 
-                <!-- Notification Dropdown Form -->
+                                 
                 <div class="notification-dropdown" id="notification-dropdown" style="display: none;">
                     <form action="process_notifications.php" method="post">
-                        <?php
-                        // Example array of notifications (replace with database query)
+                        <?php                 
                         $notifications = [
                             "You have a new message",
                             "Your order has been shipped",
@@ -112,30 +105,61 @@
                 </div>
 
            
-
-                
-              <!-- Profile Icon with Dropdown Menu -->
+                              
                 <div class="nav-icon-p">
                     <a href="#" id="profile-icon">
                         <div class="header-profile-pic-container">
                         <div class="header-user-img">
+                        
+                        <?php if ($_SESSION["avatar"] !== "http://pocket-garage.com/backend/"): ?>
                             <img src="<?php echo $_SESSION["avatar"]; ?>" id="photo" alt="Profile Picture">            
+                        <?php else: ?>            
+                            <img src="../assets/profile.jpeg" id="photo" alt="Profile Picture">   
+                        <?php endif; ?>
                         </div>
                     </div>
                     </a>
-                     <!-- Placed the order in dropdown -->
+                    <!-- Placed the order in dropdown -->
                     <!-- Dropdown Menu -->
-                    <div class="profile-dropdown" id="profile-dropdown">
+                    <div class="profile-dropdown" id="profile-dropdown">                    
                         <a href="MyProfile.php">My Profile</a>
                         <a href="ordertracking.php">Order</a>
                         <a href="chatModal.php">Message</a>
-                           <!-- change the seller status as needed when verified-->
-                        <a href="SellerLogin.php">Switch to Seller (<span id="seller-status">Pending</span>)</a> 
+                        <?php
+                            $query = $conn->prepare("SELECT status FROM seller WHERE user_id = ?");
+                            $query->bind_param("s", $_SESSION["user_id"]);
+                            
+                            if ($query->execute()) {
+                                $result = $query->get_result();
+                                                                
+                                if ($result->num_rows > 0) {
+                                    $row = $result->fetch_assoc();
+                                    $status = $row['status'];
+                                    
+                                    // Handle different statuses
+                                    if ($status === "Approved") {
+                                        echo '<a href="../process/switchToSeller.php?id=' . htmlspecialchars($user_id) . '">Switch to Seller</a>';
+                                    } elseif ($status === "Pending") {
+                                        echo '<a>Switch to Seller(Under Review)</a>';
+                                    } elseif ($status === "Rejected") {
+                                        echo '<a>Switch to Seller(Rejected)</a>';
+                                    }
+                                    
+                                } else {                                    
+                                    echo '<div class="nav-icon-p"><a href="SellerLogin.php">Register as seller</a></div>';
+                                }
+                            } else {
+                                // Handle query failure
+                                echo '<p>Error executing the query. Please try again later.</p>';
+                            }
+                            
+                            $query->close();
+                                                                         
+                        ?>
+                        
                         <a onclick="logout()">Logout</a>
-                  
                     </div>
                 </div>
-
             <?php else: ?>
                 <!-- Show only login icon if user is not logged in -->
                 <div class="nav-icon-p">

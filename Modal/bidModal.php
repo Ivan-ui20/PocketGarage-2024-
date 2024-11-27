@@ -1,20 +1,20 @@
 <!-- Modal -->
 <div class="modal" id="bidModal">
-    <div class="modal-content">
+    <div class="bid-modal-content">
         <span class="close-btn" onclick="closeBidModal()">&times;</span>
-        <div class="modal-body">
+        <div class="bid-modal-body">
             <div class="modal-bid-image">
                 <img id="modal-bid-image" src="https://via.placeholder.com/400" alt="Product Image">
             </div>
-            <div class="modal-info">
+            <div class="bid-modal-info">
                 <h2 class="modal-bid-title" id="modal-bid-title"></h2>
                 <!-- <p class="modal-bid-description" id="modal-bid-description">
                     This is a detailed description of the product, including its features, specifications, and other relevant information.
                 </p> -->
                                 
                 <div class="modal-appraisal-value" >
-                    <span>Appraisal Value: ₱</span> <!--appraisal value is integrated when a seller add productbid. To do, it can be collecting data similar sold product, marketprice, or use of Ebay price"
-                </p> -->
+                    <span>Appraisal Value: ₱</span>
+                </p> 
                     <span id="modal-appraisal-value"></span>
                 </div>
 
@@ -93,6 +93,9 @@ function placeBid() {
   const biddingId = document.getElementById("bidding_id").value;
   const modelId = document.getElementById("model_id").value;
   const modalPrice = document.getElementById("modal-bid-price").textContent;
+  const customerId = "<?php echo isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null; ?>" || null;
+
+  if(!customerId) return
   if (bidPrice > parseFloat(modalPrice)) {
         // Show success message
         const successMessage = document.getElementById("successMessage");
@@ -101,7 +104,7 @@ function placeBid() {
         const data = new URLSearchParams({                    
             bidding_id: biddingId,
             model_id: modelId,
-            customer_id: sessionStorage.getItem("userId"),
+            customer_id: customerId,
             amount: bidPrice
         });
 
@@ -143,7 +146,7 @@ document.querySelector(".bid-btn").addEventListener("click", placeBid);
 <style>
 /* Bid input container styling */
 
-.modal-content {
+.bid-modal-content {
     background-color: #fff;
     padding: 20px;
     width: 70%; /* Increased width */
@@ -166,7 +169,7 @@ document.querySelector(".bid-btn").addEventListener("click", placeBid);
 }
 
 
-.modal-info {
+.bid-modal-info {
     font-size: 1.2rem; /* Increase font size */
     line-height: 1.5; /* Increase line height for readability */
     width: 100%; /* Make it take up more space */
