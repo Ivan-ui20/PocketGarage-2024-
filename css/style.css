@@ -660,7 +660,6 @@ section.ProductsL {
   text-align: center;
   margin-top: 50px;
   pointer-events: auto;
-  z-index: 10;
   margin: 30px 0 100px;
 }
 
@@ -1134,6 +1133,7 @@ body .terms-conditions {
   font-size: 1.5em;
   color: #333;
   margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 .product-description,
@@ -1163,20 +1163,6 @@ body .terms-conditions {
   background-color: rgba(0, 0, 0, 0.5);
   justify-content: center;
   align-items: center;
-}
-
-.modal-content {
-  background-color: #fff;
-  height: 410px;
-  width: 800px; /* Adjusted width */
-  max-width: 800px; /* Smaller max width */
-  display: flex;
-  border-radius: 12px;
-  position: relative;
-}
-
-.modal-body {
-  display: flex;
 }
 
 .modal-image img {
@@ -1284,16 +1270,19 @@ body .terms-conditions {
 
 .modal-content {
   background-color: #fff;
-  height: 360px;
-  width: 900px; /* Adjusted width */
-  max-width: 900px; /* Smaller max width */
+  height: fit-content;
+  width: 800px; /* Adjusted width */
+  max-width: 800px; /* Smaller max width */
   display: flex;
   border-radius: 12px;
   position: relative;
+  flex-direction: column; /* Stack content vertically */
+  padding: 10px;
 }
 
 .modal-body {
   display: flex;
+  height: fit-content;
 }
 
 .modal-image img {
@@ -1362,7 +1351,6 @@ body .terms-conditions {
 #chat-icon {
   color: black;
   font-size: 40px;
-  margin-right: 166px;
 }
 
 #modal-product-image {
@@ -1433,11 +1421,6 @@ body .terms-conditions {
     height: auto; /* Allow modal to adapt to content */
     padding: 20px; /* Adjust padding */
     overflow-y: auto; /* Enable scrolling for long content */
-  }
-
-  .modal-content {
-    flex-direction: column; /* Stack content vertically */
-    padding: 10px;
   }
 
   .modal-image img {

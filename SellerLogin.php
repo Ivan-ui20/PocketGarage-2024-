@@ -15,8 +15,13 @@
             <div class="box login-form">
                 <h1>Login as a Seller</h1>
                 <form id="login-form">
+
                     <input type="text" id="phone-number" name="phone-number" placeholder="Phone Number" required maxlength="11" pattern="\d{11}" />
                     <span class="error-message" id="phone-error"></span>
+             
+                    <!--
+                     <input type="email" id="email" name="email" placeholder="Email" required />
+                    <span class="error-message" id="email-error"></span> -->
             
                     <input type="password" id="password" name="password" placeholder="Password" required />
                     <span class="error-message" id="password-error"></span>

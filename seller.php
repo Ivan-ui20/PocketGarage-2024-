@@ -531,54 +531,25 @@ if ($sizeResult) {
                 </select>
               </div>
             </div>
-            
 
+      <!-- CHANGE THE CONDITION -->
 
         <div class="form-group-row">
             <div class="form-group">
-              <label>Condition</label>
+              <label>CONDITION</label>
               <div>
-                <input
-                  type="checkbox"
-                  id="mint"
-                  name="model-condition"
-                  value="mint"
-                />
-                <label for="mint">Mint</label>
+                  <input type="checkbox" id="misb" name="model-condition" value="MISB" />
+                  <label for="misb">Mint in Sealed Box (MISB)</label>
 
-                <input
-                  type="checkbox"
-                  id="good-condition"
-                  name="model-condition"
-                  value="good condition"
-                />
-                <label for="good-condition">Good Condition</label>
+                  <input type="checkbox" id="mib" name="model-condition" value="MIB" />
+                  <label for="mib">Mint in Box (MIB)</label>
 
+                  <input type="checkbox" id="bib" name="model-condition" value="BIB" />
+                  <label for="bib">Back in Box (BIB)</label>
 
-                <input
-                  type="checkbox"
-                  id="near_mint"
-                  name="model-condition"
-                  value="near mint"
-                />
-                <label for="near_mint">Near Mint</label>
-
-                <input
-                  type="checkbox"
-                  id="non-mint"
-                  name="model-condition"
-                  value="non mint"
-                />
-                <label for="non-mint">Non Mint</label>
-
-                <input
-                  type="checkbox"
-                  id="played"
-                  name="model-condition"
-                  value="played"
-                />
-                <label for="played">Played</label>
-              </div>
+                  <input type="checkbox" id="loose" name="model-condition" value="LOOSE" />
+                  <label for="loose">Loose</label>
+                </div>
             </div>
 
             <div class="form-group">
@@ -954,53 +925,26 @@ if ($sizeResult) {
               </select>
             </div>
           </div>
-          
+        
 
+          
+        <!-- CHANGE THE CONDITION -->
         <div class="form-group-row">
           <div class="form-group">
-            <label>Condition</label>
+            <label>CONDITION</label>
             <div>
-              <input
-                type="checkbox"
-                id="mint"
-                name="model-condition"
-                value="mint"
-              />
-              <label for="mint">Mint</label>
+                  <input type="checkbox" id="misb" name="model-condition" value="MISB" />
+                  <label for="misb">Mint in Sealed Box (MISB)</label>
 
-              <input
-                type="checkbox"
-                id="good-condition"
-                name="model-condition"
-                value="good condition"
-              />
-              <label for="good-condition">Good Condition</label>
+                  <input type="checkbox" id="mib" name="model-condition" value="MIB" />
+                  <label for="mib">Mint in Box (MIB)</label>
 
+                  <input type="checkbox" id="bib" name="model-condition" value="BIB" />
+                  <label for="bib">Back in Box (BIB)</label>
 
-              <input
-                type="checkbox"
-                id="near_mint"
-                name="model-condition"
-                value="near mint"
-              />
-              <label for="near_mint">Near Mint</label>
-
-              <input
-                type="checkbox"
-                id="non-mint"
-                name="model-condition"
-                value="non mint"
-              />
-              <label for="non-mint">Non Mint</label>
-
-              <input
-                type="checkbox"
-                id="played"
-                name="model-condition"
-                value="played"
-              />
-              <label for="played">Played</label>
-            </div>
+                  <input type="checkbox" id="loose" name="model-condition" value="LOOSE" />
+                  <label for="loose">Loose</label>
+                </div>
           </div>
 
           <div class="form-group">

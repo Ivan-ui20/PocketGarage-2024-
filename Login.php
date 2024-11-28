@@ -13,16 +13,27 @@
             <div class="box login-form">
                 <h1>Login as a Buyer</h1>
                 <form id="login-form">
-                    <input type="text" id="phone-number" name="phone-number" placeholder="Phone Number" required maxlength="11" pattern="\d{11}" />
+                  <input type="text" id="phone-number" name="phone-number" placeholder="Phone Number" required maxlength="11" pattern="\d{11}" />
                     <span class="error-message" id="phone-error"></span>
+             
+                    <!--
+                     <input type="email" id="email" name="email" placeholder="Email" required />
+                    <span class="error-message" id="email-error"></span> -->
             
                     <input type="password" id="password" name="password" placeholder="Password" required />
                     <span class="error-message" id="password-error"></span>
-            
+
+                    
+                    <div class="remember-me-container">
+                        <input type="checkbox" id="show-password" />
+                        <label for="show-password" style="color: #fff;">Show Password</label>
+                    </div>
+       
                     <div class="remember-me-container">
                         <input type="checkbox" id="remember-me" name="remember-me" />
                         <label for="remember-me" style="color: #fff;">Remember Me</label>
                     </div>
+
             
                     <button type="button" id="login-btn">LOGIN</button>
                     
@@ -72,6 +83,7 @@
             
                     <input type="password" id="signup-password" name="password" placeholder="Password" required />
                     <span class="error-message" id="signup-password-error"></span>
+                   
             
                     <button type="submit" id="signup-btn">Sign Up</button>
                 </form>
@@ -84,3 +96,4 @@
     <script src="./scripts/login.js"></script>
 </body>
 </html>
+
