@@ -169,6 +169,8 @@
 
             $stmt->close();
         ?>      
+            <!--add hyperlink for detailsModal      echo "<a href=\"#\" class=\"btn btn-details\" onclick=\"openDetailsModal({$sellerId})\">View Details</a>"; // Added hyperlink for details-->
+
     </tbody>
 
     </table>
@@ -276,7 +278,44 @@
         alert(responseData.message)
         window.location.reload();
     }
+
+        /* FOR Opendetails sample
+
+            function openDetailsModal(sellerId) {
+            // Fetch seller details using sellerId (AJAX or server-side request)
+            fetch(`getSellerDetails.php?seller_id=${sellerId}`)
+                .then(response => response.json())
+                .then(data => {
+                    // Populate modal with seller details dynamically
+                    document.getElementById('modal-fullname').textContent = `${data.first_name} ${data.last_name}`;
+                    document.getElementById('modal-email').textContent = data.email_address;
+                    document.getElementById('modal-contact').textContent = data.contact_number;
+                    document.getElementById('modal-account-type').textContent = data.account_type; // e.g., Seller
+                    document.getElementById('modal-status').textContent = data.status;
+
+                    // Populate ID Images
+                    document.getElementById('modal-id-front').src = data.id_front; // Image URL from server
+                    document.getElementById('modal-id-back').src = data.id_back;   // Image URL from server
+
+                    // Populate Past Transaction Proof (assuming proof is available)
+                    document.getElementById('modal-transaction-proof').src = data.transaction_proof; // Image URL for transaction proof
+
+                    // Show the modal
+                    document.getElementById('detailsModal').style.display = 'block';
+                })
+                .catch(error => console.error('Error fetching seller details:', error));
+        }
+
+        function closeModal() {
+            document.getElementById('detailsModal').style.display = 'none';
+        }
+
+        */ 
 </script>
+
+
+
+
 
 </body>
 </html>

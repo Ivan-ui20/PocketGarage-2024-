@@ -6,15 +6,27 @@
                 <img src="https://via.placeholder.com/400" alt="Product Image" id="modal-product-image">            
             </div>
             <div class="modal-info">
+                 <!-- Add Model Brand/Model Type/Packaging/UnopenedScale/CONDITION/model tag-->
+
+
                 <input type="hidden" id="modal-seller-id" value="">
                 <h2 class="modal-title" id="modal-product-title"></h2>
                 <p class="modal-seller" id="modal-product-seller">Posted by <span id="modal-seller-name"></span></p>
                 <p class="modal-description" id="modal-product-description"></p>
+
+                  <!-- Additional Product Details -->
+                    <p class="modal-details">Brand: <span id="modal-product-brand"></span></p>
+                    <p class="modal-details">Model Type:<span id="modal-product-model-type"></span></p>
+                    <p class="modal-details">Packaging: <span id="modal-product-packaging"></span></p>
+                    <p class="modal-details">Scale: <span id="modal-product-scale"></span></p>
+                    <p class="modal-details">Condition:<span id="modal-product-condition"></span></p>
+
                 <p class="modal-description" id="modal-product-stock"></p>
-                <div class="modal-price" id="modal-product-price">
+                <div class="modal-price" id="modal-product-price">  
                     <span></span>
                 </div>
                 <div class="modal-buttons">
+
                     <?php if (isset($_SESSION['user_id'])): ?>
                         <a href="#" id="chat-icon">
                             <i class='bx bx-chat'></i>

@@ -360,3 +360,49 @@ document.getElementById("signup-form").addEventListener("submit", function(event
         alert("Signup failed. Please check your inputs and try again.");
     }
 });
+
+// Sample login validation for email
+document.getElementById("login-btn").addEventListener("click", function () {
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+
+  if (!email.includes("@") || !email.includes(".")) {
+    document.getElementById("email-error").innerText =
+      "Please enter a valid email address";
+  } else {
+    document.getElementById("email-error").innerText = "";
+    // Proceed with login logic
+  }
+
+  if (!password) {
+    document.getElementById("password-error").innerText =
+      "Password is required";
+  } else {
+    document.getElementById("password-error").innerText = "";
+    // Proceed with login logic
+  }
+});
+
+// Function to toggle the visibility of the login password
+document
+  .getElementById("show-password")
+  .addEventListener("change", function () {
+    const passwordField = document.getElementById("password");
+    if (this.checked) {
+      passwordField.type = "text"; // Show the password
+    } else {
+      passwordField.type = "password"; // Hide the password
+    }
+  });
+
+// Function to toggle the visibility of the signup password
+document
+  .getElementById("show-signup-password")
+  .addEventListener("change", function () {
+    const signupPasswordField = document.getElementById("signup-password");
+    if (this.checked) {
+      signupPasswordField.type = "text"; // Show the password
+    } else {
+      signupPasswordField.type = "password"; // Hide the password
+    }
+  });
