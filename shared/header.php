@@ -138,7 +138,7 @@
                                     
                                     // Handle different statuses
                                     if ($status === "Approved") {
-                                        echo '<a href="../process/switchToSeller.php?id=' . htmlspecialchars($user_id) . '">Switch to Seller</a>';
+                                        echo '<a href="../process/switchToSeller.php?id=' . htmlspecialchars($_SESSION["user_id"]) . '">Switch to Seller</a>';
                                     } elseif ($status === "Pending") {
                                         echo '<a>Switch to Seller(Under Review)</a>';
                                     } elseif ($status === "Rejected") {

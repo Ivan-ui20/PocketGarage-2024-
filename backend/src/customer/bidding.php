@@ -1,5 +1,7 @@
 <?php
 
+
+
 function placeBid($connect, $payload) {
 
     $connect->begin_transaction();

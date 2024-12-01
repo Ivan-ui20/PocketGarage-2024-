@@ -150,7 +150,7 @@ if ($sizeResult) {
               </a>
             </li>
             <li>
-              <a href="Login.php">
+              <a href="index.php">
                 <span class="material-symbols-outlined">lab_profile</span>
                 <h3>Switch to Buyer</h3>
               </a>
@@ -187,7 +187,7 @@ if ($sizeResult) {
               $result = $getData->get_result();
               $userData = $result->fetch_assoc();
 
-              $avatar = !empty($userData['avatar']) ? 'http://pocket-garage.com/backend/' . $userData['avatar'] : '';
+              $avatar = !empty($userData['avatar']) ? 'http://pocket-garage.com/backend/' . $userData['avatar'] : 'http://pocket-garage.com/assets/profile.jpeg';
               $getData->close();
           ?>
           <li class="profile"  >

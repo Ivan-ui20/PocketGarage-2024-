@@ -24,7 +24,7 @@ function updateCartModal() {
                     <img class="product-image" src="http://pocket-garage.com/backend/${item.image}" alt="${item.name}">
                     <div class="product-description">
                         <h3>${item.name}</h3>
-                        <p>${item.description}</p>
+                        <p>${item.description || "no description"}</p>
                     </div>
                 </div>
                 
@@ -32,11 +32,25 @@ function updateCartModal() {
                     <span></span>
                     <span>₱${item.price}</span>
                     <div class="quantity-controls">
-                        <button class="quantity-decrease" data-index="${index}">-</button>
+                        ${
+                            item.type !== "Bidding" 
+                            ? `<button class="quantity-decrease" data-index="${index}">-</button>` 
+                            : `<button class="quantity-decrease" disabled>-</button>` 
+                        }
+                        
                         <span>${item.quantity}</span>
-                        <button class="quantity-increase" data-index="${index}">+</button>
+                        ${
+                            item.type !== "Bidding" 
+                            ? `<button class="quantity-increase" data-index="${index}">+</button>` 
+                            : `<button class="quantity-increase" disabled>+</button>` 
+                        }
                     </div>
-                    <button class="remove-btn" data-index="${index}" data-remove-id="${item.id}">Remove</button>
+                    ${
+                        item.type !== "Bidding" 
+                        ? `<button class="remove-btn" data-index="${index}" data-remove-id="${item.id}">Remove</button>` 
+                        : `<button class="remove-btn" disabled>Remove</button>`
+                    }
+                    
                 </div>
             </div>
         `;
@@ -64,12 +78,20 @@ function attachAddToCartListeners() {
             const productName = event.target.getAttribute('data-product-name');
             const productImage = event.target.getAttribute('data-product-image');
             const productPrice = event.target.getAttribute('data-product-price');
-                                   
+            const productDescription = event.target.getAttribute('data-product-description');            
             let updatedItem;
 
             const existingItemIndex = cartItems.findIndex(item => item.id === productId);
             if (existingItemIndex === -1) {
-                updatedItem = { id: productId, name: productName, image: productImage, price: productPrice, quantity: 1 };
+                updatedItem = { 
+                    id: productId, 
+                    name: productName, 
+                    description: productDescription, 
+                    image: productImage, 
+                    price: productPrice, 
+                    quantity: 1,
+                    type: cartItem.model_type };
+                
                 cartItems.push(updatedItem);
             } else {
                 cartItems[existingItemIndex].quantity += 1;
@@ -193,7 +215,11 @@ document.addEventListener('DOMContentLoaded', () => {
                             product.model_name,
                             product.details,                            
                             product.model_price,
-                            product.appraisal_value
+                            product.appraisal_value,
+                            product.seller_name,
+                            product.start_time,
+                            product.end_time,
+                            product.bid_status
                         );
                     } else {
                         productBox.onclick = () => openProductModal(
@@ -223,21 +249,10 @@ document.addEventListener('DOMContentLoaded', () => {
                                 <p class="login-prompt">Please log in to add items to your cart.</p>
                             `;
                         }
-                    }
-                    // <button 
-                    //                 class="add-to-cart-btn"
-                    //                 data-product-id="${product.model_id}" 
-                    //                 data-product-name="${product.model_name}"
-                    //                 data-product-image="${product.model_image_url}"
-                    //                 data-product-price="${product.model_price}">
-                    //                 Add to Cart</button>
-                    
-    
+                    }           
                     productList.appendChild(productBox);
                 });
-    
-                // Add event listeners for all 'Add to Cart' buttons after loading products
-                
+                                    
             } else {
                 productList.innerHTML = 'No products here...';
             }
@@ -310,7 +325,8 @@ document.addEventListener('DOMContentLoaded', () => {
                             description: cartItem.model_description,
                             image: `${cartItem.model_image_url}`, 
                             price: cartItem.model_price, 
-                            quantity: cartItem.quantity });
+                            quantity: cartItem.quantity,
+                            type: cartItem.model_type });
                     } else {
                         cartItems[existingItemIndex].quantity += 1;
                     }

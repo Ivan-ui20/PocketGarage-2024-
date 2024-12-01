@@ -211,9 +211,6 @@
     </div>
 </div>
 
-
-
-
 <script>
     document.getElementById("status-filter").addEventListener("change", function() {
         const selectedStatus = this.value;

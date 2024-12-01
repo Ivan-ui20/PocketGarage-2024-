@@ -223,13 +223,10 @@ document.getElementById("signup-btn").addEventListener("click", async function(e
         formData.append("customer_id", customerId);
         if (idFrontFile) {
             formData.append("id_front", idFrontFile.files[0]);
-        }
-        
-       
+        }               
         if (idBackFile) {
             formData.append("id_back", idBackFile.files[0]);
         }
-
        
         if (proofSeller) {
             formData.append("proof", proofSeller.files[0]);
@@ -256,8 +253,28 @@ document.getElementById("signup-btn").addEventListener("click", async function(e
         }
         
         const responseData = await response.json();        
-        alert(responseData.message)
-        window.location.href = 'index.php'        
+        
+        const emailData = new FormData();
+        emailData.append('email', document.getElementById("email").value);
+
+        
+        const sendEmail = await fetch('/email/email.php', {
+            method: 'POST', 
+            body: emailData 
+        });
+    
+        if (!sendEmail.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+    
+        const sendEmailData = await sendEmail.json();
+        
+        if (sendEmailData.success) {
+            alert(responseData.message);
+            window.location.href = 'index.php'; // Redirect to the index page on success
+        } else {
+            alert(responseData.message); // Show error message from the server
+        }
         
     } catch (error) {
         console.error('Error during fetch:', error);

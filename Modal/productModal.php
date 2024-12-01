@@ -32,7 +32,8 @@
                                 data-product-name=""
                                 data-product-description=""
                                 data-product-image=""
-                                data-product-price=""                              
+                                data-product-price=""
+                                data-product-type=""
                                 >Add to Cart</button>
                             <button id="cart-icon1" class="checkout-btn-pmodal">Checkout</button>
                         <?php else: ?>
