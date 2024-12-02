@@ -204,15 +204,14 @@ body {
 
 .remember-me-container {
     display: flex;
-    align-items: first baseline;
-    margin: 1px 0; /* Adjust margin for spacing */
-    width: 100% 
+    justify-content:space-between;
+    width:80%;
 }
 
 .remember-me-container input[type="checkbox"] {
     margin-right: 2px; /* Space between checkbox and label */
     width: fit-content;
-    margin-left: 35px;
+    /*margin-left: 35px;*/
     margin-top: auto;
 }
 

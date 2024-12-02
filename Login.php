@@ -19,19 +19,21 @@
                     <!--
                      <input type="email" id="email" name="email" placeholder="Email" required />
                     <span class="error-message" id="email-error"></span> -->
-            
+
+                    
                     <input type="password" id="password" name="password" placeholder="Password" required />
                     <span class="error-message" id="password-error"></span>
 
                     
                     <div class="remember-me-container">
-                        <input type="checkbox" id="show-password" />
-                        <label for="show-password" style="color: #fff;">Show Password</label>
-                    </div>
-       
-                    <div class="remember-me-container">
-                        <input type="checkbox" id="remember-me" name="remember-me" />
-                        <label for="remember-me" style="color: #fff;">Remember Me</label>
+                        <div style="display:flex;">
+                            <input type="checkbox" id="remember-me" name="remember-me" style="border:1px solid green"/>
+                            <label for="remember-me" style="color: #fff;">Remember Me</label>
+                        </div>
+                        <div style="display:flex;">
+                            <input type="checkbox" id="show-password" />
+                            <label for="show-password" style="color: #fff;">Show Password</label>
+                        </div>
                     </div>
 
             

@@ -37,13 +37,14 @@
                 <input type="text" id="modal-bid-end-time">
 
                 <!-- New Bid Input Field with Peso Symbol -->
-                <div class="bid-input-container" id="bid-input-container">
-                    <span class="peso-sign">₱</span>
-                    <input type="number" id="bidPrice" class="bid-input" placeholder="0" min="0" oninput="preventNegative(this)">
-                </div>
+                
                 
                 <!-- New Bid Button -->
-                <?php if (isset($_SESSION['user_id'])): ?>                  
+                <?php if (isset($_SESSION['user_id'])): ?>
+                    <div class="bid-input-container" id="bid-input-container">
+                        <span class="peso-sign">₱</span>
+                        <input type="number" id="bidPrice" class="bid-input" placeholder="0" min="0" oninput="preventNegative(this)">
+                    </div>
                     <button class="bid-btn" id="bid-btn">Bid</button>
                     <p id="close-bid">This bid is already closed</p>
                 <?php else: ?>
@@ -71,11 +72,6 @@
             <ul class="details-list">
                 <li> <h2> Product Details </h2> </li>
             
-
-                <li>
-                    <strong>Product Description:</strong>
-                    <span id="detail-brand"></span>
-                </li>
                 <li>
                     <strong>Model Brand:</strong>
                     <span id="detail-brand"></span>
@@ -132,7 +128,8 @@ function isDateTimeNowOutsideRange(startTime, endTime) {
 
     
 function openBidModal(bidID, modId, image, name, description, 
-    price, appraValue, sellerName, startTime, endTime, status) {
+    price, appraValue, sellerName, startTime, endTime, status, 
+    brand, type, packaging, ratio, condition, tags) {
     document.getElementById("bidModal").style.display = "flex";
 
     const biddingId = document.getElementById("bidding_id");
@@ -151,6 +148,15 @@ function openBidModal(bidID, modId, image, name, description,
     const formattedStartTime = formatDateTime(startTime);
     const formattedEndTime = formatDateTime(endTime);
     
+    const detailBrand = document.getElementById('detail-brand');
+    const detailType = document.getElementById('detail-type');
+    const detailPackaging = document.getElementById('detail-packaging');
+    const detailScale = document.getElementById('detail-scale');
+    const detailCondition = document.getElementById('detail-condition');
+    const detailTags = document.getElementById('detail-tags');
+
+    console.log(condition)
+    console.log(tags)
     modalImage.src = `http://pocket-garage.com/backend/${image}`;
     modalImage.alt = name;
     modalTitle.textContent = name;        
@@ -162,6 +168,12 @@ function openBidModal(bidID, modId, image, name, description,
     modalSellerName.textContent = sellerName;
     modalStartTime.value = formattedStartTime;    
     modalEndTime.value = formattedEndTime
+    detailBrand.textContent = brand
+    detailType.textContent = type
+    detailPackaging.textContent = packaging
+    detailScale.textContent = ratio
+    detailCondition.textContent = condition
+    detailTags.textContent = tags
         
     if (status === "Closed" || status === "Complete") {
         bidBtn.style.display = "none"

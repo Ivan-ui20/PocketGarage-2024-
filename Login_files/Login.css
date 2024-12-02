@@ -5,7 +5,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    background: url('BGM.jpg') no-repeat center center fixed;
+    background: url('../assets/BGM.jpg') no-repeat center center fixed;
     background-size: cover;
 }
 
@@ -85,9 +85,6 @@ body {
     border-radius: 5px; /* Optional: Rounded corners for button */
 }
 
-.box button:active {
-    background: #27ae60;
-}
 
 .box p {
     font-size: 14px;
@@ -98,8 +95,29 @@ body {
     color: #666;
 }
 
+#login-btn {
+    background-color: #27ae60;
+    padding: 8px 8px;
+    color: #fff;
+    font-size: 15px;
+}
+
+#login-btn:hover {
+   background-color:#2ecc71;
+}
+
 .login-form {
     display: block; /* Show login form by default */
+}
+
+#login-link {
+    text-align: center;
+    color: #27ae60;
+}
+
+#login-link:hover{
+    text-align: center;
+    color: #2ecc71;
 }
 
 .signup-form {
@@ -113,31 +131,187 @@ body {
     margin-bottom: 10px; /* Space below error message */
 }
 
+#signup-link {
+    text-align: center;
+    color: #27ae60;
+}
 
-.forgot-password-link {
-    color: #2ecc71; /* Color for the Forgot Password link */
-    text-align: center; /* Center align the link */
-    display: block; /* Make it a block element */
-    margin-top: 1px; /* Space between login button and link */
-    font-size: 12px; /* Smaller text size */
-    margin-left: 230px;
+#signup-link {
+    text-align: center;
+    color: #2ecc71;
+}
+
+#signup-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center the form content */
+}
+
+#signup-step .name-fields {
+    display: flex;
+    gap: 10px;                   /* Space between first name and last name */
+    width: 100%;                 /* Full width for the name fields container */
+    max-width: 350px;           /* Adjust max-width as necessary */
+    box-sizing: border-box;      /* Include padding and border in width calculation */
+    margin-bottom: 5px;
+}
+
+#signup-step .name-fields input {
+    flex: 1;                     /* Equal space for both inputs */
+    margin: 10px 0;              /* Vertical margin */
+    padding: 15px;               /* Padding */
+    background: rgba(0, 0, 0, 0.8); /* Consistent background */
+    color: #fff;                 /* Text color */
+    border: none;                /* No borders */
+    border-radius: 5px;         /* Rounded corners */
+    box-sizing: border-box;      /* Box model */
+}
+
+#signup-step input {
+    width: 100%;                 /* Full width for other inputs */
+    max-width: 350px;           /* Maximum width for inputs */
+    margin: 10px 0;             /* Vertical spacing */
+    padding: 15px;              /* Padding for inputs */
+    background: rgba(0, 0, 0, 0.8); /* Background color */
+    color: #fff;                /* Text color */
+    border: none;               /* No borders */
+    border-radius: 5px;        /* Rounded corners */
+    box-sizing: border-box;     /* Box model */
+    margin-bottom: 5px;
+}
+
+#forgot-password-btn {
+    background-color: transparent;  /* Make the background transparent */
+    border: none;                   /* Remove the border */
+    color: #ffffff;                 /* Set the text color */
+    font-size: 13px;                /* Make the font small */
+    cursor: pointer;                /* Keep the cursor as a pointer */   
+    text-align: right;               /* Align to the left */
+    display: block;                 /* Make it a block element */
+    margin-top: 5px;                /* Add space above the button */
+    margin-left: 33px;                 /* Align to the left below the login button */
+    padding: 0;                     /* Remove any padding */
+}
+
+#forgot-password-btn:hover {
+    text-decoration: underline;    
+    color: #27ae60;            
+}
+
+.forgot-password-form {
+    display: none; /* Hidden by default */
 }
 
 .remember-me-container {
     display: flex;
-    align-items: first baseline;
-    margin: 1px 0; /* Adjust margin for spacing */
-    width: 100% 
+    justify-content:space-between;
+    width:80%;
 }
 
 .remember-me-container input[type="checkbox"] {
     margin-right: 2px; /* Space between checkbox and label */
     width: fit-content;
-    margin-left: 35px;
+    /*margin-left: 35px;*/
+    margin-top: auto;
 }
 
 .remember-me-container label {
     color: #fff;
     font-size: 12px; /* Smaller text size for the label */
     margin-left: 0; /* Remove left margin to bring text closer to checkbox */
+}
+
+.error-message {
+    color: red;                     /* Color for error messages */
+    font-size: 12px;               /* Font size for error messages */
+    margin-top: 5px;               /* Space between the input field and the error message */
+    display: block;                 /* Ensure the error message takes up a full line */
+}
+
+#back-to-login-btn {
+    background: none; /* Remove background color */
+    color: #fff; /* Keep text color white */
+    border: none; /* Remove border */
+    font-size: 14px; /* Adjust font size */
+    text-align: left; /* Align text to the left */
+    width: fit-content; /* Make the width fit the text */
+    cursor: pointer;
+    margin: 0; /* Remove margin */
+    padding: 0; /* Remove padding */
+    position: absolute; /* Positioning to move it */
+    top: 10px; /* Move to top */
+    left: 10px; /* Move to left */
+}
+
+#back-to-login-btn:hover {
+    text-decoration: underline;
+    color: #2ecc71;
+}
+
+#back-btn {
+    background: none; /* Remove background color */
+    color: #fff; /* Keep text color white */
+    border: none; /* Remove border */
+    font-size: 14px; /* Adjust font size */
+    text-align: left; /* Align text to the left */
+    width: fit-content; /* Make the width fit the text */
+    cursor: pointer;
+    margin: 0; /* Remove margin */
+    padding: 0; /* Remove padding */
+    position: absolute; /* Positioning to move it */
+    top: 10px; /* Move to top */
+    left: 10px; /* Move to left */
+}
+
+#back-btn:hover {
+    text-decoration: underline;
+    color: #2ecc71;
+}
+
+#signup-step-2 {
+    text-align: left;
+    font-size: 15px;
+    margin-top: 5px;
+}
+
+.signup-button-container {
+    text-align: right;            /* Align the button to the right */
+    margin-top: 10px;             /* Add some margin on top for spacing */
+    margin-right: 42px;
+}
+
+#signup-btn {
+    background-color: #27ae60;    /* Green background color */
+    border: none;                 /* Remove borders */
+    color: #fff;                  /* White text color */
+    font-size: 16px;              /* Medium font size */
+    padding: 10px 20px;           /* Medium padding for the button */
+    cursor: pointer;              /* Pointer cursor on hover */
+    border-radius: 5px;           /* Slightly rounded corners */
+    width: 100px;                  /* Automatically adjust width */
+    display: inline-block;        /* Only take necessary space */
+    margin-left: 275px;
+}
+
+#reset-password-btn {
+    background-color: #27ae60;
+    color: white;
+    padding: 5px 5px;
+    font-size: 15px;
+}
+
+#reset-password-btn:hover {
+    background-color: #2ecc71;
+}
+
+#signup-btn:hover {
+    background-color: #2ecc71;    /* Lighter green on hover */
+}
+
+#UD {
+    text-align: center;
+}
+
+#valid {
+    margin-left: 45px;
 }

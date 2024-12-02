@@ -219,7 +219,13 @@ document.addEventListener('DOMContentLoaded', () => {
                             product.seller_name,
                             product.start_time,
                             product.end_time,
-                            product.bid_status
+                            product.bid_status,
+                            product.brand_name,
+                            product.model_type,
+                            product.model_packaging,
+                            product.ratio,
+                            product.model_condition,
+                            product.model_tags
                         );
                     } else {
                         productBox.onclick = () => openProductModal(
@@ -230,7 +236,13 @@ document.addEventListener('DOMContentLoaded', () => {
                             product.seller_name,
                             product.model_description,
                             product.model_stock,
-                            product.model_price
+                            product.model_price,
+                            product.brand_name,
+                            product.model_type,
+                            product.model_packaging,
+                            product.ratio,
+                            product.model_condition
+                            
                         );
                     }
                                        
